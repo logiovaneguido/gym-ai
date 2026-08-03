@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#c6f24e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Gym AI">
+<title>Gym AI</title>
+<style>
+  :root{
+    --lime:#c6f24e; --lime-d:#b0e02f; --ink:#2e2e2e; --ink2:#555; --bg:#ededed;
+    --card:#ffffff; --line:#e2e2e2; --muted:#8a8a8a;
+    --i1:#77c043; --i2:#e2e63a; --i3:#f2a03d; --i4:#e5533c; --red:#e5533c;
+    --shadow:0 6px 20px rgba(0,0,0,.08);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;}
+  body{max-width:520px;margin:0 auto;min-height:100vh;position:relative;overflow-x:hidden;}
+  h1,h2,h3{margin:0;letter-spacing:-.02em;}
+  .app{padding:18px 16px 100px;}
+  .hidden{display:none!important;}
+  button{font-family:inherit;cursor:pointer;border:none;}
+  .btn{background:var(--lime);color:var(--ink);font-weight:800;font-size:16px;
+    padding:16px;border-radius:14px;width:100%;text-transform:uppercase;letter-spacing:.02em;
+    box-shadow:var(--shadow);transition:transform .05s;}
+  .btn:active{transform:scale(.98);}
+  .btn.dark{background:var(--ink);color:#fff;}
+  .btn.ghost{background:#fff;color:var(--ink);box-shadow:none;border:1.5px solid var(--line);}
+  .btn.red{background:var(--red);color:#fff;}
+  .btn.sm{font-size:13px;padding:10px 14px;width:auto;border-radius:10px;}
+  .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+  .logo{font-weight:900;font-size:26px;letter-spacing:-.04em;}
+  .logo span{background:var(--lime);padding:0 6px;border-radius:6px;}
+  .pill{background:var(--lime);color:var(--ink);font-weight:800;font-size:12px;
+    padding:5px 12px;border-radius:20px;text-transform:uppercase;letter-spacing:.03em;}
+  .pill.grey{background:#e0e0e0;color:#555;}
+  .muted{color:var(--muted);}
+  .card{background:var(--card);border-radius:18px;padding:16px;box-shadow:var(--shadow);margin-bottom:14px;}
+  .row{display:flex;align-items:center;gap:10px;}
+  .between{justify-content:space-between;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .selcard{background:#fff;border-radius:16px;padding:16px;border:2.5px solid var(--line);
+    cursor:pointer;transition:.12s;}
+  .selcard.on{border-color:var(--ink);background:var(--lime);}
+  .selcard .t{font-weight:800;font-size:16px;}
+  .selcard .d{font-size:12px;color:var(--ink2);margin-top:4px;line-height:1.3;}
+  .selcard.on .d{color:#3a3a3a;}
+  .label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:18px 0 10px;}
+  /* block card */
+  .blk{background:#fff;border-radius:16px;padding:14px;box-shadow:var(--shadow);margin-bottom:12px;position:relative;overflow:hidden;}
+  .blk .tag{position:absolute;top:0;left:0;background:var(--ink);color:#fff;font-size:10px;font-weight:800;
+    padding:4px 10px;border-bottom-right-radius:10px;text-transform:uppercase;letter-spacing:.04em;}
+  .blk.warm .tag{background:var(--red);}
+  .blk h3{font-size:22px;font-weight:900;margin:20px 0 2px;letter-spacing:-.03em;}
+  .blk .sub{font-size:12px;font-weight:700;color:var(--ink2);background:#f0f0f0;display:inline-block;
+    padding:4px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.02em;}
+  .blk .time{position:absolute;top:12px;right:12px;text-align:center;background:#fff;border-radius:10px;
+    padding:4px 8px;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+  .blk .time b{font-size:18px;font-weight:900;display:block;}
+  .movs{margin-top:10px;font-size:14px;color:#3a3a3a;line-height:1.7;}
+  .movs .mv b{display:inline-block;min-width:34px;font-weight:800;}
+  .dots{display:flex;gap:4px;align-items:center;margin-top:10px;}
+  .dot{width:10px;height:10px;border-radius:50%;background:#ddd;}
+  .region{font-size:11px;font-weight:800;text-transform:uppercase;color:var(--muted);letter-spacing:.05em;}
+  .blkfoot{display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:8px;}
+  /* modal */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50;display:flex;align-items:flex-end;
+    justify-content:center;}
+  .sheet{background:#fff;width:100%;max-width:520px;border-radius:22px 22px 0 0;padding:18px 16px 28px;
+    max-height:88vh;overflow-y:auto;animation:up .2s ease;}
+  @keyframes up{from{transform:translateY(30px);opacity:.6;}to{transform:none;opacity:1;}}
+  .alt{border:1.5px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px;cursor:pointer;}
+  .alt:active{background:#f6f6f6;}
+  .alt .at{font-weight:800;}
+  .banner{background:#fff8e1;border:1.5px solid #f2d675;border-radius:14px;padding:12px 14px;
+    font-size:13px;color:#7a5c00;margin-bottom:14px;line-height:1.4;}
+  .banner b{color:#5a4400;}
+  /* exec */
+  .totwrap{background:var(--ink);color:#fff;border-radius:18px;padding:16px;text-align:center;margin-bottom:14px;position:sticky;top:8px;z-index:5;}
+  .totwrap .lab{font-size:11px;text-transform:uppercase;letter-spacing:.1em;opacity:.7;}
+  .totwrap .clock{font-size:34px;font-weight:900;letter-spacing:.02em;}
+  .totbar{height:6px;background:#4a4a4a;border-radius:6px;overflow:hidden;margin-top:8px;}
+  .totbar>i{display:block;height:100%;background:var(--lime);width:0;transition:width 1s linear;}
+  .phase{background:#fff;border-radius:18px;padding:22px 16px;text-align:center;box-shadow:var(--shadow);margin-bottom:14px;}
+  .phase .ptype{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
+  .phase .pclock{font-size:64px;font-weight:900;letter-spacing:.01em;line-height:1.05;margin:6px 0;}
+  .phase .pname{font-size:20px;font-weight:900;}
+  .phase.rest{background:#eef7d8;}
+  .phase.prep{background:#fdeee6;}
+  .steps{display:flex;gap:6px;justify-content:center;margin:14px 0;}
+  .step{flex:1;height:7px;border-radius:6px;background:#e0e0e0;max-width:56px;}
+  .step.done{background:var(--i1);} .step.now{background:var(--lime);}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;
+    padding:12px 18px;border-radius:12px;font-weight:700;font-size:14px;z-index:99;box-shadow:var(--shadow);}
+  .streak{display:flex;align-items:center;gap:12px;}
+  .streak .num{font-size:40px;font-weight:900;line-height:1;}
+  .hist{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);}
+  .hist:last-child{border:none;}
+  .navwarn{font-size:11px;color:var(--muted);text-align:center;margin-top:6px;}
+  .footnote{font-size:11px;color:var(--muted);text-align:center;margin-top:24px;line-height:1.5;}
+  a.link{color:#3a7a1e;font-weight:700;cursor:pointer;text-decoration:underline;}
+  .movs .mv{cursor:pointer;padding:3px 0;border-radius:6px;}
+  .movs .mv:active{background:#f4f4f4;}
+  .mven{color:var(--muted);font-size:12px;font-style:italic;}
+  .mvi{color:var(--lime-d);font-weight:900;font-size:13px;}
+  .mediaB{background:#f2f2f2;border:1.5px dashed #cfcfcf;border-radius:14px;height:210px;display:flex;
+    flex-direction:column;align-items:center;justify-content:center;color:var(--muted);gap:8px;text-align:center;padding:14px;}
+  .mediaB video,.mediaB img{width:100%;height:100%;object-fit:contain;border-radius:14px;}
+  .cue{font-size:14px;line-height:1.5;color:#444;}
+  .matchip{display:inline-block;background:var(--ink);color:#fff;font-size:11px;font-weight:800;
+    padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.03em;}
+</style>
+</head>
+<body>
+<div id="app" class="app"></div>
+<div id="modal"></div>
+<div id="toast"></div>
+
+<script>
+/* ============================================================
+   GYM AI · MVP v1  (motor determinista, sin backend, offline)
+   Basado en PRD 003 v1.1
+   ============================================================ */
+
+/* ---------- STORAGE ADAPTER (localStorage con fallback en memoria) ---------- */
+const Store = (()=>{
+  let mem={}, ok=true;
+  try{ localStorage.setItem('__t','1'); localStorage.removeItem('__t'); }catch(e){ ok=false; }
+  return {
+    ok,
+    get(k){ if(ok){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):null; }catch(e){} } return k in mem?mem[k]:null; },
+    set(k,v){ if(ok){ try{ localStorage.setItem(k,JSON.stringify(v)); return; }catch(e){} } mem[k]=v; }
+  };
+})();
+
+/* ---------- CONFIG ---------- */
+const OBJETIVOS = [
+  {id:'hipertrofia', t:'Hipertrofia', d:'Ganar masa muscular'},
+  {id:'fuerza',      t:'Fuerza',      d:'Fuerza máxima'},
+  {id:'resistencia', t:'Resistencia', d:'Aeróbico y acondicionamiento'},
+  {id:'rendimiento', t:'Rendimiento', d:'Potencia y deporte (fútbol)'},
+  {id:'salud',       t:'Salud general', d:'Recomposición y mantenimiento'}
+];
+const NIVELES = [
+  {id:'principiante', t:'Principiante'},
+  {id:'intermedio',   t:'Intermedio'},
+  {id:'avanzado',     t:'Avanzado'}
+];
+const NIVEL_RANK = {principiante:1, intermedio:2, avanzado:3};
+
+// Matriz de proporción objetivo -> categoría (1..5, nunca 0). §8.2
+const WEIGHTS = {
+  'Hypertrophy':            {hipertrofia:5,fuerza:2,resistencia:1,rendimiento:1,salud:3},
+  'Traditional Hypertrophy':{hipertrofia:5,fuerza:2,resistencia:1,rendimiento:1,salud:3},
+  'Strength':               {hipertrofia:2,fuerza:5,resistencia:1,rendimiento:2,salud:3},
+  'Combined Strength':      {hipertrofia:2,fuerza:5,resistencia:2,rendimiento:3,salud:3},
+  'HRX Training':           {hipertrofia:2,fuerza:4,resistencia:2,rendimiento:4,salud:2},
+  'FBA':                    {hipertrofia:2,fuerza:2,resistencia:3,rendimiento:3,salud:3},
+  'Full Body':              {hipertrofia:3,fuerza:2,resistencia:3,rendimiento:2,salud:4},
+  'Upper Body':             {hipertrofia:4,fuerza:3,resistencia:2,rendimiento:2,salud:3},
+  'Lower Body':             {hipertrofia:4,fuerza:3,resistencia:2,rendimiento:3,salud:3},
+  'Midline':                {hipertrofia:2,fuerza:2,resistencia:2,rendimiento:2,salud:3},
+  'Cardio':                 {hipertrofia:1,fuerza:1,resistencia:5,rendimiento:2,salud:3},
+  'HIIT':                   {hipertrofia:1,fuerza:1,resistencia:5,rendimiento:3,salud:3},
+  'Sport':                  {hipertrofia:1,fuerza:1,resistencia:2,rendimiento:5,salud:2},
+  'Pilates':                {hipertrofia:2,fuerza:2,resistencia:2,rendimiento:2,salud:3}
+};
+// Banda de intensidad total del día (suma de 4 bloques) por objetivo. §8.1 Paso5
+const BANDA = {hipertrofia:[8,13],fuerza:[10,16],resistencia:[10,16],rendimiento:[10,15],salud:[7,12]};
+const REST_S = 90;   // descanso entre bloques
+const PREP_S = 15;   // preparación inicial
+
+/* ---------- CATÁLOGO DE BLOQUES ----------
+   m(cat,variante,formato,dur,region,intensidad,nivel,pesoDesaf, movimientos[[reps,nombre]]) */
+let _id=0;
+function m(cat,variante,formato,dur,region,inten,nivel,peso,movs){
+  return {id:'b'+(++_id),cat,variante,formato,dur,esLargo:dur>=12,region,inten,nivel,peso,
+          movs:movs.map(x=>({r:String(x[0]),n:x[1]}))};
+}
+const FMT = {ROUNDS:'COMPLETE {r} ROUNDS IN {d}\'', AMRAP:'AMRAP IN {d}\'', EMOM:'EVERY 60" X {d}\'',
+             INTERVAL:'30" ON / 30" OFF X {d}\'', WARMUP:'WARM UP · {d}\''};
+
+const CATALOG = [
+ /* ---- WARMUPS (4') ---- */
+ m('Upper Body','WARM UP','WARMUP',4,'upper',1,'principiante',false,[[8,'Kneeling Scapular Push Ups'],[8,'Asymmetric Scapular Rotation'],[8,'Bird Dogs'],[10,'Plank Shoulder Taps'],[8,'Sprawls']]),
+ m('Lower Body','WARM UP','WARMUP',4,'lower',1,'principiante',false,[[10,'Hip Swivels'],['12/12','Banded Clamshell'],[10,'Happy-Angry Cat'],['8/8','Cossacks']]),
+ m('Full Body','WARM UP','WARMUP',4,'full',1,'principiante',false,[[10,'Jumping Jacks'],[8,'Inchworm'],[10,'Air Squats'],['6/6','World’s Greatest Stretch']]),
+
+ /* ---- LARGOS (12-14') ---- */
+ m('Hypertrophy','UPPER BUILDING','ROUNDS',14,'upper',3,'avanzado',true,[[10,'Barbell Bench Press (peso desafiante)'],['10/10','Tall Plank Single-Arm Front Fly'],['10/10','Single-Arm DB Overhead Triceps Extensions']]),
+ m('Hypertrophy','LOWER BUILDING','ROUNDS',14,'lower',3,'avanzado',true,[[10,'Barbell Hip Thrust (peso desafiante)'],['10/10','SKB Single-Leg Hip Thrust'],[10,'Banded Squat + Lateral Leg Raises']]),
+ m('Traditional Hypertrophy','UPPER ACCESSORY','ROUNDS',14,'upper',3,'intermedio',false,[[12,'Seated DDB Arnold Press'],[10,'DKB Arnold Shoulder Press'],['10/10','Asymmetric SKB Shoulder Press']]),
+ m('Traditional Hypertrophy','BARBELL','ROUNDS',14,'upper',3,'avanzado',true,[[12,'Barbell Shoulder Press (peso desafiante)'],['90"','Rest'],[10,'DDB Lateral Flys']]),
+ m('Strength','BARBELL','ROUNDS',14,'lower',3,'avanzado',true,[[10,'Goblet Squat Jump'],[10,'Goblet Squat to Kneel Down'],[4,'Barbell Back Squat (peso desafiante)'],['90"','Rest'],[12,'Goblet Sumo Squat']]),
+ m('Strength','UPPER STRONG','ROUNDS',14,'upper',3,'avanzado',true,[[10,'Kneeling Scapular Push Ups'],[10,'Lying Scapular Y Retractions'],[4,'Weighted Strict Pull Ups (peso desafiante)'],['90"','Rest'],[10,'TRX Skull Crusher']]),
+ m('Combined Strength','HYBRID STRENGTH','AMRAP',14,'full',4,'avanzado',true,[[5,'Incline Barbell Chest Press (peso desafiante)'],[5,'DKB Sumo Deadlift (peso desafiante)'],[8,'Push Ups'],[10,'Good Morning'],['30"','Rest']]),
+ m('HRX Training','HYBRID','ROUNDS',14,'full',4,'avanzado',false,[[6,'Barbell Bent Over Row'],[4,'Barbell Hang Cluster'],['40"','Machine'],[4,'Barbell Muscle Clean'],[6,'Barbell Front Squat'],[8,'Barbell Lunges'],[6,'Barbell Deadlift'],[6,'Burpees Over The Bar']]),
+ m('HRX Training','HYBRID STRENGTH','AMRAP',14,'upper',4,'avanzado',true,[[4,'Weighted Strict Pull Ups (peso desafiante)'],[10,'SDB Pullover'],['90"','Machine']]),
+ m('FBA','PUSH POWER','ROUNDS',14,'full',4,'intermedio',false,[[12,'MB Push Ups'],[12,'MB Chest Throw'],[12,'Burpees']]),
+ m('Full Body','TRADITIONAL DB','ROUNDS',14,'full',3,'intermedio',false,[[8,'DDB Deadlift'],[6,'DDB Gunslinger'],['6/6','Russian Twists'],['10"','Plank Hold']]),
+ m('Full Body','BODYWEIGHT','EMOM',14,'full',2,'principiante',false,[[3,'TRX Row'],[6,'Lunges (Totales)'],[9,'Crunches']]),
+ m('Full Body','BODYWEIGHT','ROUNDS',12,'full',2,'principiante',false,[['10/10','Mountain Climbers'],[5,'Stiff Leg Vertical Jumps'],['10/10','Plank Jack Get Ups'],[2,'Walkouts']]),
+ m('Upper Body','BARBELL POWER','ROUNDS',14,'upper',4,'avanzado',true,[['6-8-10-12','Barbell Shoulder Press'],['6-8-10-12','Single-Arm DB Bent Over Row'],['6-8-10-12','Overhead Barbell Triceps Extensions']]),
+ m('Upper Body','UPPER ACCESSORY','EMOM',14,'upper',3,'avanzado',true,[[8,'Weighted Strict Pull Ups'],[12,'DDB Chest Press'],[12,'DDB Three-Way Flys']]),
+ m('Lower Body','HARD WORK','ROUNDS',14,'lower',3,'intermedio',false,[['10/10','Split Lunges'],[10,'Deficit DKB Sumo Deadlift'],['8/8','Squat Jump + Lateral Lunges']]),
+ m('Lower Body','LOWER PUMP','ROUNDS',14,'lower',3,'intermedio',false,[[15,'Banded KB Glute Bridge'],['30"/30"','Lunge Hold'],['10/10','Front Lunge + Reverse Lunge']]),
+ m('Midline','CORE CONTROL','ROUNDS',14,'core',3,'intermedio',false,[[12,'Alt. Tall Windmill Plank'],[10,'Plank Get Up Shoulder Taps'],[12,'Lateral Tuck to Toe Touch'],[15,'Bent Knee Prayer Crunches']]),
+ m('Midline','MIDLINE','AMRAP',14,'core',3,'intermedio',false,[[8,'Single-Leg Toes to Bar'],[15,'Prayer Crunches'],[12,'Plank Shoulder Tap + Windmill'],[8,'Twisting Plank']]),
+ m('Cardio','INTRO','ROUNDS',14,'full',2,'principiante',false,[[20,'Jumping Jacks'],[20,'Plank Jack'],[12,'Sprawl + Squat'],[20,'Backwards Skipping'],[15,'Plank In & Out']]),
+ m('Sport','STABILIZERS POWER','ROUNDS',14,'full',3,'avanzado',false,[['6/6','SKB Single-Leg Deadlift'],['5/5','Lunge to Heiden'],['5/5','DDB Renegade Rows']]),
+ m('Pilates','GROUND WORK','AMRAP',14,'core',1,'principiante',false,[['10/10','Ham Roller Asymmetric Slides'],['8/8','Lateral Plank + Side Jack Knives'],['10/10','Lateral Hip Raises']]),
+
+ /* ---- CORTOS (7-8') ---- */
+ m('Hypertrophy','UPPER BUILDING','EMOM',7,'upper',3,'intermedio',false,[[10,'Push Ups'],[10,'DDB Incline Flys Chest'],[10,'MB Deficit Push Up']]),
+ m('Hypertrophy','LOWER BUILDING','EMOM',7,'lower',3,'intermedio',false,[[10,'SKB Box Ham Curls'],[10,'DDB Romanian Deadlift'],['10/10','DKB Farmer Bulgarian Squat']]),
+ m('Hypertrophy','UPPER BUILDING','ROUNDS',8,'upper',3,'principiante',false,[[12,'Banded Triceps Push Down'],[12,'SDB Hex Triceps Overhead Extensions'],[12,'Banded Triceps Extensions']]),
+ m('Traditional Hypertrophy','PUSH CONTROL','ROUNDS',7,'upper',3,'principiante',false,[[8,'DDB Shoulder Press'],[8,'Banded Shoulder Press']]),
+ m('Traditional Hypertrophy','PUSH PUMP','ROUNDS',7,'upper',3,'intermedio',false,[[10,'SDB Shoulder Press'],[10,'DDB Kneeling Shoulder Press'],[12,'Goblet Shoulder Press']]),
+ m('Strength','LOWER ACCESSORY','ROUNDS',7,'lower',2,'principiante',false,[[10,'Goblet Squat'],[10,'Jumping Squats'],[10,'Lying Scapular T Retractions']]),
+ m('Combined Strength','GLOBAL CORE','AMRAP',7,'full',3,'intermedio',false,[[6,'DKB Gorilla Row'],['30"','Goblet Squat Hold'],[6,'Walkouts']]),
+ m('Combined Strength','HARD WORK','ROUNDS',7,'full',4,'avanzado',false,[[5,'DKB Deadlift'],[6,'Alt. DDB Push Press'],[8,'DKB Reverse Farmer Lunges'],['20"','Rest']]),
+ m('HRX Training','METABOLIC STORM','ROUNDS',7,'full',4,'avanzado',false,[[16,'DDB Renegade Rows'],[10,'DDB Gunslinger'],[8,'DDB Deadlift'],['30"','Hollow Hold']]),
+ m('FBA','FINISHER','ROUNDS',7,'core',3,'intermedio',false,[[10,'Hollow Rock To Tuck Up'],[10,'Toe Touches']]),
+ m('Full Body','MIDLINE','EMOM',7,'core',2,'principiante',false,[['6/6','MB Single-Leg Dead Bug'],['3/3','Leg Levers']]),
+ m('Full Body','FINISHER','ROUNDS',7,'full',2,'principiante',false,[[10,'Back Extensions'],['10"','Hollow Hold']]),
+ m('Upper Body','INTRO','ROUNDS',7,'upper',2,'principiante',false,[[12,'SDB Shoulder Press'],[10,'Goblet Biceps Curls'],['25"','DDB Lateral Fly Hold']]),
+ m('Upper Body','PUSH PUMP','ROUNDS',7,'upper',3,'intermedio',false,[[12,'Goblet Push Press'],[12,'DDB Overhead Triceps Extensions'],[12,'DDB Incline Hammer Biceps Curls']]),
+ m('Lower Body','ASYMMETRY WORK','ROUNDS',7,'lower',2,'intermedio',false,[[12,'Barbell Glute Bridge'],['10/10','Banded Single-Leg Glute Bridge'],['25"/25"','Lunge Hold']]),
+ m('Lower Body','INTRO','ROUNDS',7,'lower',2,'principiante',false,[['12/12','Banded Glute Bridge Abduction'],['20"/20"','Banded Glute Bridge Hold + Abduction'],['30"','Squat Hold']]),
+ m('Midline','MIDLINE ON FIRE','AMRAP',7,'core',3,'intermedio',false,[[12,'Hanging Knees To Elbow'],[15,'Zombie Sit Ups'],[12,'Dynamic Tall Plank']]),
+ m('Midline','ASYMMETRY WORK','AMRAP',7,'core',2,'intermedio',false,[[10,'Pallof split stance change'],['6/6','Reverse Lunge + Pallof Rotation'],['30"/30"','Copenhagen Plank']]),
+ m('HIIT','BODYWEIGHT','INTERVAL',7,'full',4,'principiante',false,[[1,'Air Squat'],[1,'Skipping'],[1,'Hollow Rocks'],[1,'Squats In & Out'],[1,'Tall Plank'],[1,'Plank Jack'],[1,'V-Sit Ups']]),
+ m('HIIT','NO IMPACT','INTERVAL',7,'full',3,'intermedio',false,[[1,'SKB Skier Swing'],[1,'Sit Ups'],[1,'SKB Single-Arm Swing + Pull'],[1,'DKB Bent Over Row'],[1,'KB Halo'],[1,'KB Russian Twist'],[1,'SKB Gunslinger']]),
+ m('Sport','SPEED POWER','AMRAP',7,'lower',3,'intermedio',false,[[10,'Heidens'],['6/6','Skater Squats'],[8,'Side Skip to Heiden']]),
+ m('Sport','CORE CONTROL','AMRAP',7,'core',3,'intermedio',false,[['8/8','DKB Renegade Rows'],['30"','Hollow Hold'],[10,'Hollow Body Alt. Shotguns']]),
+ m('Pilates','INTRO','ROUNDS',7,'core',1,'principiante',false,[[10,'Ham Roller Bridge slides'],['10/10','Ham Roller Quadruped Abductions'],['40"','Ham Roller Adho Mukha']])
+];
+const LONGS = CATALOG.filter(b=>b.esLargo);
+const SHORTS = CATALOG.filter(b=>!b.esLargo && b.formato!=='WARMUP');
+const WARMS = CATALOG.filter(b=>b.formato==='WARMUP');
+
+/* ---------- TRADUCCIÓN BILINGÜE (ES/EN) ---------- */
+const TRANS = {
+ 'Kneeling Scapular Push Ups':'Flexiones escapulares de rodillas','Asymmetric Scapular Rotation':'Rotación escapular asimétrica',
+ 'Bird Dogs':'Bird dog','Plank Shoulder Taps':'Plancha con toques de hombro','Sprawls':'Sprawls',
+ 'Hip Swivels':'Giros de cadera','Banded Clamshell':'Almeja con banda','Happy-Angry Cat':'Gato feliz-enojado','Cossacks':'Sentadilla cosaca',
+ 'Jumping Jacks':'Saltos de tijera','Inchworm':'Oruga','Air Squats':'Sentadillas libres','World’s Greatest Stretch':'Movilidad completa',
+ 'Barbell Bench Press':'Press de banca con barra','Tall Plank Single-Arm Front Fly':'Plancha alta con apertura frontal a un brazo',
+ 'Single-Arm DB Overhead Triceps Extensions':'Extensión de tríceps sobre la cabeza a un brazo','Barbell Hip Thrust':'Empuje de cadera con barra',
+ 'SKB Single-Leg Hip Thrust':'Empuje de cadera a una pierna (pesa rusa)','Banded Squat + Lateral Leg Raises':'Sentadilla con banda + elevaciones laterales',
+ 'Seated DDB Arnold Press':'Press Arnold sentado (2 mancuernas)','DKB Arnold Shoulder Press':'Press Arnold de hombros (2 pesas rusas)',
+ 'Asymmetric SKB Shoulder Press':'Press de hombros asimétrico (pesa rusa)','Barbell Shoulder Press':'Press de hombros con barra',
+ 'Rest':'Descanso','DDB Lateral Flys':'Vuelos laterales (2 mancuernas)','Goblet Squat Jump':'Sentadilla goblet con salto',
+ 'Goblet Squat to Kneel Down':'Sentadilla goblet a arrodillado','Barbell Back Squat':'Sentadilla trasera con barra','Goblet Sumo Squat':'Sentadilla sumo goblet',
+ 'Lying Scapular Y Retractions':'Retracción escapular en Y tumbado','Weighted Strict Pull Ups':'Dominadas estrictas con peso',
+ 'TRX Skull Crusher':'Rompecráneos en TRX','Incline Barbell Chest Press':'Press inclinado de pecho con barra',
+ 'DKB Sumo Deadlift':'Peso muerto sumo (2 pesas rusas)','Push Ups':'Flexiones de brazos','Good Morning':'Buenos días (good morning)',
+ 'Barbell Bent Over Row':'Remo con barra inclinado','Barbell Hang Cluster':'Cluster colgado con barra','Machine':'Máquina de cardio',
+ 'Barbell Muscle Clean':'Cargada de fuerza con barra','Barbell Front Squat':'Sentadilla frontal con barra','Barbell Lunges':'Estocadas con barra',
+ 'Barbell Deadlift':'Peso muerto con barra','Burpees Over The Bar':'Burpees sobre la barra','SDB Pullover':'Pullover (mancuerna)',
+ 'MB Push Ups':'Flexiones con balón medicinal','MB Chest Throw':'Lanzamiento de pecho con balón','Burpees':'Burpees',
+ 'DDB Deadlift':'Peso muerto (2 mancuernas)','DDB Gunslinger':'Gunslinger (2 mancuernas)','Russian Twists':'Giros rusos','Plank Hold':'Plancha isométrica',
+ 'TRX Row':'Remo en TRX','Lunges (Totales)':'Estocadas (totales)','Crunches':'Abdominales crunch','Mountain Climbers':'Escaladores',
+ 'Stiff Leg Vertical Jumps':'Saltos verticales con piernas rígidas','Plank Jack Get Ups':'Plancha jack con incorporación','Walkouts':'Caminata a plancha',
+ 'Single-Arm DB Bent Over Row':'Remo inclinado a un brazo (mancuerna)','Overhead Barbell Triceps Extensions':'Extensión de tríceps con barra sobre la cabeza',
+ 'DDB Chest Press':'Press de pecho (2 mancuernas)','DDB Three-Way Flys':'Vuelos en tres direcciones (2 mancuernas)','Split Lunges':'Estocadas divididas',
+ 'Deficit DKB Sumo Deadlift':'Peso muerto sumo con déficit (2 pesas rusas)','Squat Jump + Lateral Lunges':'Sentadilla con salto + estocadas laterales',
+ 'Banded KB Glute Bridge':'Puente de glúteos con banda y pesa rusa','Lunge Hold':'Estocada isométrica','Front Lunge + Reverse Lunge':'Estocada al frente + estocada atrás',
+ 'Alt. Tall Windmill Plank':'Plancha molino alterna','Plank Get Up Shoulder Taps':'Plancha con incorporación y toques de hombro',
+ 'Lateral Tuck to Toe Touch':'Encogimiento lateral a toque de puntas','Bent Knee Prayer Crunches':'Crunch de plegaria con rodillas flexionadas',
+ 'Single-Leg Toes to Bar':'Punteras a la barra a una pierna','Prayer Crunches':'Crunch de plegaria','Plank Shoulder Tap + Windmill':'Plancha con toque de hombro + molino',
+ 'Twisting Plank':'Plancha con giro','Plank Jack':'Plancha jack','Sprawl + Squat':'Sprawl + sentadilla','Backwards Skipping':'Skipping hacia atrás',
+ 'Plank In & Out':'Plancha adentro y afuera','SKB Single-Leg Deadlift':'Peso muerto a una pierna (pesa rusa)','Lunge to Heiden':'Estocada a salto lateral',
+ 'DDB Renegade Rows':'Remo renegado (2 mancuernas)','Ham Roller Asymmetric Slides':'Deslizamientos asimétricos con rodillo',
+ 'Lateral Plank + Side Jack Knives':'Plancha lateral + navaja lateral','Lateral Hip Raises':'Elevaciones laterales de cadera',
+ 'DDB Incline Flys Chest':'Vuelos inclinados de pecho (2 mancuernas)','MB Deficit Push Up':'Flexión con déficit sobre balón',
+ 'SKB Box Ham Curls':'Curl femoral en caja (pesa rusa)','DDB Romanian Deadlift':'Peso muerto rumano (2 mancuernas)',
+ 'DKB Farmer Bulgarian Squat':'Sentadilla búlgara tipo granjero (2 pesas rusas)','Banded Triceps Push Down':'Extensión de tríceps con banda (empuje)',
+ 'SDB Hex Triceps Overhead Extensions':'Extensión de tríceps sobre la cabeza (mancuerna hex)','Banded Triceps Extensions':'Extensión de tríceps con banda',
+ 'DDB Shoulder Press':'Press de hombros (2 mancuernas)','Banded Shoulder Press':'Press de hombros con banda','SDB Shoulder Press':'Press de hombros (mancuerna)',
+ 'DDB Kneeling Shoulder Press':'Press de hombros de rodillas (2 mancuernas)','Goblet Shoulder Press':'Press de hombros goblet','Goblet Squat':'Sentadilla goblet',
+ 'Jumping Squats':'Sentadillas con salto','Lying Scapular T Retractions':'Retracción escapular en T tumbado','DKB Gorilla Row':'Remo gorila (2 pesas rusas)',
+ 'Goblet Squat Hold':'Sentadilla goblet isométrica','DKB Deadlift':'Peso muerto (2 pesas rusas)','Alt. DDB Push Press':'Push press alterno (2 mancuernas)',
+ 'DKB Reverse Farmer Lunges':'Estocadas atrás tipo granjero (2 pesas rusas)','Hollow Hold':'Hollow hold isométrico','Hollow Rock To Tuck Up':'Balanceo hollow a encogimiento',
+ 'Toe Touches':'Toque de puntas','MB Single-Leg Dead Bug':'Dead bug a una pierna con balón','Leg Levers':'Elevaciones de piernas','Back Extensions':'Extensiones de espalda',
+ 'Goblet Biceps Curls':'Curl de bíceps goblet','DDB Lateral Fly Hold':'Vuelo lateral isométrico (2 mancuernas)','Goblet Push Press':'Push press goblet',
+ 'DDB Overhead Triceps Extensions':'Extensión de tríceps sobre la cabeza (2 mancuernas)','DDB Incline Hammer Biceps Curls':'Curl martillo inclinado (2 mancuernas)',
+ 'Barbell Glute Bridge':'Puente de glúteos con barra','Banded Single-Leg Glute Bridge':'Puente de glúteos a una pierna con banda',
+ 'Banded Glute Bridge Abduction':'Puente de glúteos con abducción y banda','Banded Glute Bridge Hold + Abduction':'Puente de glúteos isométrico + abducción',
+ 'Squat Hold':'Sentadilla isométrica','Hanging Knees To Elbow':'Rodillas al codo colgado','Zombie Sit Ups':'Abdominales zombi','Dynamic Tall Plank':'Plancha alta dinámica',
+ 'Pallof split stance change':'Pallof con cambio de postura','Reverse Lunge + Pallof Rotation':'Estocada atrás + rotación Pallof','Copenhagen Plank':'Plancha de Copenhague',
+ 'Air Squat':'Sentadilla libre','Skipping':'Skipping','Hollow Rocks':'Balanceos hollow','Squats In & Out':'Sentadillas adentro y afuera','Tall Plank':'Plancha alta',
+ 'V-Sit Ups':'Abdominales en V','SKB Skier Swing':'Swing esquiador (pesa rusa)','Sit Ups':'Abdominales completos','SKB Single-Arm Swing + Pull':'Swing a un brazo + tirón (pesa rusa)',
+ 'DKB Bent Over Row':'Remo inclinado (2 pesas rusas)','KB Halo':'Halo con pesa rusa','KB Russian Twist':'Giro ruso con pesa rusa','SKB Gunslinger':'Gunslinger (pesa rusa)',
+ 'Heidens':'Saltos laterales (Heidens)','Skater Squats':'Sentadilla del patinador','Side Skip to Heiden':'Skip lateral a Heiden','Hollow Body Alt. Shotguns':'Hollow body con shotguns alternos',
+ 'Ham Roller Bridge slides':'Puente con deslizamiento en rodillo','Ham Roller Quadruped Abductions':'Abducción en cuadrupedia con rodillo','Ham Roller Adho Mukha':'Perro boca abajo con rodillo'
+};
+// Media manual por ejercicio (override): nombre EN base -> url de imagen/GIF/video.
+const MEDIA = {};
+// Base libre de dominio público (Free Exercise DB). Imágenes vía CDN de GitHub.
+const FREE_BASE='https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/';
+// Mapeo de nuestros ejercicios -> slug en la base libre (los que existen; el resto cae a placeholder).
+const MEDIA_SLUG={
+ 'Barbell Bench Press':'Barbell_Bench_Press_-_Medium_Grip','Incline Barbell Chest Press':'Barbell_Incline_Bench_Press_-_Medium_Grip',
+ 'Barbell Back Squat':'Barbell_Full_Squat','Barbell Front Squat':'Front_Barbell_Squat','Barbell Deadlift':'Barbell_Deadlift',
+ 'Barbell Shoulder Press':'Barbell_Shoulder_Press','Barbell Bent Over Row':'Bent_Over_Barbell_Row','Barbell Lunges':'Barbell_Lunge',
+ 'DDB Romanian Deadlift':'Romanian_Deadlift','Push Ups':'Pushups','Push Up':'Pushups','Goblet Squat':'Goblet_Squat_With_Kettlebell',
+ 'Goblet Sumo Squat':'Goblet_Squat_With_Kettlebell','Good Morning':'Good_Morning','Burpees':'Burpee','Mountain Climbers':'Mountain_Climbers',
+ 'Crunches':'Crunches','Jumping Jacks':'Jumping_Jacks','Russian Twists':'Russian_Twist','Sit Ups':'Sit-Up',
+ 'Air Squats':'Bodyweight_Squat','Air Squat':'Bodyweight_Squat','Jumping Squats':'Jump_Squat','Skipping':'Rope_Jumping',
+ 'Goblet Biceps Curls':'Dumbbell_Bicep_Curl','Good Mornings':'Good_Morning'
+};
+function mediaUrlFor(n){ const b=baseName(n); if(MEDIA[b]) return MEDIA[b]; if(MEDIA_SLUG[b]) return FREE_BASE+MEDIA_SLUG[b]+'/0.jpg'; return null; }
+window.techFallback=function(img){ const box=img.closest('.mediaB'); if(box) box.innerHTML=PLACEHOLDER_MEDIA; };
+const PLACEHOLDER_MEDIA=`<div style="font-size:34px">🎬</div><div>Demo de técnica próximamente</div><div style="font-size:12px">Este ejercicio aún no tiene medio disponible en la base libre</div>`;
+function baseName(n){return n.replace(/\s*\(peso desafiante\)$/i,'');}
+function traducir(n){
+  const chall=/\(peso desafiante\)$/i.test(n); const b=baseName(n);
+  const es=TRANS[b]||b;
+  return {es: es+(chall?' (peso desafiante)':''), en: b+(chall?' (challenging weight)':'')};
+}
+const MAT_ES={peso_corporal:'Peso corporal',banda:'Banda elástica',mancuerna_simple:'Mancuerna',doble_mancuerna:'2 mancuernas',
+  pesa_rusa_simple:'Pesa rusa',doble_pesa_rusa:'2 pesas rusas',balon_medicinal:'Balón medicinal',suspension_trx:'TRX',barra:'Barra',maquina:'Máquina',rodillo:'Rodillo'};
+function inferMat(n){
+  const s=n.toLowerCase();
+  if(/barbell|\bbar\b/.test(s))return'barra'; if(/dkb|double kettlebell/.test(s))return'doble_pesa_rusa';
+  if(/skb|single.*kettlebell|\bkb\b/.test(s))return'pesa_rusa_simple'; if(/ddb/.test(s))return'doble_mancuerna';
+  if(/sdb|\bdb\b|dumbbell|goblet/.test(s))return'mancuerna_simple'; if(/banded/.test(s))return'banda';
+  if(/\bmb\b|medicine|med ball/.test(s))return'balon_medicinal'; if(/trx/.test(s))return'suspension_trx';
+  if(/ham roller|roller/.test(s))return'rodillo'; if(/machine/.test(s))return'maquina'; return'peso_corporal';
+}
+/* ---------- GALERÍA DE TÉCNICA ---------- */
+function openTech(encN){
+  const n=decodeURIComponent(encN), t=traducir(n), mat=inferMat(baseName(n)), url=mediaUrlFor(n);
+  const isVid=url&&/\.(mp4|webm|gif)$/i.test(url);
+  const mediaHTML = url
+    ? (isVid && /\.(mp4|webm)$/i.test(url)
+        ? `<video src="${url}" autoplay loop muted playsinline onerror="techFallback(this)"></video>`
+        : `<img src="${url}" alt="" onerror="techFallback(this)">`)
+    : PLACEHOLDER_MEDIA;
+  const credit = url && MEDIA_SLUG[baseName(n)] ? `<div class="mven" style="margin-top:6px">Imagen: Free Exercise DB (dominio público)</div>` : '';
+  document.getElementById('modal').innerHTML=`<div class="overlay" id="ov"><div class="sheet">
+    <div class="row between"><div style="font-weight:900;font-size:19px;line-height:1.15">${esc(t.es)}</div>
+      <button class="btn ghost sm" id="cl">✕</button></div>
+    <div class="mven" style="margin:2px 0 12px">${esc(t.en)}</div>
+    <div class="mediaB">${mediaHTML}</div>
+    ${credit}
+    <div style="margin:12px 0 4px"><span class="matchip">${MAT_ES[mat]}</span></div>
+    <div class="cue" style="margin-top:8px">Mirá la demo para dominar la técnica antes de ejecutar. Controlá el rango de movimiento y la respiración; ajustá el peso a tu nivel.</div>
+  </div></div>`;
+  document.getElementById('cl').onclick=()=>document.getElementById('modal').innerHTML='';
+  document.getElementById('ov').onclick=e=>{if(e.target.id==='ov')document.getElementById('modal').innerHTML='';};
+}
+window.openTech=openTech;
+
+/* ---------- SEEDED RNG (determinismo) ---------- */
+function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+
+/* ---------- MOTOR DETERMINISTA ---------- */
+function tallyRegions(last3){const c={};last3.forEach(s=>(s.regiones||[]).forEach(r=>c[r]=(c[r]||0)+1));return c;}
+function tallyCats(hist){const c={};hist.slice(-6).forEach(s=>(s.cats||[]).forEach(k=>c[k]=(c[k]||0)+1));return c;}
+
+function regionPlan(obj,rc){
+  const up=rc.upper||0, lo=rc.lower||0;
+  if(obj==='resistencia') return {long:['full','full'], short:['full','core']};
+  if(obj==='rendimiento') return {long:['full','lower'], short:['full','core']};
+  // hipertrofia / fuerza / salud -> alternar upper/lower
+  const l = up>lo ? ['lower','upper'] : ['upper','lower'];
+  return {long:l, short:['core','full']};
+}
+function score(b,obj,slotRegion,used,mixDeliv,userNivel,chosen,rng){
+  const w = (WEIGHTS[b.cat]||{})[obj]||1;
+  const deliv = mixDeliv[b.cat]||0;
+  const deficit = 1/(1+deliv*0.6);
+  let regionM = b.region===slotRegion?1.6 : (b.region==='full'||slotRegion==='full'?1.0:0.55);
+  const anti = used.has(b.id)?0.15:1.0;
+  const sameCatToday = chosen.some(c=>c.cat===b.cat)?0.5:1.0;
+  const overLevel = NIVEL_RANK[b.nivel] > NIVEL_RANK[userNivel] ? 0.75 : 1.0;
+  const jit = 0.85 + rng()*0.3;
+  return w*deficit*regionM*anti*sameCatToday*overLevel*jit;
+}
+function pickBest(pool,obj,slotRegion,used,mixDeliv,userNivel,chosen,rng){
+  // Muestreo ponderado por puntaje^gamma (determinista via rng).
+  // gamma>1 acentúa las categorías dominantes, pero TODAS conservan probabilidad >0
+  // -> ninguna categoría queda excluida por objetivo (§8.4). p.ej. hipertrofia igual
+  //    aparece de vez en cuando en un objetivo de fútbol, en baja proporción.
+  const GAMMA=1.5;
+  const cands=pool.filter(b=>!chosen.some(c=>c.id===b.id));
+  if(!cands.length) return null;
+  const scored=cands.map(b=>({b,s:Math.pow(Math.max(0.0001,score(b,obj,slotRegion,used,mixDeliv,userNivel,chosen,rng)),GAMMA)}));
+  const tot=scored.reduce((a,x)=>a+x.s,0);
+  let rv=rng()*tot;
+  for(const x of scored){ rv-=x.s; if(rv<=0) return x.b; }
+  return scored[scored.length-1].b;
+}
+function enforce(chosen,obj,userNivel,rng){
+  const uRank=NIVEL_RANK[userNivel];
+  // TOPE por nivel: máx 2 bloques por encima del nivel del usuario
+  const over=()=>chosen.filter(b=>NIVEL_RANK[b.nivel]>uRank);
+  let guard=0;
+  while(over().length>2 && guard++<6){
+    // reemplazar el bloque "over" de mayor intensidad por alternativa <= nivel del mismo tipo
+    const offenders=over().sort((a,b)=>b.inten-a.inten);
+    const bad=offenders[0], pool=bad.esLargo?LONGS:SHORTS;
+    const alt=pool.filter(b=>NIVEL_RANK[b.nivel]<=uRank && !chosen.some(c=>c.id===b.id))
+                  .sort((a,b)=>WEIGHTS[b.cat][obj]-WEIGHTS[a.cat][obj])[0];
+    if(!alt) break;
+    chosen[chosen.indexOf(bad)]=alt;
+  }
+  // INTENSIDAD: nunca 4 bloques intensidad 4; y respetar banda superior
+  const band=BANDA[obj]; guard=0;
+  const sum=()=>chosen.reduce((a,b)=>a+b.inten,0);
+  const allRed=()=>chosen.every(b=>b.inten===4);
+  while((allRed() || sum()>band[1]) && guard++<6){
+    const hi=[...chosen].sort((a,b)=>b.inten-a.inten)[0];
+    const pool=hi.esLargo?LONGS:SHORTS;
+    const alt=pool.filter(b=>b.inten<hi.inten && !chosen.some(c=>c.id===b.id))
+                  .sort((a,b)=>WEIGHTS[b.cat][obj]-WEIGHTS[a.cat][obj])[0];
+    if(!alt) break;
+    chosen[chosen.indexOf(hi)]=alt;
+  }
+  return chosen;
+}
+function generarRutina(obj,nivel,hist,seedExtra){
+  const last3=hist.slice(-3);
+  const seed=hashStr(obj+'|'+nivel+'|'+(hist.length)+'|'+(seedExtra||''));
+  const rng=mulberry32(seed);
+  const used=new Set(); last3.forEach(s=>(s.blockIds||[]).forEach(id=>used.add(id)));
+  const rc=tallyRegions(last3), mixDeliv=tallyCats(hist);
+  const plan=regionPlan(obj,rc);
+  const chosen=[];
+  // 2 largos
+  plan.long.forEach(r=>{const p=pickBest(LONGS,obj,r,used,mixDeliv,nivel,chosen,rng); if(p)chosen.push(p);});
+  // 2 cortos
+  plan.short.forEach(r=>{const p=pickBest(SHORTS,obj,r,used,mixDeliv,nivel,chosen,rng); if(p)chosen.push(p);});
+  // ordenar: largo, corto, largo, corto
+  const largos=chosen.filter(b=>b.esLargo), cortos=chosen.filter(b=>!b.esLargo);
+  let ordered=[largos[0],cortos[0],largos[1],cortos[1]].filter(Boolean);
+  enforce(ordered,obj,nivel,rng);
+  // warmup segun region dominante de los largos
+  const domReg=(ordered.find(b=>b.esLargo)||{}).region||'full';
+  const warm=WARMS.find(w=>w.region===domReg)||WARMS.find(w=>w.region==='full');
+  const durTot = warm.dur + ordered.reduce((a,b)=>a+b.dur,0) + (ordered.length)*(REST_S/60);
+  return {fecha:todayKey(), objetivo:obj, nivel, warmup:warm, bloques:ordered,
+          durEstim:Math.round(durTot), removed:[]};
+}
+
+/* ---------- STATE ---------- */
+function defState(){return {profile:null, routine:null};}
+let S = Store.get('gymai_v1') || defState();
+function save(){Store.set('gymai_v1',S);}
+function todayKey(){const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+
+/* ---------- HELPERS UI ---------- */
+const $=(s,el=document)=>el.querySelector(s);
+const app=$('#app'), modalEl=$('#modal');
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function fmtFormato(b){return (FMT[b.formato]||'{d}\'').replace('{d}',b.dur).replace('{r}',roundsGuess(b));}
+function roundsGuess(b){return b.formato==='ROUNDS'?(b.esLargo?4:3):'';}
+function icolor(i){return ['','var(--i1)','var(--i2)','var(--i3)','var(--i4)'][i];}
+function dots(i){let h='';for(let k=1;k<=4;k++)h+=`<div class="dot" style="background:${k<=i?icolor(i):'#e0e0e0'}"></div>`;return `<div class="dots">${h}<span class="region" style="margin-left:8px">Intensidad ${i}/4</span></div>`;}
+function movsHTML(b){return b.movs.map(mv=>{const t=traducir(mv.n);
+  return `<div class="mv" onclick="openTech('${encodeURIComponent(mv.n)}')"><b>${esc(mv.r)}</b> ${esc(t.es)} <span class="mvi">ⓘ</span><div class="mven">${esc(t.en)}</div></div>`;}).join('');}
+function toast(msg){const t=$('#toast');t.innerHTML=`<div class="toast">${esc(msg)}</div>`;setTimeout(()=>t.innerHTML='',2200);}
+function mmss(s){s=Math.max(0,Math.round(s));const m=Math.floor(s/60),ss=s%60;return m+':'+String(ss).padStart(2,'0');}
+
+/* ---------- ROUTER ---------- */
+function render(){
+  modalEl.innerHTML='';
+  if(!S.profile){ return screenOnboarding(); }
+  screenHome();
+}
+
+/* ---------- ONBOARDING ---------- */
+let _tmpObj=null,_tmpNivel=null;
+function screenOnboarding(){
+  _tmpObj=_tmpObj||null;_tmpNivel=_tmpNivel||null;
+  app.innerHTML=`
+    <div class="topbar"><div class="logo"><span>GYM</span> AI</div></div>
+    <h2 style="font-size:28px;font-weight:900;letter-spacing:-.03em;">Tu entrenador diario</h2>
+    <p class="muted" style="margin:6px 0 4px;font-size:14px;">Elegí tu objetivo y tu nivel. En segundos te armamos la rutina de hoy.</p>
+    <div class="label">¿Cuál es tu objetivo?</div>
+    <div id="objs" class="grid2"></div>
+    <div class="label">¿Cuál es tu nivel?</div>
+    <div id="nivs" class="grid2" style="grid-template-columns:1fr 1fr 1fr;"></div>
+    <div style="height:16px"></div>
+    <button id="go" class="btn dark" style="opacity:.5" disabled>Empezar</button>
+    <div class="footnote">Podés cambiar objetivo y nivel cuando quieras, sin perder tu historial.</div>
+  `;
+  const oc=$('#objs');
+  OBJETIVOS.forEach(o=>{const d=document.createElement('div');d.className='selcard'+(_tmpObj===o.id?' on':'');
+    d.innerHTML=`<div class="t">${o.t}</div><div class="d">${o.d}</div>`;
+    d.onclick=()=>{_tmpObj=o.id;screenOnboarding();};oc.appendChild(d);});
+  const nc=$('#nivs');
+  NIVELES.forEach(n=>{const d=document.createElement('div');d.className='selcard'+(_tmpNivel===n.id?' on':'');
+    d.style.textAlign='center';d.innerHTML=`<div class="t" style="font-size:14px">${n.t}</div>`;
+    d.onclick=()=>{_tmpNivel=n.id;screenOnboarding();};nc.appendChild(d);});
+  const g=$('#go');
+  if(_tmpObj&&_tmpNivel){g.disabled=false;g.style.opacity=1;
+    g.onclick=()=>{S.profile={objetivo:_tmpObj,nivel:_tmpNivel,historial:[],contador:{}};save();toast('¡Listo! Objetivo configurado');render();};}
+}
+
+/* ---------- HOME ---------- */
+function objName(id){return (OBJETIVOS.find(o=>o.id===id)||{}).t||id;}
+function nivName(id){return (NIVELES.find(o=>o.id===id)||{}).t||id;}
+function streakThisWeek(){const h=S.profile.historial;return h.length;}
+function screenHome(){
+  const p=S.profile;
+  app.innerHTML=`
+    <div class="topbar"><div class="logo"><span>GYM</span> AI</div>
+      <div class="pill grey" id="perfilBtn" style="cursor:pointer">${objName(p.objetivo)} · ${nivName(p.nivel)}</div></div>
+    <div class="card">
+      <div class="streak"><div class="num">${streakThisWeek()}</div>
+        <div><div style="font-weight:800">Entrenamientos</div><div class="muted" style="font-size:13px">registrados en total</div></div></div>
+    </div>
+    ${nudgeHTML()}
+    <div class="card" style="text-align:center;">
+      <div style="font-weight:900;font-size:20px;margin-bottom:4px">Rutina de hoy</div>
+      <div class="muted" style="font-size:13px;margin-bottom:14px">4 bloques + entrada en calor · 50-60 min, alineada a <b>${objName(p.objetivo)}</b></div>
+      <button id="gen" class="btn">Generar rutina de hoy</button>
+    </div>
+    <button id="histBtn" class="btn ghost">Ver historial (${p.historial.length})</button>
+    <div class="footnote">${Store.ok?'Tus datos se guardan en este dispositivo.':'⚠ Persistencia no disponible en este contexto: los datos se pierden al recargar. Abrí la app servida (ver notas).'}</div>
+  `;
+  $('#gen').onclick=()=>{S.routine=generarRutina(p.objetivo,p.nivel,p.historial,'');save();screenRoutine();};
+  $('#histBtn').onclick=screenHistory;
+  $('#perfilBtn').onclick=screenPerfil;
+}
+function nudgeHTML(){
+  // §11.1: categorías relevantes removidas en >=3 de últimas 5 sesiones
+  const h=S.profile.historial.slice(-5); if(h.length<3) return '';
+  const cnt={}; h.forEach(s=>(s.removed||[]).forEach(c=>cnt[c]=(cnt[c]||0)+1));
+  const obj=S.profile.objetivo;
+  const flagged=Object.keys(cnt).filter(c=>cnt[c]>=3 && (WEIGHTS[c]?.[obj]||0)>=3);
+  if(!flagged.length) return '';
+  const c=flagged[0];
+  return `<div class="banner">👀 Venís salteando bloques de <b>${c}</b> en tus últimas clases. Es un estímulo importante para tu objetivo de <b>${objName(obj)}</b> — considerá dejarlo en la próxima.</div>`;
+}
+
+/* ---------- ROUTINE PREVIEW ---------- */
+function blockCardHTML(b,idx,isWarm){
+  return `<div class="blk ${isWarm?'warm':''}" data-idx="${idx}">
+    <div class="tag">${isWarm?'Warm-up':'Bloque '+(idx+1)}</div>
+    <div class="time"><b>${b.dur}'</b></div>
+    <h3>${esc(b.cat)}</h3>
+    <div class="sub">${esc(fmtFormato(b))} · ${esc(b.variante)}</div>
+    <div class="movs">${movsHTML(b)}</div>
+    ${isWarm?'':dots(b.inten)}
+    ${isWarm?'':`<div class="blkfoot"><span class="region">${regLabel(b.region)}</span>
+      <button class="btn ghost sm" onclick="openEdit(${idx})">Cambiar bloque</button></div>`}
+  </div>`;
+}
+function regLabel(r){return {upper:'Tren superior',lower:'Tren inferior',full:'Cuerpo completo',core:'Core'}[r]||r;}
+function screenRoutine(){
+  const r=S.routine,p=S.profile;
+  app.innerHTML=`
+    <div class="topbar"><div class="row" style="gap:8px"><button class="btn ghost sm" id="back">‹</button>
+      <div style="font-weight:900;font-size:20px">Rutina de hoy</div></div>
+      <div class="pill">${objName(p.objetivo)}</div></div>
+    <div class="card row between" style="padding:14px 16px">
+      <div><div class="muted" style="font-size:12px">Duración estimada</div>
+      <div style="font-weight:900;font-size:22px">${r.durEstim} min</div></div>
+      <button id="regen" class="btn ghost sm">↻ Regenerar</button>
+    </div>
+    <div id="blocks"></div>
+    <button id="start" class="btn">Iniciar rutina</button>
+    <div class="navwarn">${warnIntensidad(r)}</div>
+  `;
+  const bc=$('#blocks');
+  bc.insertAdjacentHTML('beforeend',blockCardHTML(r.warmup,-1,true));
+  r.bloques.forEach((b,i)=>bc.insertAdjacentHTML('beforeend',blockCardHTML(b,i,false)));
+  $('#back').onclick=render;
+  $('#regen').onclick=()=>{S.routine=generarRutina(p.objetivo,p.nivel,p.historial,String(Math.floor(performance.now())));save();screenRoutine();};
+  $('#start').onclick=startExec;
+}
+function warnIntensidad(r){
+  const reds=r.bloques.filter(b=>b.inten===4).length;
+  const over=r.bloques.filter(b=>NIVEL_RANK[b.nivel]>NIVEL_RANK[S.profile.nivel]).length;
+  let w=[];
+  if(reds>=3) w.push('Día exigente: '+reds+' bloques de máxima intensidad.');
+  if(over>0) w.push(over+' bloque(s) por encima de tu nivel — regulá el peso o cambialos si querés.');
+  return w.join(' ');
+}
+
+/* ---------- EDIT (2 niveles) ---------- */
+function openEdit(idx){
+  const r=S.routine, cur=r.bloques[idx], isLong=cur.esLargo;
+  const pool=isLong?LONGS:SHORTS;
+  // Nivel 1: alternativas sugeridas (mismo tipo, buena afinidad, no repetidas hoy)
+  const chosenIds=new Set([r.warmup.id,...r.bloques.map(b=>b.id)]);
+  const sug=pool.filter(b=>!chosenIds.has(b.id))
+    .map(b=>({b,s:(WEIGHTS[b.cat][S.profile.objetivo]||1)*(b.region===cur.region?1.5:1)}))
+    .sort((a,b)=>b.s-a.s).slice(0,5).map(x=>x.b);
+  const allByCat={}; pool.forEach(b=>{(allByCat[b.cat]=allByCat[b.cat]||[]).push(b);});
+  modalEl.innerHTML=`<div class="overlay" id="ov"><div class="sheet">
+    <div class="row between"><div style="font-weight:900;font-size:18px">Cambiar bloque ${isLong?'largo':'corto'}</div>
+      <button class="btn ghost sm" id="cl">✕</button></div>
+    <div class="muted" style="font-size:13px;margin:6px 0 14px">Estás cambiando: <b>${esc(cur.cat)} · ${esc(cur.variante)}</b></div>
+    <div class="label" style="margin-top:0">Alternativas sugeridas</div>
+    <div id="sug"></div>
+    <div class="label">O elegí cualquier bloque del catálogo</div>
+    <div id="all"></div>
+  </div></div>`;
+  const sc=$('#sug');
+  sug.forEach(b=>sc.appendChild(altEl(b,idx)));
+  const ac=$('#all');
+  Object.keys(allByCat).sort().forEach(cat=>{
+    const h=document.createElement('div');h.className='region';h.style.margin='10px 0 6px';h.textContent=cat;ac.appendChild(h);
+    allByCat[cat].filter(b=>!chosenIds.has(b.id)||b.id===cur.id).forEach(b=>ac.appendChild(altEl(b,idx)));
+  });
+  $('#cl').onclick=()=>modalEl.innerHTML='';
+  $('#ov').onclick=e=>{if(e.target.id==='ov')modalEl.innerHTML='';};
+}
+function altEl(b,idx){
+  const d=document.createElement('div');d.className='alt';
+  d.innerHTML=`<div class="row between"><div><div class="at">${esc(b.cat)} · ${esc(b.variante)}</div>
+    <div class="muted" style="font-size:12px">${esc(fmtFormato(b))} · ${regLabel(b.region)} · int ${b.inten}/4</div></div>
+    <div class="dot" style="width:14px;height:14px;background:${icolor(b.inten)}"></div></div>`;
+  d.onclick=()=>{
+    const r=S.routine, old=r.bloques[idx];
+    r.bloques[idx]=b; r.removed=r.removed||[]; if(old.cat!==b.cat) r.removed.push(old.cat);
+    r.durEstim=Math.round(r.warmup.dur+r.bloques.reduce((a,x)=>a+x.dur,0)+r.bloques.length*(REST_S/60));
+    save();modalEl.innerHTML='';screenRoutine();toast('Bloque cambiado');
+  };
+  return d;
+}
+
+/* ---------- EXEC (doble timer) ---------- */
+let EX=null, TICK=null;
+function buildPhases(r){
+  const ph=[{type:'prep',name:'Preparate',dur:PREP_S}];
+  ph.push({type:'block',name:r.warmup.cat+' · Warm-up',dur:r.warmup.dur*60,ref:r.warmup,warm:true});
+  r.bloques.forEach((b,i)=>{
+    ph.push({type:'rest',name:'Descanso',dur:REST_S});
+    ph.push({type:'block',name:'Bloque '+(i+1)+' · '+b.cat,dur:b.dur*60,ref:b,idx:i});
+  });
+  return ph;
+}
+function startExec(){
+  const r=S.routine;
+  const phases=buildPhases(r);
+  const total=phases.reduce((a,p)=>a+p.dur,0);
+  EX={r,phases,idx:0,total,totalRem:total,phaseRem:phases[0].dur,running:true,blockStarted:true,
+      finalizados:[],cancelados:[]};
+  drawExec();
+  clearInterval(TICK);TICK=setInterval(tick,1000);
+}
+function tick(){
+  if(!EX||!EX.running)return;
+  const ph=EX.phases[EX.idx];
+  EX.totalRem--;
+  if(ph.type!=='block' || EX.blockStarted) EX.phaseRem--;
+  if(EX.phaseRem<=0){ advance('timer'); }
+  else drawExec();
+}
+function advance(reason){
+  const ph=EX.phases[EX.idx];
+  if(ph.type==='block' && reason!=='cancel'){ EX.finalizados.push(ph.ref.id); }
+  EX.idx++;
+  if(EX.idx>=EX.phases.length){ return finishRoutine('CompletoTimer'); }
+  const np=EX.phases[EX.idx];
+  EX.phaseRem=np.dur;
+  EX.blockStarted = np.type!=='block';   // prep/rest corren solos; bloque espera "Iniciar"
+  drawExec();
+}
+function drawExec(){
+  const ph=EX.phases[EX.idx];
+  const pct=100*(1-EX.totalRem/EX.total);
+  const stepBlocks=EX.phases.filter(p=>p.type==='block');
+  const curBlockNo=stepBlocks.indexOf(ph);
+  const doneBlocks=EX.finalizados.length;
+  let stepsHTML=stepBlocks.map((p,i)=>{
+    let cls='step'; if(i<doneBlocks)cls+=' done'; else if(p===ph)cls+=' now'; return `<div class="${cls}"></div>`;
+  }).join('');
+  let inner='';
+  if(ph.type==='block'){
+    const b=ph.ref;
+    inner=`<div class="phase">
+      <div class="ptype">${ph.warm?'Entrada en calor':'Bloque '+(ph.idx+1)+' de 4'}</div>
+      <div class="pname" style="margin-top:4px">${esc(b.cat)} · ${esc(b.variante)}</div>
+      <div class="muted" style="font-size:12px;margin-bottom:6px">${esc(fmtFormato(b))}</div>
+      <div class="pclock">${mmss(EX.phaseRem)}</div>
+      <div class="movs" style="text-align:left;max-width:340px;margin:6px auto 0">${movsHTML(b)}</div>
+      <div style="height:12px"></div>
+      ${EX.blockStarted
+        ? `<button class="btn" onclick="finBlock()">Finalizar bloque</button>`
+        : `<button class="btn dark" onclick="startBlock()">Iniciar bloque</button>`}
+    </div>`;
+  } else {
+    inner=`<div class="phase ${ph.type}">
+      <div class="ptype">${ph.type==='prep'?'Preparate — agarrá el material':'Descanso'}</div>
+      <div class="pclock">${mmss(EX.phaseRem)}</div>
+      <div class="pname">${ph.type==='prep'?'Arranca el warm-up':'Próximo bloque en breve'}</div>
+      <button class="btn ghost sm" style="margin-top:12px" onclick="skipPhase()">Saltar</button>
+    </div>`;
+  }
+  app.innerHTML=`
+    <div class="totwrap">
+      <div class="lab">Tiempo total de la rutina</div>
+      <div class="clock" style="color:${EX.totalRem<=0?'var(--red)':'#fff'}">${mmss(EX.totalRem)}</div>
+      <div class="totbar"><i style="width:${Math.min(100,pct)}%"></i></div>
+    </div>
+    <div class="steps">${stepsHTML}</div>
+    ${inner}
+    <div class="grid2" style="margin-top:6px">
+      <button class="btn ghost" onclick="togglePause()">${EX.running?'⏸ Pausar':'▶ Reanudar'}</button>
+      <button class="btn" onclick="finishRoutine('FinalizadoPorUsuario')">Finalizar rutina</button>
+    </div>
+    <button class="btn red" style="margin-top:10px" onclick="cancelRoutine()">Cancelar rutina</button>
+    <div class="navwarn">Finalizar guarda la sesión (aunque hayas acortado). Cancelar la descarta.</div>
+  `;
+}
+window.startBlock=()=>{EX.blockStarted=true;drawExec();};
+window.finBlock=()=>advance('user');
+window.skipPhase=()=>advance('skip');
+window.togglePause=()=>{EX.running=!EX.running;drawExec();};
+window.cancelRoutine=()=>{ if(!confirm('¿Cancelar la rutina? No se va a guardar.'))return;
+  clearInterval(TICK);EX=null;toast('Rutina cancelada (no guardada)');render();};
+window.finishRoutine=(cierre)=>{
+  clearInterval(TICK);
+  const r=EX.r;
+  // asegurar registrar bloques ya finalizados; si finaliza manual, cuentan los hechos
+  const finIds=[...new Set(EX.finalizados)];
+  const cats=[...new Set([r.warmup.cat,...r.bloques.filter(b=>finIds.includes(b.id)).map(b=>b.cat)])];
+  const regiones=[...new Set(r.bloques.filter(b=>finIds.includes(b.id)).map(b=>b.region))];
+  if(regiones.length===0){ r.bloques.forEach(b=>regiones.push(b.region)); } // finalizó sin marcar bloques: registrar plan
+  const sess={fecha:todayKey(),ts:Date.now(),objetivo:r.objetivo,nivel:r.nivel,
+    blockIds:r.bloques.map(b=>b.id), bloquesFinalizados:finIds,
+    cats:[...new Set(r.bloques.map(b=>b.cat))], regiones:[...new Set(r.bloques.map(b=>b.region))],
+    removed:r.removed||[], cierre, durMin:r.durEstim};
+  S.profile.historial.push(sess);
+  S.profile.contador[r.objetivo]=(S.profile.contador[r.objetivo]||0)+1;
+  S.routine=null;save();EX=null;
+  screenDone(sess);
+};
+function screenDone(sess){
+  app.innerHTML=`
+    <div style="text-align:center;padding:40px 10px">
+      <div style="font-size:56px">✅</div>
+      <h2 style="font-size:26px;font-weight:900;margin:10px 0 4px">¡Rutina completada!</h2>
+      <p class="muted">Objetivo: <b>${objName(sess.objetivo)}</b> · ${sess.durMin} min<br>Se guardó en tu historial.</p>
+      <div style="height:20px"></div>
+      <button class="btn" onclick="render()">Volver al inicio</button>
+      <button class="btn ghost" style="margin-top:10px" onclick="screenHistory()">Ver historial</button>
+    </div>`;
+}
+
+/* ---------- HISTORIAL ---------- */
+function screenHistory(){
+  const h=[...S.profile.historial].reverse();
+  app.innerHTML=`
+    <div class="topbar"><div class="row" style="gap:8px"><button class="btn ghost sm" onclick="render()">‹</button>
+    <div style="font-weight:900;font-size:20px">Historial</div></div></div>
+    ${h.length?'':'<div class="card muted" style="text-align:center">Todavía no registraste entrenamientos.</div>'}
+    <div class="card">${h.map(s=>`
+      <div class="hist"><div><div style="font-weight:800">${objName(s.objetivo)}</div>
+      <div class="muted" style="font-size:12px">${s.fecha} · ${s.cats.slice(0,3).join(', ')}</div></div>
+      <div style="text-align:right"><div style="font-weight:800">${s.durMin}'</div>
+      <div class="muted" style="font-size:11px">${s.cierre==='FinalizadoPorUsuario'?'finalizada':'completa'}</div></div></div>
+    `).join('')}</div>
+  `;
+}
+window.screenHistory=screenHistory;
+
+/* ---------- PERFIL ---------- */
+function screenPerfil(){
+  const p=S.profile;
+  app.innerHTML=`
+    <div class="topbar"><div class="row" style="gap:8px"><button class="btn ghost sm" onclick="render()">‹</button>
+    <div style="font-weight:900;font-size:20px">Perfil</div></div></div>
+    <div class="label">Objetivo</div><div id="objs" class="grid2"></div>
+    <div class="label">Nivel</div><div id="nivs" class="grid2" style="grid-template-columns:1fr 1fr 1fr"></div>
+    <div style="height:16px"></div>
+    <button class="btn" onclick="render()">Guardar y volver</button>
+    <button class="btn ghost red" style="margin-top:10px;color:var(--red)" onclick="resetAll()">Borrar todos mis datos</button>
+    <div class="footnote">Cambiar objetivo o nivel no borra tu historial; la próxima rutina lo tiene en cuenta.</div>
+  `;
+  const oc=$('#objs');
+  OBJETIVOS.forEach(o=>{const d=document.createElement('div');d.className='selcard'+(p.objetivo===o.id?' on':'');
+    d.innerHTML=`<div class="t">${o.t}</div><div class="d">${o.d}</div>`;
+    d.onclick=()=>{p.objetivo=o.id;save();screenPerfil();};oc.appendChild(d);});
+  const nc=$('#nivs');
+  NIVELES.forEach(n=>{const d=document.createElement('div');d.className='selcard'+(p.nivel===n.id?' on':'');
+    d.style.textAlign='center';d.innerHTML=`<div class="t" style="font-size:14px">${n.t}</div>`;
+    d.onclick=()=>{p.nivel=n.id;save();screenPerfil();};nc.appendChild(d);});
+}
+window.screenPerfil=screenPerfil;
+window.resetAll=()=>{if(confirm('¿Borrar objetivo, nivel e historial?')){S=defState();save();render();}};
+window.openEdit=openEdit;
+window.render=render;
+
+/* ---------- PWA (instalable / agregar a inicio) ---------- */
+(function(){
+  try{
+    const icon='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512"><rect width="512" height="512" rx="96" fill="#2e2e2e"/><rect x="56" y="196" width="400" height="120" rx="24" fill="#c6f24e"/><text x="256" y="286" font-size="96" font-family="Arial" font-weight="900" text-anchor="middle" fill="#2e2e2e">GYM</text><text x="256" y="410" font-size="64" font-family="Arial" font-weight="900" text-anchor="middle" fill="#c6f24e">AI</text></svg>');
+    const man={name:'Gym AI',short_name:'Gym AI',start_url:'.',scope:'.',display:'standalone',orientation:'portrait',
+      background_color:'#ededed',theme_color:'#c6f24e',icons:[{src:icon,sizes:'192x192',type:'image/svg+xml',purpose:'any'},{src:icon,sizes:'512x512',type:'image/svg+xml',purpose:'any'}]};
+    const url=URL.createObjectURL(new Blob([JSON.stringify(man)],{type:'application/manifest+json'}));
+    const l=document.createElement('link');l.rel='manifest';l.href=url;document.head.appendChild(l);
+    const al=document.createElement('link');al.rel='apple-touch-icon';al.href=icon;document.head.appendChild(al);
+  }catch(e){}
+})();
+
+/* ---------- INIT ---------- */
+render();
+</script>
+</body>
+</html>
