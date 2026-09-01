@@ -103,8 +103,21 @@
   .navwarn{font-size:11px;color:var(--muted);text-align:center;margin-top:6px;}
   .footnote{font-size:11px;color:var(--muted);text-align:center;margin-top:24px;line-height:1.5;}
   a.link{color:#3a7a1e;font-weight:700;cursor:pointer;text-decoration:underline;}
-  .movs .mv{cursor:pointer;padding:3px 0;border-radius:6px;}
+  .movs .mv{cursor:pointer;padding:3px 0;border-radius:6px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
   .movs .mv:active{background:#f4f4f4;}
+  .movs .mvmain{flex:1;min-width:0;}
+  .subx{flex:none;background:var(--lime);color:#1c1c1c;border:none;border-radius:8px;font-size:15px;font-weight:900;
+    width:30px;height:30px;line-height:1;cursor:pointer;margin-top:2px;}
+  .subx:active{transform:scale(.92);}
+  .sublabel{font-weight:800;font-size:13px;margin:14px 0 6px;}
+  .subrow{display:flex;flex-wrap:wrap;gap:7px;}
+  .subbtn{background:#efefef;border:1px solid #e0e0e0;border-radius:20px;padding:7px 13px;font-size:13px;font-weight:700;cursor:pointer;color:#222;}
+  .subbtn.alt{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .subbtn:active{transform:scale(.96);}
+  .genf{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 2px;}
+  .genf .gbtn{background:#efefef;border:1px solid #e0e0e0;border-radius:20px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;color:#333;}
+  .genf .gbtn.on{background:var(--lime);border-color:var(--lime);color:#1c1c1c;}
+  .genlabel{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin:10px 2px 2px;text-align:left;}
   .mven{color:var(--muted);font-size:12px;font-style:italic;}
   .mvi{color:var(--lime-d);font-weight:900;font-size:13px;}
   .mediaB{background:#f2f2f2;border:1.5px dashed #cfcfcf;border-radius:14px;height:210px;display:flex;
@@ -138,7 +151,7 @@ const Store = (()=>{
 })();
 
 /* ---------- CONFIG ---------- */
-const APP_VERSION='v6 · QA 2026-09-01 (técnica escrita 85/85 · GIF animados · offline)';
+const APP_VERSION='v7 · 2026-09-01 (Biblioteca VigoGym 170 · sustituir ejercicio · filtros región/implemento)';
 const OBJETIVOS = [
   {id:'hipertrofia', t:'Hipertrofia', d:'Ganar masa muscular'},
   {id:'fuerza',      t:'Fuerza',      d:'Fuerza máxima'},
@@ -255,128 +268,208 @@ const EQ_ES={maq:'Máquina',lib:'Libre',piso:'Piso'};
 let _mid=0;
 function mv(es,en,mu,eq,role,lvl,unil){return {id:'x'+(++_mid),es,en,mu,eq,role,lvl:lvl||'intermedio',unil:!!unil,region:MREGION[mu]};}
 const LIB=[
- // PECHO
- mv('Press de pecho en máquina','Machine Chest Press','pecho','maq','comp','principiante'),
- mv('Pec deck (aperturas)','Machine Fly','pecho','maq','acc','principiante'),
- mv('Press inclinado en máquina','Incline Machine Chest Press','pecho','maq','comp','intermedio'),
- mv('Cruce de poleas','Cable Crossover','pecho','maq','acc','intermedio'),
- mv('Press de banca con barra','Barbell Bench Press','pecho','lib','comp','intermedio'),
- mv('Press plano con mancuernas','Dumbbell Bench Press','pecho','lib','comp','intermedio'),
- mv('Press inclinado con mancuernas','Incline Dumbbell Press','pecho','lib','comp','intermedio'),
- mv('Aperturas con mancuernas','Dumbbell Fly','pecho','lib','acc','intermedio'),
- mv('Flexiones de brazos','Push-Up','pecho','piso','comp','principiante'),
- mv('Flexiones inclinadas','Incline Push-Up','pecho','piso','comp','principiante'),
- mv('Flexiones diamante','Diamond Push-Up','pecho','piso','acc','intermedio'),
- // ESPALDA
- mv('Jalón al pecho en polea','Lat Pulldown','espalda','maq','comp','principiante'),
- mv('Remo sentado en polea','Cable Seated Row','espalda','maq','comp','principiante'),
- mv('Remo en máquina','Machine Row','espalda','maq','comp','principiante'),
- mv('Pullover en polea','Cable Pullover','espalda','maq','acc','intermedio'),
- mv('Remo con barra','Barbell Bent Over Row','espalda','lib','comp','intermedio'),
- mv('Remo con mancuerna a un brazo','One-Arm Dumbbell Row','espalda','lib','comp','principiante',true),
- mv('Peso muerto con barra','Barbell Deadlift','espalda','lib','comp','avanzado'),
- mv('Encogimientos con mancuernas','Dumbbell Shrug','espalda','lib','acc','principiante'),
- mv('Dominadas','Pull-Up','espalda','piso','comp','avanzado'),
- mv('Remo invertido','Inverted Row','espalda','piso','comp','intermedio'),
- mv('Superman','Superman','espalda','piso','acc','principiante'),
- // HOMBROS
- mv('Press de hombros en máquina','Machine Shoulder Press','hombros','maq','comp','principiante'),
- mv('Elevaciones laterales en polea','Cable Lateral Raise','hombros','maq','acc','intermedio',true),
- mv('Pájaros en máquina','Reverse Machine Fly','hombros','maq','acc','principiante'),
- mv('Press militar con barra','Barbell Overhead Press','hombros','lib','comp','intermedio'),
- mv('Press Arnold con mancuernas','Arnold Press','hombros','lib','comp','intermedio'),
- mv('Elevaciones laterales con mancuernas','Dumbbell Lateral Raise','hombros','lib','acc','principiante'),
- mv('Pike push ups','Pike Push-Up','hombros','piso','comp','intermedio'),
- mv('Plancha con toques de hombro','Plank Shoulder Taps','hombros','piso','acc','principiante'),
- // BICEPS
- mv('Curl en polea','Cable Biceps Curl','biceps','maq','acc','principiante'),
- mv('Curl en máquina','Machine Biceps Curl','biceps','maq','acc','principiante'),
- mv('Curl con barra','Barbell Curl','biceps','lib','comp','intermedio'),
- mv('Curl con mancuernas','Dumbbell Biceps Curl','biceps','lib','acc','principiante'),
- mv('Curl martillo','Hammer Curl','biceps','lib','acc','principiante'),
- mv('Dominada supina (chin up)','Chin-Up','biceps','piso','comp','avanzado'),
- mv('Curl con banda','Band Biceps Curl','biceps','piso','acc','principiante'),
- // TRICEPS
- mv('Extensión en polea','Triceps Pushdown','triceps','maq','acc','principiante'),
- mv('Extensión sobre la cabeza en polea','Cable Overhead Triceps Extension','triceps','maq','acc','intermedio'),
- mv('Fondos en máquina','Machine Triceps Dip','triceps','maq','comp','principiante'),
- mv('Press cerrado con barra','Close-Grip Bench Press','triceps','lib','comp','intermedio'),
- mv('Press francés con mancuerna','Lying Dumbbell Triceps Extension','triceps','lib','acc','intermedio'),
- mv('Extensión sobre la cabeza con mancuerna','Overhead Dumbbell Triceps Extension','triceps','lib','acc','principiante'),
- mv('Fondos en banco','Bench Dips','triceps','piso','comp','principiante'),
- // CUADRICEPS
- mv('Prensa de piernas','Leg Press','cuadriceps','maq','comp','principiante'),
- mv('Extensión de cuádriceps','Leg Extension','cuadriceps','maq','acc','principiante'),
- mv('Hack squat en máquina','Hack Squat','cuadriceps','maq','comp','intermedio'),
- mv('Sentadilla en Smith','Smith Machine Squat','cuadriceps','maq','comp','intermedio'),
- mv('Sentadilla con barra','Barbell Squat','cuadriceps','lib','comp','avanzado'),
- mv('Sentadilla goblet','Goblet Squat','cuadriceps','lib','comp','principiante'),
- mv('Zancadas con mancuernas','Dumbbell Lunge','cuadriceps','lib','comp','intermedio',true),
- mv('Sentadilla búlgara con mancuernas','Bulgarian Split Squat','cuadriceps','lib','comp','intermedio',true),
- mv('Sentadilla libre','Bodyweight Squat','cuadriceps','piso','comp','principiante'),
- mv('Sentadilla con salto','Jump Squat','cuadriceps','piso','comp','intermedio'),
- mv('Zancadas caminando','Walking Lunge','cuadriceps','piso','comp','principiante',true),
- mv('Sentadilla isométrica en pared','Wall Sit','cuadriceps','piso','acc','principiante'),
- // ISQUIOS (femorales)
- mv('Curl femoral tumbado','Lying Leg Curl','isquios','maq','acc','principiante'),
- mv('Curl femoral sentado','Seated Leg Curl','isquios','maq','acc','principiante'),
- mv('Peso muerto rumano en Smith','Smith Romanian Deadlift','isquios','maq','comp','intermedio'),
- mv('Peso muerto rumano con mancuernas','Dumbbell Romanian Deadlift','isquios','lib','comp','intermedio'),
- mv('Buenos días con barra','Good Morning','isquios','lib','comp','avanzado'),
- mv('Curl nórdico','Nordic Hamstring Curl','isquios','piso','acc','avanzado'),
- mv('Puente a una pierna','Single-Leg Glute Bridge','isquios','piso','acc','principiante',true),
- // GLUTEOS
- mv('Empuje de cadera en máquina','Machine Hip Thrust','gluteos','maq','comp','principiante'),
- mv('Patada de glúteo en polea','Cable Glute Kickback','gluteos','maq','acc','principiante',true),
- mv('Abductor en máquina','Hip Abduction Machine','gluteos','maq','acc','principiante'),
- mv('Hip thrust con barra','Barbell Hip Thrust','gluteos','lib','comp','intermedio'),
- mv('Peso muerto sumo con mancuerna','Dumbbell Sumo Deadlift','gluteos','lib','comp','intermedio'),
- mv('Puente de glúteos','Glute Bridge','gluteos','piso','comp','principiante'),
- mv('Patada de glúteo en cuadrupedia','Quadruped Hip Extension','gluteos','piso','acc','principiante',true),
- // PANTORRILLAS
- mv('Gemelos de pie en máquina','Standing Calf Raise','pantorrillas','maq','acc','principiante'),
- mv('Gemelos en prensa','Calf Press','pantorrillas','maq','acc','principiante'),
- mv('Gemelos con mancuerna','Dumbbell Calf Raise','pantorrillas','lib','acc','principiante'),
- mv('Gemelos a peso corporal','Bodyweight Calf Raise','pantorrillas','piso','acc','principiante'),
- // CORE
- mv('Crunch en polea','Cable Crunch','core','maq','acc','principiante'),
- mv('Rotación de torso en máquina','Torso Rotation Machine','core','maq','acc','principiante'),
- mv('Elevación de piernas en silla romana','Captain Chair Leg Raise','core','maq','comp','intermedio'),
- mv('Leñador en polea','Cable Woodchopper','core','maq','acc','intermedio',true),
- mv('Russian twist con mancuerna','Weighted Russian Twist','core','lib','acc','principiante'),
- mv('Plancha','Plank','core','piso','comp','principiante'),
- mv('Hollow hold','Hollow Hold','core','piso','acc','intermedio'),
- mv('Toque de puntas','Toe Touches','core','piso','acc','principiante'),
- mv('Abdominal bicicleta','Bicycle Crunch','core','piso','acc','principiante'),
- mv('Dead bug','Dead Bug','core','piso','acc','principiante'),
- mv('Elevación de piernas colgado','Hanging Leg Raise','core','piso','comp','avanzado')
+ {id:'v0',es:'Abdominales (3/4)',esf:'Abdominal 3/4',en:'3 4 Sit Up',mu:'core',eq:'piso',impl:'piso',role:'comp',lvl:'intermedio',unil:false,region:'core',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/3-4-sit-up.gif',desc:'Boca arriba, rodillas flexionadas. Elevá el torso hasta 3/4 del recorrido contrayendo el abdomen; bajá lento.'},
+ {id:'v1',es:'Bicicleta',esf:'Abdominal bicicleta',en:'Air Bike',mu:'core',eq:'piso',impl:'piso',role:'acc',lvl:'intermedio',unil:false,region:'core',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/air-bike.gif',desc:'Boca arriba, pedaleá llevando el codo a la rodilla opuesta alternando; controlado.'},
+ {id:'v2',es:'Abdominales en polea',esf:'Crunch de rodillas en polea',en:'Cable Kneeling Crunch',mu:'core',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'core',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/cable-kneeling-crunch.gif',desc:'Arrodillado bajo la polea alta con la soga en la nuca. Flexioná el tronco llevando los codos a los muslos; volvé lento.'},
+ {id:'v3',es:'Bicicleta con banda',esf:'Abdominal bicicleta con banda',en:'Band Bicycle Crunch',mu:'core',eq:'piso',impl:'banda',role:'acc',lvl:'principiante',unil:false,region:'core',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/band-bicycle-crunch.gif',desc:'Boca arriba con banda en los pies. Pedaleá llevando codo a rodilla opuesta contra la resistencia.'},
+ {id:'v4',es:'Oblicuos con mancuerna',esf:'Inclinación lateral con mancuerna',en:'Dumbbell Side Bend',mu:'core',eq:'lib',impl:'mancuerna',role:'acc',lvl:'intermedio',unil:true,region:'core',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/dumbbell-side-bend.gif',desc:'De pie con una mancuerna a un lado. Incliná el torso hacia ese lado y volvé al centro; cambiá de lado.'},
+ {id:'v5',es:'Molino',esf:'Molino con pesa rusa',en:'Kettlebell Windmill',mu:'core',eq:'lib',impl:'pesarusa',role:'acc',lvl:'intermedio',unil:true,region:'core',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/kettlebell-windmill.gif',desc:'Rusa arriba con un brazo, piernas abiertas. Bajá el torso hacia la pierna opuesta mirando la rusa; volvé con control.'},
+ {id:'v6',es:'Sit-up con barra',esf:'Abdominal con press de barra',en:'Barbell Press Sit Up',mu:'core',eq:'lib',impl:'barra',role:'comp',lvl:'intermedio',unil:false,region:'core',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/barbell-press-sit-up.gif',desc:'Boca arriba con la barra sobre el pecho. Al subir el torso, empujá la barra arriba; bajá controlando.'},
+ {id:'v7',es:'Toques de talón',esf:'Toques de talón alternos',en:'Alternate Heel Touchers',mu:'core',eq:'piso',impl:'piso',role:'acc',lvl:'intermedio',unil:true,region:'core',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/alternate-heel-touchers.gif',desc:'Boca arriba, rodillas flexionadas. Elevá apenas los hombros y tocá alternadamente cada talón; contraé el oblicuo.'},
+ {id:'v8',es:'Giro sentado en polea',esf:'Rotación de torso sentado en polea',en:'Cable Seated Twist',mu:'core',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'core',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/cable-seated-twist.gif',desc:'Sentado de costado a la polea. Rotá el torso alejándote del anclaje y volvé controlando; oblicuos.'},
+ {id:'v9',es:'Crunch de pie con banda',esf:'Encogimiento de pie con banda',en:'Band Standing Crunch',mu:'core',eq:'piso',impl:'banda',role:'acc',lvl:'principiante',unil:false,region:'core',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/band-standing-crunch.gif',desc:'Banda anclada arriba, soga en la nuca. Flexioná el tronco hacia abajo contrayendo el abdomen; volvé lento.'},
+ {id:'v10',es:'Elevación colgado',esf:'Elevación de piernas colgado',en:'Hanging Leg Raise',mu:'core',eq:'piso',impl:'piso',role:'acc',lvl:'intermedio',unil:false,region:'core',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/hanging-leg-raise.gif',desc:'Colgado de la barra. Elevá las piernas al frente (rodillas o rectas) sin balancear; bajá lento.'},
+ {id:'v11',es:'Oblicuos en polea',esf:'Inclinación lateral en polea',en:'Cable Side Bend',mu:'core',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:true,region:'core',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/cable-side-bend.gif',desc:'De pie de costado a la polea baja. Incliná el torso al lado opuesto al anclaje y volvé; oblicuo.'},
+ {id:'v12',es:'V-up con banda',esf:'Plegado en V con banda',en:'Band V Up',mu:'core',eq:'piso',impl:'banda',role:'acc',lvl:'intermedio',unil:false,region:'core',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/band-v-up.gif',desc:'Boca arriba con banda en los pies. Elevá torso y piernas a la vez formando una V; bajá lento.'},
+ {id:'v13',es:'Ocho con rusa',esf:'Ocho con pesa rusa',en:'Kettlebell Figure 8',mu:'core',eq:'lib',impl:'pesarusa',role:'acc',lvl:'intermedio',unil:true,region:'core',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/kettlebell-figure-8.gif',desc:'Piernas abiertas, semiflexión. Pasá la rusa en forma de 8 entre las piernas de mano en mano; core firme.'},
+ {id:'v14',es:'Giro sentado con barra',esf:'Rotación de torso sentado con barra',en:'Barbell Seated Twist',mu:'core',eq:'lib',impl:'barra',role:'acc',lvl:'intermedio',unil:false,region:'core',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/barbell-seated-twist.gif',desc:'Sentado con la barra sobre los hombros. Rotá el torso de lado a lado controladamente; oblicuos.'},
+ {id:'v15',es:'Abdominal en el piso',esf:'Encogimiento en el piso',en:'Crunch Floor',mu:'core',eq:'piso',impl:'piso',role:'acc',lvl:'principiante',unil:false,region:'core',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/crunch-floor.gif',desc:'Boca arriba, rodillas flexionadas. Elevá los hombros del piso contrayendo el abdomen; bajá lento.'},
+ {id:'v16',es:'Crunch de pie en polea',esf:'Encogimiento de pie en polea',en:'Cable Standing Crunch',mu:'core',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'core',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/cable-standing-crunch.gif',desc:'De pie bajo la polea alta, soga en la nuca. Flexioná el tronco hacia abajo apretando el abdomen; volvé lento.'},
+ {id:'v17',es:'Pallof con banda',esf:'Press Pallof horizontal con banda',en:'Band Horizontal Pallof Press',mu:'core',eq:'piso',impl:'banda',role:'comp',lvl:'intermedio',unil:false,region:'core',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/band-horizontal-pallof-press.gif',desc:'De costado a la banda, manos al pecho. Estirá los brazos al frente resistiendo la rotación; volvé sin girar el torso.'},
+ {id:'v18',es:'Dead bug',esf:'Bicho muerto',en:'Dead Bug',mu:'core',eq:'piso',impl:'piso',role:'acc',lvl:'principiante',unil:false,region:'core',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/dead-bug.gif',desc:'Boca arriba, brazos y rodillas a 90°. Estirá brazo y pierna opuestos sin arquear la lumbar; alterná.'},
+ {id:'v19',es:'Abdominales en declinado',esf:'Abdominal completo en banco declinado',en:'Decline Sit Up',mu:'core',eq:'piso',impl:'piso',role:'comp',lvl:'intermedio',unil:false,region:'core',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/decline-sit-up.gif',desc:'En banco declinado, pies trabados. Subí el torso hasta sentarte contrayendo el abdomen; bajá lento.'},
+ {id:'v20',es:'Press flexionado con rusa',esf:'Bent press con pesa rusa',en:'Kettlebell Bent Press',mu:'core',eq:'lib',impl:'pesarusa',role:'comp',lvl:'avanzado',unil:false,region:'core',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/kettlebell-bent-press.gif',desc:'Rusa arriba con un brazo. Bajá el torso al costado deslizando la cadera mientras sostenés la rusa arriba; volvé.'},
+ {id:'v21',es:'Rueda con barra',esf:'Rollout con barra',en:'Barbell Rollerout',mu:'core',eq:'lib',impl:'barra',role:'comp',lvl:'intermedio',unil:false,region:'core',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/barbell-rollerout.gif',desc:'Arrodillado con la barra en el piso. Rodá la barra al frente estirando el cuerpo sin arquear la lumbar; volvé apretando el abdomen.'},
+ {id:'v22',es:'Press Arnold',esf:'Press Arnold con mancuernas',en:'Dumbbell Arnold Press',mu:'hombros',eq:'lib',impl:'mancuerna',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/dumbbell-arnold-press.gif',desc:'Sentado, mancuernas al frente palmas hacia vos. Al subir rotá las palmas hacia afuera y estirá arriba; invertí al bajar.'},
+ {id:'v23',es:'Frontales con barra',esf:'Elevación frontal con barra',en:'Barbell Front Raise',mu:'hombros',eq:'lib',impl:'barra',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/barbell-front-raise.gif',desc:'De pie, barra al frente de los muslos. Elevala al frente hasta la altura de los hombros con brazos casi estirados; bajá lento.'},
+ {id:'v24',es:'Hombro en polea',esf:'Press de hombros en polea',en:'Cable Shoulder Press',mu:'hombros',eq:'maq',impl:'maquina',role:'comp',lvl:'principiante',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/cable-shoulder-press.gif',desc:'Manerales a la altura de los hombros. Empujá arriba hasta estirar; bajá controlando.'},
+ {id:'v25',es:'Press de hombros con banda',esf:'Press de hombros con banda',en:'Band Shoulder Press',mu:'hombros',eq:'piso',impl:'banda',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/band-shoulder-press.gif',desc:'Pisá la banda, manos a los hombros. Empujá arriba estirando los brazos contra la resistencia; bajá lento.'},
+ {id:'v26',es:'Laterales',esf:'Elevaciones laterales con mancuernas',en:'Dumbbell Lateral Raise',mu:'hombros',eq:'lib',impl:'mancuerna',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/dumbbell-lateral-raise.gif',desc:'De pie, mancuernas al costado. Elevá los brazos al lateral hasta la línea del hombro; bajá lento.'},
+ {id:'v27',es:'Remo al mentón con barra',esf:'Remo vertical con barra',en:'Barbell Upright Row',mu:'hombros',eq:'lib',impl:'barra',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/barbell-upright-row.gif',desc:'De pie, barra al frente. Tirá la barra hacia el mentón llevando los codos altos y afuera; bajá lento.'},
+ {id:'v28',es:'Posterior en polea con soga',esf:'Remo para deltoides posterior en polea',en:'Cable Rear Delt Row With Rope',mu:'hombros',eq:'maq',impl:'maquina',role:'comp',lvl:'principiante',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/cable-rear-delt-row-with-rope.gif',desc:'Polea a la altura del pecho con soga. Tirá hacia la cara abriendo los codos afuera, apretando el deltoides posterior.'},
+ {id:'v29',es:'Pájaros con banda',esf:'Aperturas invertidas con banda',en:'Band Reverse Fly',mu:'hombros',eq:'piso',impl:'banda',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/band-reverse-fly.gif',desc:'Banda al frente a la altura del pecho. Abrí los brazos hacia atrás apretando los deltoides posteriores; volvé lento.'},
+ {id:'v30',es:'Hombro sentado con mancuernas',esf:'Press de hombros sentado con mancuernas',en:'Dumbbell Seated Shoulder Press',mu:'hombros',eq:'lib',impl:'mancuerna',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/dumbbell-seated-shoulder-press.gif',desc:'Sentado con respaldo, mancuernas a la altura de los hombros. Empujá arriba hasta estirar; bajá a las orejas.'},
+ {id:'v31',es:'Thruster con barra',esf:'Thruster con barra',en:'Barbell Thruster',mu:'hombros',eq:'lib',impl:'barra',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/barbell-thruster.gif',desc:'Barra al frente de los hombros. Hacé una sentadilla y, al subir, aprovechá el envión para empujar la barra sobre la cabeza.'},
+ {id:'v32',es:'Laterales en polea',esf:'Elevaciones laterales en polea',en:'Cable Lateral Raise',mu:'hombros',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/cable-lateral-raise.gif',desc:'Polea baja al costado. Elevá el brazo al lateral hasta la altura del hombro; bajá lento.'},
+ {id:'v33',es:'Elevación en Y con banda',esf:'Elevación en Y con banda',en:'Band Y Raise',mu:'hombros',eq:'piso',impl:'banda',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/band-y-raise.gif',desc:'Banda pisada. Elevá los brazos en diagonal formando una Y por encima de la cabeza; bajá controlando.'},
+ {id:'v34',es:'Posteriores con mancuernas',esf:'Elevación posterior con mancuernas',en:'Dumbbell Rear Lateral Raise',mu:'hombros',eq:'lib',impl:'mancuerna',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/dumbbell-rear-lateral-raise.gif',desc:'Torso inclinado al frente, mancuernas colgando. Abrí los brazos al lateral apretando el deltoides posterior; bajá lento.'},
+ {id:'v35',es:'Posterior con barra',esf:'Elevación posterior con barra',en:'Barbell Rear Delt Raise',mu:'hombros',eq:'lib',impl:'barra',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/barbell-rear-delt-raise.gif',desc:'Torso inclinado, barra colgando. Elevá la barra hacia atrás-arriba apretando los deltoides posteriores; bajá lento.'},
+ {id:'v36',es:'Frontal en polea',esf:'Elevación frontal en polea',en:'Cable Forward Raise',mu:'hombros',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/cable-forward-raise.gif',desc:'Polea baja por delante. Elevá el brazo al frente hasta la altura del hombro; bajá lento.'},
+ {id:'v37',es:'Arnold con rusa',esf:'Press Arnold con pesa rusa',en:'Kettlebell Arnold Press',mu:'hombros',eq:'lib',impl:'pesarusa',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/kettlebell-arnold-press.gif',desc:'Rusa al frente con palma hacia vos. Al subir rotá la palma hacia afuera y estirá arriba; invertí al bajar.'},
+ {id:'v38',es:'Frontales con mancuernas',esf:'Elevación frontal con mancuernas',en:'Dumbbell Front Raise',mu:'hombros',eq:'lib',impl:'mancuerna',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/dumbbell-front-raise.gif',desc:'De pie, mancuernas por delante. Elevá los brazos al frente hasta la altura de los hombros; bajá lento.'},
+ {id:'v39',es:'Press militar',esf:'Press militar con barra',en:'Barbell Seated Overhead Press',mu:'hombros',eq:'lib',impl:'barra',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/barbell-seated-overhead-press.gif',desc:'De pie, barra a la altura de los hombros. Empujá arriba hasta estirar; bajá al mentón.'},
+ {id:'v40',es:'Hombro alterno en polea',esf:'Press de hombros alterno en polea',en:'Cable Alternate Shoulder Press',mu:'hombros',eq:'maq',impl:'maquina',role:'comp',lvl:'principiante',unil:true,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/cable-alternate-shoulder-press.gif',desc:'Manerales a la altura de los hombros. Empujá un brazo por vez hacia arriba; alterná controlando.'},
+ {id:'v41',es:'Frontales con banda',esf:'Elevación frontal con banda',en:'Band Front Raise',mu:'hombros',eq:'piso',impl:'banda',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/band-front-raise.gif',desc:'Pisá la banda. Elevá los brazos al frente hasta la altura de los hombros contra la resistencia; bajá lento.'},
+ {id:'v42',es:'Push press con mancuernas',esf:'Push press con mancuernas',en:'Dumbbell Push Press',mu:'hombros',eq:'lib',impl:'mancuerna',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/dumbbell-push-press.gif',desc:'Mancuernas a los hombros. Con un leve envión de piernas, empujá las mancuernas sobre la cabeza; bajá controlando.'},
+ {id:'v43',es:'Press alterno con rusas',esf:'Press alterno con pesas rusas',en:'Kettlebell Alternating Press',mu:'hombros',eq:'lib',impl:'pesarusa',role:'comp',lvl:'intermedio',unil:true,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/kettlebell-alternating-press.gif',desc:'Rusas a los hombros. Empujá una por vez hacia arriba estirando; alterná.'},
+ {id:'v44',es:'Flexión arquero',esf:'Flexión arquero',en:'Archer Push Up',mu:'pecho',eq:'piso',impl:'piso',role:'acc',lvl:'avanzado',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/archer-push-up.gif',desc:'En flexión, cargá el peso sobre un brazo que flexiona mientras el otro se estira al costado; alterná lados.'},
+ {id:'v45',es:'Press de pecho con banda',esf:'Press de banca con banda',en:'Band Bench Press',mu:'pecho',eq:'piso',impl:'banda',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/band-bench-press.gif',desc:'Banda por detrás de la espalda. Empujá las manos al frente estirando los brazos; volvé lento.'},
+ {id:'v46',es:'Banco plano',esf:'Press de banca con barra',en:'Barbell Bench Press',mu:'pecho',eq:'lib',impl:'barra',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/barbell-bench-press.gif',desc:'Acostado, escápulas retraídas. Bajá la barra al esternón con codos a ~45° y empujá hasta estirar.'},
+ {id:'v47',es:'Press de pecho en polea',esf:'Press de banca en polea',en:'Cable Bench Press',mu:'pecho',eq:'maq',impl:'maquina',role:'comp',lvl:'principiante',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/cable-bench-press.gif',desc:'Acostado o de pie entre poleas. Empujá los manerales al frente juntando el pecho; volvé lento.'},
+ {id:'v48',es:'Fondos de pecho',esf:'Fondos en paralelas para pecho',en:'Chest Dip',mu:'pecho',eq:'piso',impl:'piso',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/chest-dip.gif',desc:'En paralelas, torso inclinado al frente. Bajá flexionando los codos hasta sentir el pecho; empujá arriba.'},
+ {id:'v49',es:'Banco plano con mancuernas',esf:'Press de banca con mancuernas',en:'Dumbbell Bench Press',mu:'pecho',eq:'lib',impl:'mancuerna',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/dumbbell-bench-press.gif',desc:'Acostado, mancuernas a la altura del pecho. Bajá sintiendo el estiramiento y empujá arriba juntando.'},
+ {id:'v50',es:'Aperturas',esf:'Aperturas con mancuernas',en:'Dumbbell Fly',mu:'pecho',eq:'lib',impl:'mancuerna',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/dumbbell-fly.gif',desc:'Acostado, brazos casi estirados con leve flexión de codo. Abrí en arco hasta la línea del pecho y volvé juntando arriba.'},
+ {id:'v51',es:'Inclinado con barra',esf:'Press inclinado con barra',en:'Barbell Incline Bench Press',mu:'pecho',eq:'lib',impl:'barra',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/barbell-incline-bench-press.gif',desc:'Banco a ~30°. Bajá la barra a la parte alta del pecho y empujá arriba.'},
+ {id:'v52',es:'Aperturas inclinadas en polea',esf:'Aperturas inclinadas en polea',en:'Cable Incline Fly',mu:'pecho',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/cable-incline-fly.gif',desc:'En banco inclinado entre poleas. Abrí y juntá los brazos al frente en arco apretando el pecho alto.'},
+ {id:'v53',es:'Declinado con mancuernas',esf:'Press declinado con mancuernas',en:'Dumbbell Decline Bench Press',mu:'pecho',eq:'lib',impl:'mancuerna',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/dumbbell-decline-bench-press.gif',desc:'Banco declinado. Bajá las mancuernas a la parte baja del pecho y empujá arriba.'},
+ {id:'v54',es:'Flexión con aplauso',esf:'Flexión con aplauso (pliométrica)',en:'Clap Push Up',mu:'pecho',eq:'piso',impl:'piso',role:'acc',lvl:'avanzado',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/clap-push-up.gif',desc:'En flexión, bajá y empujá con fuerza para despegar las manos y aplaudir; caé suave y repetí.'},
+ {id:'v55',es:'Press de pecho con giro y banda',esf:'Press de pecho a un brazo con giro y banda',en:'Band One Arm Twisting Chest Press',mu:'pecho',eq:'piso',impl:'banda',role:'comp',lvl:'intermedio',unil:true,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/band-one-arm-twisting-chest-press.gif',desc:'Banda por detrás, empujá con un brazo al frente rotando el torso; volvé y alterná.'},
+ {id:'v56',es:'Declinado con barra',esf:'Press declinado con barra',en:'Barbell Decline Bench Press',mu:'pecho',eq:'lib',impl:'barra',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/barbell-decline-bench-press.gif',desc:'Banco declinado. Bajá la barra a la parte baja del pecho y empujá arriba.'},
+ {id:'v57',es:'Aperturas declinadas en polea',esf:'Aperturas declinadas en polea',en:'Cable Decline Fly',mu:'pecho',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/cable-decline-fly.gif',desc:'Poleas altas, torso al frente. Juntá las manos hacia abajo-adelante en arco apretando el pecho bajo.'},
+ {id:'v58',es:'Pullover con mancuerna',esf:'Pullover con mancuerna',en:'Dumbbell Pullover',mu:'pecho',eq:'lib',impl:'mancuerna',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/dumbbell-pullover.gif',desc:'Acostado, una mancuerna sobre el pecho con ambas manos. Llevala por detrás de la cabeza en arco y volvé; pecho y dorsal.'},
+ {id:'v59',es:'Flexiones inclinadas',esf:'Flexiones inclinadas',en:'Incline Push Up',mu:'pecho',eq:'piso',impl:'piso',role:'acc',lvl:'principiante',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/incline-push-up.gif',desc:'Manos elevadas en un banco, cuerpo recto. Bajá el pecho y empujá; versión más accesible.'},
+ {id:'v60',es:'Aperturas inclinadas',esf:'Aperturas inclinadas con mancuernas',en:'Dumbbell Incline Fly',mu:'pecho',eq:'lib',impl:'mancuerna',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/dumbbell-incline-fly.gif',desc:'Banco a ~30°. Abrí en arco hasta la línea del pecho y volvé juntando; pecho alto.'},
+ {id:'v61',es:'Cruces de pie',esf:'Aperturas de pie en polea',en:'Cable Standing Fly',mu:'pecho',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/cable-standing-fly.gif',desc:'De pie entre poleas, un pie adelante. Juntá las manos al frente en arco apretando el pecho; volvé lento.'},
+ {id:'v62',es:'Banco guillotina',esf:'Press de banca guillotina',en:'Barbell Guillotine Bench Press',mu:'pecho',eq:'lib',impl:'barra',role:'comp',lvl:'avanzado',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/barbell-guillotine-bench-press.gif',desc:'Acostado, bajá la barra hacia el cuello con codos abiertos y empujá. Avanzado, cuidá el hombro.'},
+ {id:'v63',es:'Fondos en barra recta',esf:'Fondos de pecho en barra recta',en:'Chest Dip On Straight Bar',mu:'pecho',eq:'piso',impl:'piso',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/chest-dip-on-straight-bar.gif',desc:'Sobre una barra recta, torso al frente. Bajá flexionando los codos y empujá arriba.'},
+ {id:'v64',es:'Salto hacia atrás',esf:'Salto hacia atrás',en:'Backward Jump',mu:'cuadriceps',eq:'piso',impl:'piso',role:'acc',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/backward-jump.gif',desc:'Desde semisentadilla, saltá hacia atrás y caé amortiguando con las rodillas; controlado.'},
+ {id:'v65',es:'Búlgara con banda',esf:'Sentadilla búlgara a una pierna con banda',en:'Band One Arm Single Leg Split Squat',mu:'cuadriceps',eq:'piso',impl:'banda',role:'comp',lvl:'intermedio',unil:true,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/band-one-arm-single-leg-split-squat.gif',desc:'Pie de atrás elevado, banda para resistencia. Bajá la rodilla trasera manteniendo el torso; subí con la delantera.'},
+ {id:'v66',es:'Sentadilla frontal al cajón',esf:'Sentadilla frontal a banco con barra',en:'Barbell Bench Front Squat',mu:'cuadriceps',eq:'lib',impl:'barra',role:'comp',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/barbell-bench-front-squat.gif',desc:'Barra al frente sobre los hombros. Bajá sentándote hasta rozar el banco y subí, torso erguido.'},
+ {id:'v67',es:'Cargada y press',esf:'Cargada y envión con barra',en:'Barbell Clean And Press',mu:'cuadriceps',eq:'lib',impl:'barra',role:'comp',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/barbell-clean-and-press.gif',desc:'Levantá la barra del piso a los hombros y empujala sobre la cabeza; bajá y repetí.'},
+ {id:'v68',es:'Sentadilla overhead',esf:'Sentadilla con barra sobre la cabeza',en:'Barbell Overhead Squat',mu:'cuadriceps',eq:'lib',impl:'barra',role:'comp',lvl:'avanzado',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/barbell-overhead-squat.gif',desc:'Barra estirada sobre la cabeza. Bajá en sentadilla manteniendo la barra firme arriba; subí. Avanzado.'},
+ {id:'v69',es:'Sentadilla lateral con barra',esf:'Sentadilla dividida lateral con barra',en:'Barbell Side Split Squat',mu:'cuadriceps',eq:'lib',impl:'barra',role:'comp',lvl:'intermedio',unil:true,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/barbell-side-split-squat.gif',desc:'Barra en la espalda, piernas bien abiertas. Bajá cargando una pierna flexionada mientras la otra queda estirada; alterná.'},
+ {id:'v70',es:'Sentadilla de rodillas con barra',esf:'Sentadilla de rodillas con barra',en:'Barbell Squat On Knees',mu:'cuadriceps',eq:'lib',impl:'barra',role:'comp',lvl:'avanzado',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/barbell-squat-on-knees.gif',desc:'Arrodillado con barra en la espalda. Sentate hacia los talones y volvé apretando glúteos; cuidá la técnica.'},
+ {id:'v71',es:'Goblet',esf:'Sentadilla goblet con mancuerna',en:'Dumbbell Goblet Squat',mu:'cuadriceps',eq:'lib',impl:'mancuerna',role:'comp',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/dumbbell-goblet-squat.gif',desc:'Sostené una mancuerna contra el pecho. Bajá entre las piernas con el torso erguido; subí.'},
+ {id:'v72',es:'Búlgara con mancuernas',esf:'Sentadilla búlgara con mancuernas',en:'Dumbbell Single Leg Split Squat',mu:'cuadriceps',eq:'lib',impl:'mancuerna',role:'comp',lvl:'intermedio',unil:true,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/dumbbell-single-leg-split-squat.gif',desc:'Pie de atrás elevado en un banco. Bajá la rodilla trasera hacia el piso; subí con la delantera.'},
+ {id:'v73',es:'Subida al cajón con mancuernas',esf:'Subida al cajón con mancuernas',en:'Dumbbell Step Up Lunge',mu:'cuadriceps',eq:'lib',impl:'mancuerna',role:'comp',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/dumbbell-step-up-lunge.gif',desc:'Con mancuernas, subí a un cajón con una pierna y bajá controlando; alterná.'},
+ {id:'v74',es:'Sentadilla asistida con mancuerna',esf:'Sentadilla asistida con mancuerna',en:'Dumbbell Supported Squat',mu:'cuadriceps',eq:'lib',impl:'mancuerna',role:'comp',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/dumbbell-supported-squat.gif',desc:'Con apoyo, bajá en sentadilla hasta paralelo manteniendo el torso; subí.'},
+ {id:'v75',es:'Caminata del granjero',esf:'Caminata del granjero',en:'Farmers Walk',mu:'cuadriceps',eq:'piso',impl:'piso',role:'comp',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/farmers-walk.gif',desc:'Sostené peso pesado a los costados y caminá erguido con pasos firmes; core y agarre.'},
+ {id:'v76',es:'Salto al frente',esf:'Salto hacia adelante',en:'Forward Jump',mu:'cuadriceps',eq:'piso',impl:'piso',role:'acc',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/forward-jump.gif',desc:'Desde semisentadilla, saltá hacia adelante y caé amortiguando con las rodillas.'},
+ {id:'v77',es:'Prensa',esf:'Prensa de piernas',en:'Lever Alternate Leg Press',mu:'cuadriceps',eq:'maq',impl:'maquina',role:'comp',lvl:'principiante',unil:true,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/lever-alternate-leg-press.gif',desc:'Pies en la plataforma. Bajá flexionando las rodillas hacia el pecho (~90°) y empujá sin trabar.'},
+ {id:'v78',es:'Camilla de cuádriceps',esf:'Extensión de cuádriceps en máquina',en:'Lever Leg Extension',mu:'cuadriceps',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/lever-leg-extension.gif',desc:'Sentado, tobillos bajo el rodillo. Estirá las rodillas apretando el cuádriceps; bajá lento.'},
+ {id:'v79',es:'Extensión de cuádriceps con banda',esf:'Extensión de cuádriceps con banda',en:'Resistance Band Leg Extension',mu:'cuadriceps',eq:'piso',impl:'banda',role:'acc',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/resistance-band-leg-extension.gif',desc:'Sentado, banda en el tobillo. Estirá la rodilla contra la resistencia; volvé lento.'},
+ {id:'v80',es:'Sentadilla sissy',esf:'Sentadilla sissy',en:'Sissy Squat',mu:'cuadriceps',eq:'piso',impl:'piso',role:'comp',lvl:'avanzado',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/sissy-squat.gif',desc:'Sujetándote de un apoyo, inclinate hacia atrás flexionando las rodillas al frente; enfatiza el cuádriceps.'},
+ {id:'v81',es:'Sentadilla en Smith',esf:'Sentadilla a silla en Smith',en:'Smith Chair Squat',mu:'cuadriceps',eq:'maq',impl:'maquina',role:'comp',lvl:'principiante',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/smith-chair-squat.gif',desc:'Barra del Smith en la espalda alta. Bajá sentándote hasta paralelo y subí empujando el piso.'},
+ {id:'v82',es:'Búlgara en Smith',esf:'Sentadilla búlgara a una pierna en Smith',en:'Smith Single Leg Split Squat',mu:'cuadriceps',eq:'maq',impl:'maquina',role:'comp',lvl:'principiante',unil:true,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/smith-single-leg-split-squat.gif',desc:'Pie de atrás elevado, barra del Smith en la espalda. Bajá la rodilla trasera y subí con la delantera.'},
+ {id:'v83',es:'Estocada estática',esf:'Sentadilla dividida',en:'Split Squats',mu:'cuadriceps',eq:'piso',impl:'piso',role:'comp',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/split-squats.gif',desc:'Un pie adelante y otro atrás fijos. Bajá la rodilla trasera hacia el piso y subí; cambiá.'},
+ {id:'v84',es:'Dominada con banda',esf:'Dominada asistida con banda',en:'Band Assisted Pull Up',mu:'espalda',eq:'piso',impl:'banda',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/band-assisted-pull-up.gif',desc:'Banda colgada de la barra bajo el pie o rodilla. Traccioná hasta pasar el mentón; bajá controlando.'},
+ {id:'v85',es:'Pullover con barra',esf:'Pullover con barra (brazos flexionados)',en:'Barbell Bent Arm Pullover',mu:'espalda',eq:'lib',impl:'barra',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/barbell-bent-arm-pullover.gif',desc:'Acostado, barra sobre el pecho con codos flexionados. Llevala por detrás de la cabeza y volvé; dorsal.'},
+ {id:'v86',es:'Pullover con barra recto',esf:'Pullover con barra (brazos rectos)',en:'Barbell Pullover',mu:'espalda',eq:'lib',impl:'barra',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/barbell-pullover.gif',desc:'Acostado, barra con brazos casi estirados. Llevala por detrás de la cabeza en arco y volvé sintiendo el dorsal.'},
+ {id:'v87',es:'Jalón al pecho',esf:'Jalón al pecho con barra en polea',en:'Cable Bar Lateral Pulldown',mu:'espalda',eq:'maq',impl:'maquina',role:'comp',lvl:'principiante',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/cable-bar-lateral-pulldown.gif',desc:'Sentado, agarre ancho. Traé la barra al pecho llevando los codos abajo y atrás; subí controlando.'},
+ {id:'v88',es:'Jalón a un brazo',esf:'Jalón a un brazo en polea',en:'Cable One Arm Pulldown',mu:'espalda',eq:'maq',impl:'maquina',role:'comp',lvl:'principiante',unil:true,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/cable-one-arm-pulldown.gif',desc:'Polea alta con maneral simple. Tirá hacia abajo con un brazo llevando el codo al costado; volvé lento.'},
+ {id:'v89',es:'Jalón con brazos rectos',esf:'Jalón con brazos rectos en polea',en:'Cable Straight Arm Pulldown',mu:'espalda',eq:'maq',impl:'maquina',role:'comp',lvl:'principiante',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/cable-straight-arm-pulldown.gif',desc:'De pie frente a la polea alta, brazos estirados. Bajá la barra hacia los muslos en arco apretando el dorsal.'},
+ {id:'v90',es:'Dominada supina',esf:'Dominada supina (chin up)',en:'Chin Up',mu:'espalda',eq:'piso',impl:'piso',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/chin-up.gif',desc:'Agarre supino al ancho de hombros. Traccioná llevando el mentón sobre la barra; bajá con control.'},
+ {id:'v91',es:'Dominada supina cerrada',esf:'Dominada supina agarre cerrado',en:'Close Grip Chin Up',mu:'espalda',eq:'piso',impl:'piso',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/close-grip-chin-up.gif',desc:'Agarre supino angosto. Traccioná llevando el pecho a la barra; bajá controlando.'},
+ {id:'v92',es:'Pullover con barra Z',esf:'Pullover tumbado con barra Z',en:'Ez Bar Lying Bent Arms Pullover',mu:'espalda',eq:'lib',impl:'barra',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/ez-bar-lying-bent-arms-pullover.gif',desc:'Acostado, barra Z sobre el pecho con codos flexionados. Llevala por detrás de la cabeza y volvé.'},
+ {id:'v93',es:'Jalón en máquina',esf:'Jalón frontal en máquina',en:'Lever Front Pulldown',mu:'espalda',eq:'maq',impl:'maquina',role:'comp',lvl:'principiante',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/lever-front-pulldown.gif',desc:'Sentado en la máquina, agarre ancho. Tirá las manijas al pecho apretando la espalda; volvé controlando.'},
+ {id:'v94',es:'Pullover en máquina',esf:'Pullover en máquina',en:'Lever Pullover',mu:'espalda',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/lever-pullover.gif',desc:'Sentado, empujá las manijas hacia abajo-adelante en arco apretando el dorsal; volvé lento.'},
+ {id:'v95',es:'Dominadas',esf:'Dominadas',en:'Pull Up',mu:'espalda',eq:'piso',impl:'piso',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/pull-up.gif',desc:'Colgado con agarre prono. Traccioná llevando el pecho a la barra; bajá con control.'},
+ {id:'v96',es:'Dominada agarre neutro',esf:'Dominada con agarre neutro',en:'Pull Up Neutral Grip',mu:'espalda',eq:'piso',impl:'piso',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/pull-up-neutral-grip.gif',desc:'Agarre neutro (palmas enfrentadas). Traccioná llevando el pecho a la barra; bajá controlando.'},
+ {id:'v97',es:'Dominada supina',esf:'Dominada con agarre invertido',en:'Reverse Grip Pull Up',mu:'espalda',eq:'piso',impl:'piso',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/reverse-grip-pull-up.gif',desc:'Agarre supino. Traccioná llevando el mentón sobre la barra; bajá con control.'},
+ {id:'v98',es:'Dominada con peso',esf:'Dominada lastrada',en:'Weighted Pull Up',mu:'espalda',eq:'piso',impl:'piso',role:'comp',lvl:'avanzado',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/weighted-pull-up.gif',desc:'Con peso extra. Traccioná hasta pasar el mentón; bajá controlando.'},
+ {id:'v99',es:'Dominada agarre ancho',esf:'Dominada con agarre ancho',en:'Wide Grip Pull Up',mu:'espalda',eq:'piso',impl:'piso',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/wide-grip-pull-up.gif',desc:'Agarre bien abierto. Traccioná llevando el pecho a la barra; bajá controlando.'},
+ {id:'v100',es:'Jalón al pecho completo',esf:'Jalón al pecho de rango completo',en:'Cable Lat Pulldown Full Range Of Motion',mu:'espalda',eq:'maq',impl:'maquina',role:'comp',lvl:'principiante',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/cable-lat-pulldown-full-range-of-motion.gif',desc:'Sentado, agarre ancho. Traé la barra al pecho con rango completo apretando el dorsal; subí controlando.'},
+ {id:'v101',es:'Dominada arquero',esf:'Dominada arquero',en:'Archer Pull Up',mu:'espalda',eq:'piso',impl:'piso',role:'comp',lvl:'avanzado',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/archer-pull-up.gif',desc:'Traccioná cargando el peso sobre un brazo mientras el otro se estira al costado; alterná. Avanzado.'},
+ {id:'v102',es:'Peso muerto',esf:'Peso muerto con barra',en:'Barbell Deadlift',mu:'gluteos',eq:'lib',impl:'barra',role:'comp',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/barbell-deadlift.gif',desc:'Barra pegada a la canilla, bisagra de cadera, espalda neutra. Empujá el piso y estirá cadera y rodillas juntas.'},
+ {id:'v103',es:'Puente con barra',esf:'Puente de glúteos con barra',en:'Barbell Glute Bridge',mu:'gluteos',eq:'lib',impl:'barra',role:'comp',lvl:'principiante',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/barbell-glute-bridge.gif',desc:'Boca arriba con barra sobre la cadera. Empujá la cadera arriba apretando glúteos; bajá lento.'},
+ {id:'v104',es:'Sentadilla profunda',esf:'Sentadilla completa con barra',en:'Barbell Full Squat',mu:'gluteos',eq:'lib',impl:'barra',role:'comp',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/barbell-full-squat.gif',desc:'Barra en la espalda. Bajá la cadera atrás/abajo por debajo del paralelo con la espalda neutra; subí.'},
+ {id:'v105',es:'Peso muerto con mancuernas',esf:'Peso muerto con mancuernas',en:'Dumbbell Deadlift',mu:'gluteos',eq:'lib',impl:'mancuerna',role:'comp',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/dumbbell-deadlift.gif',desc:'Mancuernas por delante de las piernas. Bisagra de cadera bajando con espalda neutra; subí estirando la cadera.'},
+ {id:'v106',es:'Rumano con mancuernas',esf:'Peso muerto rumano con mancuernas',en:'Dumbbell Romanian Deadlift',mu:'gluteos',eq:'lib',impl:'mancuerna',role:'comp',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/dumbbell-romanian-deadlift.gif',desc:'Rodillas apenas flexionadas. Bajá las mancuernas pegadas a las piernas con espalda neutra; subí apretando glúteos.'},
+ {id:'v107',es:'Estocadas con mancuernas',esf:'Zancadas con mancuernas',en:'Dumbbell Lunge',mu:'gluteos',eq:'lib',impl:'mancuerna',role:'comp',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/dumbbell-lunge.gif',desc:'Paso al frente, bajá la rodilla de atrás hacia el piso; empujá con la pierna delantera y volvé.'},
+ {id:'v108',es:'Subida al cajón',esf:'Subida al cajón con mancuernas',en:'Dumbbell Step Up',mu:'gluteos',eq:'lib',impl:'mancuerna',role:'comp',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/dumbbell-step-up.gif',desc:'Con mancuernas, subí a un cajón con una pierna estirándola arriba; bajá controlando y alterná.'},
+ {id:'v109',es:'Pull through en polea',esf:'Pull through en polea con soga',en:'Cable Pull Through With Rope',mu:'gluteos',eq:'maq',impl:'maquina',role:'comp',lvl:'principiante',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/cable-pull-through-with-rope.gif',desc:'De espaldas a la polea baja, soga entre las piernas. Con bisagra de cadera, estirá la cadera al frente apretando glúteos.'},
+ {id:'v110',es:'Patada de glúteo en polea',esf:'Extensión de cadera de pie en polea',en:'Cable Standing Hip Extension',mu:'gluteos',eq:'maq',impl:'maquina',role:'comp',lvl:'principiante',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/cable-standing-hip-extension.gif',desc:'Tobillera en la polea baja. Llevá la pierna hacia atrás estirando la cadera y apretando el glúteo; volvé lento.'},
+ {id:'v111',es:'Peso muerto en polea',esf:'Peso muerto en polea',en:'Cable Deadlift',mu:'gluteos',eq:'maq',impl:'maquina',role:'comp',lvl:'principiante',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/cable-deadlift.gif',desc:'De pie frente a la polea baja. Con bisagra de cadera, estirá cadera y rodillas traccionando; volvé controlando.'},
+ {id:'v112',es:'Pull through con banda',esf:'Pull through con banda',en:'Band Pull Through',mu:'gluteos',eq:'piso',impl:'banda',role:'comp',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/band-pull-through.gif',desc:'De espaldas al anclaje, banda entre las piernas. Con bisagra de cadera, estirá la cadera al frente apretando glúteos.'},
+ {id:'v113',es:'Puente con banda',esf:'Elevación de cadera con banda',en:'Band Hip Lift',mu:'gluteos',eq:'piso',impl:'banda',role:'comp',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/band-hip-lift.gif',desc:'Boca arriba, banda sobre la cadera. Empujá la cadera arriba apretando glúteos contra la resistencia; bajá lento.'},
+ {id:'v114',es:'Sentadilla con banda',esf:'Sentadilla con banda',en:'Band Squat',mu:'gluteos',eq:'piso',impl:'banda',role:'comp',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/band-squat.gif',desc:'De pie sobre la banda, manos a los hombros. Bajá en sentadilla hasta paralelo contra la resistencia; subí.'},
+ {id:'v115',es:'Estocada al frente',esf:'Zancada hacia adelante',en:'Forward Lunge',mu:'gluteos',eq:'piso',impl:'piso',role:'comp',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/forward-lunge-male.gif',desc:'Paso al frente bajando la rodilla trasera casi al piso; empujá con la pierna delantera y volvé.'},
+ {id:'v116',es:'Puente con marcha',esf:'Puente de glúteos con marcha',en:'Glute Bridge March',mu:'gluteos',eq:'piso',impl:'piso',role:'comp',lvl:'principiante',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/glute-bridge-march.gif',desc:'En puente arriba, levantá una rodilla por vez como marchando sin dejar caer la cadera.'},
+ {id:'v117',es:'Sentadilla con salto',esf:'Sentadilla con salto',en:'Jump Squat',mu:'gluteos',eq:'piso',impl:'piso',role:'comp',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/jump-squat.gif',desc:'Bajá en sentadilla y explotá saltando; caé suave amortiguando con las rodillas.'},
+ {id:'v118',es:'Peso muerto en máquina',esf:'Peso muerto en máquina',en:'Lever Deadlift',mu:'gluteos',eq:'maq',impl:'maquina',role:'comp',lvl:'principiante',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/lever-deadlift.gif',desc:'En la máquina, con bisagra de cadera estirá cadera y rodillas traccionando; volvé controlando.'},
+ {id:'v119',es:'Hiperextensión inversa',esf:'Hiperextensión inversa en máquina',en:'Lever Reverse Hyperextension',mu:'gluteos',eq:'maq',impl:'maquina',role:'comp',lvl:'avanzado',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/lever-reverse-hyperextension.gif',desc:'Torso apoyado, piernas colgando. Elevá las piernas hacia atrás-arriba apretando glúteos; bajá lento.'},
+ {id:'v120',es:'Buenos días',esf:'Buenos días con barra',en:'Barbell Good Morning',mu:'isquios',eq:'lib',impl:'barra',role:'comp',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/barbell-good-morning.gif',desc:'Barra en la espalda alta. Bisagra de cadera llevando el torso al frente con la espalda recta; volvé apretando glúteos.'},
+ {id:'v121',es:'Rígido con barra',esf:'Peso muerto piernas rígidas con barra',en:'Barbell Straight Leg Deadlift',mu:'isquios',eq:'lib',impl:'barra',role:'comp',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/barbell-straight-leg-deadlift.gif',desc:'Rodillas casi estiradas, bisagra de cadera. Bajá la barra pegada a las piernas hasta sentir el isquio; subí.'},
+ {id:'v122',es:'Femoral con mancuerna',esf:'Curl femoral tumbado con mancuerna',en:'Dumbbell Lying Femoral',mu:'isquios',eq:'lib',impl:'mancuerna',role:'acc',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/dumbbell-lying-femoral.gif',desc:'Boca abajo, mancuerna sujeta entre los pies. Flexioná las rodillas llevando los talones a los glúteos; bajá lento.'},
+ {id:'v123',es:'Femoral inverso en polea',esf:'Curl femoral inverso asistido en polea',en:'Cable Assisted Inverse Leg Curl',mu:'isquios',eq:'maq',impl:'maquina',role:'acc',lvl:'avanzado',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/cable-assisted-inverse-leg-curl.gif',desc:'Arrodillado con asistencia de la polea. Bajá el torso al frente resistiendo con los isquios y volvé.'},
+ {id:'v124',es:'Femoral asistido boca abajo',esf:'Curl femoral asistido boca abajo',en:'Assisted Prone Hamstring',mu:'isquios',eq:'piso',impl:'piso',role:'acc',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/assisted-prone-hamstring.gif',desc:'Boca abajo, con asistencia. Flexioná la rodilla llevando el talón al glúteo; bajá controlando.'},
+ {id:'v125',es:'GHR',esf:'Elevación glúteo-femoral',en:'Glute Ham Raise',mu:'isquios',eq:'piso',impl:'piso',role:'acc',lvl:'intermedio',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/glute-ham-raise.gif',desc:'Tobillos fijos, arrodillado. Bajá el torso al frente resistiendo con los isquios y volvé apretando.'},
+ {id:'v126',es:'Nórdico con banco',esf:'Curl femoral inverso con apoyo de banco',en:'Inverse Leg Curl Bench Support',mu:'isquios',eq:'piso',impl:'piso',role:'acc',lvl:'avanzado',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/inverse-leg-curl-bench-support.gif',desc:'Arrodillado con las piernas fijas y apoyo. Bajá el torso resistiendo con los isquios; volvé.'},
+ {id:'v127',es:'Nórdico autoasistido',esf:'Curl femoral inverso autoasistido',en:'Self Assisted Inverse Leg Curl',mu:'isquios',eq:'piso',impl:'piso',role:'acc',lvl:'avanzado',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/self-assisted-inverse-leg-curl.gif',desc:'Arrodillado, tobillos fijos. Bajá lento resistiendo con los isquios y ayudate con las manos al llegar.'},
+ {id:'v128',es:'Femoral arrodillado en máquina',esf:'Curl femoral arrodillado en máquina',en:'Lever Kneeling Leg Curl',mu:'isquios',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/lever-kneeling-leg-curl.gif',desc:'Arrodillado en la máquina, rodillo sobre el talón. Flexioná llevando el talón al glúteo; bajá lento.'},
+ {id:'v129',es:'Camilla',esf:'Curl femoral tumbado en máquina',en:'Lever Lying Leg Curl',mu:'isquios',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/lever-lying-leg-curl.gif',desc:'Boca abajo, rodillo sobre los talones. Flexioná llevando los talones a los glúteos; bajá lento.'},
+ {id:'v130',es:'Femoral sentado',esf:'Curl femoral sentado en máquina',en:'Lever Seated Leg Curl',mu:'isquios',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/lever-seated-leg-curl.gif',desc:'Sentado, rodillo sobre los talones. Flexioná llevando los talones abajo/atrás; volvé controlando.'},
+ {id:'v131',es:'Bícep con barra',esf:'Curl con barra',en:'Barbell Curl',mu:'biceps',eq:'lib',impl:'barra',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/barbell-curl.gif',desc:'De pie, codos al costado. Subí la barra flexionando los codos sin balancear; bajá lento.'},
+ {id:'v132',es:'Bícep con mancuernas',esf:'Curl con mancuernas',en:'Dumbbell Biceps Curl',mu:'biceps',eq:'lib',impl:'mancuerna',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/dumbbell-biceps-curl.gif',desc:'De pie, podés alternar. Flexioná sin mover los codos del costado; bajá controlando.'},
+ {id:'v133',es:'Bícep en polea',esf:'Curl en polea',en:'Cable Curl',mu:'biceps',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/cable-curl.gif',desc:'De pie frente a la polea baja, codos pegados. Flexioná llevando el maneral a los hombros; bajá lento.'},
+ {id:'v134',es:'Bícep con banda',esf:'Curl alterno con banda',en:'Band Alternating Biceps Curl',mu:'biceps',eq:'piso',impl:'banda',role:'acc',lvl:'intermedio',unil:true,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/band-alternating-biceps-curl.gif',desc:'Pisá la banda, un brazo por vez. Flexioná contra la resistencia manteniendo el codo quieto; alterná.'},
+ {id:'v135',es:'Dominada de bícep',esf:'Dominada para bíceps',en:'Biceps Pull Up',mu:'biceps',eq:'piso',impl:'piso',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/biceps-pull-up.gif',desc:'Agarre supino cerrado. Traccioná llevando el mentón sobre la barra enfatizando el bíceps; bajá controlando.'},
+ {id:'v136',es:'Predicador con barra',esf:'Curl predicador con barra',en:'Barbell Preacher Curl',mu:'biceps',eq:'lib',impl:'barra',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/barbell-preacher-curl.gif',desc:'Brazos apoyados en el banco Scott. Flexioná la barra hasta arriba; bajá lento sin despegar los codos.'},
+ {id:'v137',es:'Martillo',esf:'Curl martillo con mancuernas',en:'Dumbbell Hammer Curl',mu:'biceps',eq:'lib',impl:'mancuerna',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/dumbbell-hammer-curl.gif',desc:'Agarre neutro (palmas enfrentadas). Flexioná manteniendo el pulgar arriba; braquial y antebrazo.'},
+ {id:'v138',es:'Predicador en polea',esf:'Curl predicador en polea',en:'Cable Preacher Curl',mu:'biceps',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/cable-preacher-curl.gif',desc:'Brazos apoyados en el banco Scott, maneral de polea. Flexioná hasta arriba; bajá controlando.'},
+ {id:'v139',es:'Concentrado',esf:'Curl concentrado con mancuerna',en:'Dumbbell Concentration Curl',mu:'biceps',eq:'lib',impl:'mancuerna',role:'acc',lvl:'intermedio',unil:true,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/dumbbell-concentration-curl.gif',desc:'Sentado, codo apoyado en el muslo. Flexioná la mancuerna hasta el hombro apretando el bíceps; bajá lento.'},
+ {id:'v140',es:'Curl invertido con barra',esf:'Curl invertido con barra',en:'Barbell Reverse Curl',mu:'biceps',eq:'lib',impl:'barra',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/barbell-reverse-curl.gif',desc:'Agarre prono (palmas abajo). Flexioná los codos subiendo la barra; antebrazo y braquial.'},
+ {id:'v141',es:'Martillo en polea con soga',esf:'Curl martillo en polea con soga',en:'Cable Hammer Curl With Rope',mu:'biceps',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/cable-hammer-curl-with-rope.gif',desc:'Polea baja con soga, agarre neutro. Flexioná llevando la soga a los hombros; bajá lento.'},
+ {id:'v142',es:'Curl inclinado',esf:'Curl inclinado con mancuernas',en:'Dumbbell Incline Curl',mu:'biceps',eq:'lib',impl:'mancuerna',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/dumbbell-incline-curl.gif',desc:'Sentado en banco inclinado, brazos colgando. Flexioná las mancuernas con estiramiento inicial; bajá lento.'},
+ {id:'v143',es:'Predicador con mancuerna',esf:'Curl predicador con mancuerna',en:'Dumbbell Preacher Curl',mu:'biceps',eq:'lib',impl:'mancuerna',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/dumbbell-preacher-curl.gif',desc:'Brazo apoyado en el banco Scott. Flexioná la mancuerna hasta arriba; bajá controlando.'},
+ {id:'v144',es:'Martillo cruzado',esf:'Curl martillo cruzado',en:'Dumbbell Cross Body Hammer Curl',mu:'biceps',eq:'lib',impl:'mancuerna',role:'acc',lvl:'intermedio',unil:true,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/dumbbell-cross-body-hammer-curl.gif',desc:'Agarre neutro. Flexioná la mancuerna cruzando hacia el hombro opuesto; alterná.'},
+ {id:'v145',es:'Curl de arrastre',esf:'Curl de arrastre con barra',en:'Barbell Drag Curl',mu:'biceps',eq:'lib',impl:'barra',role:'acc',lvl:'avanzado',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/barbell-drag-curl.gif',desc:'Arrastrá la barra pegada al torso llevando los codos atrás; apretá el bíceps arriba y bajá lento.'},
+ {id:'v146',es:'Tríceps en polea',esf:'Extensión de tríceps en polea',en:'Cable Pushdown',mu:'triceps',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/cable-pushdown.gif',desc:'Codos pegados al cuerpo. Estirá los codos empujando hacia abajo; volvé sin abrir los codos.'},
+ {id:'v147',es:'Press francés con barra',esf:'Extensión de tríceps tumbado con barra',en:'Barbell Lying Triceps Extension',mu:'triceps',eq:'lib',impl:'barra',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/barbell-lying-triceps-extension.gif',desc:'Acostado, barra sobre la frente con codos flexionados. Estirá los codos sin moverlos; bajá controlando.'},
+ {id:'v148',es:'Patada de tríceps',esf:'Patada de tríceps con mancuerna',en:'Dumbbell Kickback',mu:'triceps',eq:'lib',impl:'mancuerna',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/dumbbell-kickback.gif',desc:'Torso inclinado, brazo pegado al costado. Estirá el codo llevando la mancuerna atrás; volvé sin mover el hombro.'},
+ {id:'v149',es:'Flexión cerrada',esf:'Flexión con agarre cerrado',en:'Close Grip Push Up',mu:'triceps',eq:'piso',impl:'piso',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/close-grip-push-up.gif',desc:'Manos juntas bajo el pecho. Bajá con los codos pegados al cuerpo y empujá; tríceps.'},
+ {id:'v150',es:'Tríceps lateral con banda',esf:'Extensión de tríceps lateral con banda',en:'Band Side Triceps Extension',mu:'triceps',eq:'piso',impl:'banda',role:'acc',lvl:'intermedio',unil:true,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/band-side-triceps-extension.gif',desc:'Banda anclada al costado. Estirá el codo alejando la mano contra la resistencia; volvé lento.'},
+ {id:'v151',es:'Tríceps en polea agarre invertido',esf:'Extensión de tríceps en polea agarre supino',en:'Cable Reverse Grip Pushdown',mu:'triceps',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/cable-reverse-grip-pushdown.gif',desc:'Agarre supino en la polea alta. Estirá los codos hacia abajo; volvé sin abrir los codos.'},
+ {id:'v152',es:'Press cerrado',esf:'Press cerrado con barra',en:'Barbell Close Grip Bench Press',mu:'triceps',eq:'lib',impl:'barra',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/barbell-close-grip-bench-press.gif',desc:'Agarre al ancho de hombros. Bajá la barra al pecho con codos pegados y empujá; tríceps.'},
+ {id:'v153',es:'Press francés con mancuernas',esf:'Extensión de tríceps tumbado con mancuernas',en:'Dumbbell Lying Triceps Extension',mu:'triceps',eq:'lib',impl:'mancuerna',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/dumbbell-lying-triceps-extension.gif',desc:'Acostado, mancuernas arriba. Flexioná los codos bajando hacia la frente y estirá sin moverlos.'},
+ {id:'v154',es:'Flexión cerrada con banda',esf:'Flexión con agarre cerrado y banda',en:'Band Close Grip Push Up',mu:'triceps',eq:'piso',impl:'banda',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/band-close-grip-push-up.gif',desc:'Banda en la espalda, manos juntas. Bajá con los codos pegados y empujá contra la resistencia.'},
+ {id:'v155',es:'Patada de tríceps en polea',esf:'Patada de tríceps en polea',en:'Cable Kickback',mu:'triceps',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/cable-kickback.gif',desc:'Torso inclinado, polea baja. Estirá el codo llevando la mano atrás; volvé sin mover el hombro.'},
+ {id:'v156',es:'Patada de tríceps a un brazo',esf:'Patada de tríceps a un brazo con mancuerna',en:'Dumbbell One Arm Kickback',mu:'triceps',eq:'lib',impl:'mancuerna',role:'acc',lvl:'intermedio',unil:true,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/dumbbell-one-arm-kickback.gif',desc:'Apoyado en un banco, brazo pegado al costado. Estirá el codo llevando la mancuerna atrás; alterná.'},
+ {id:'v157',es:'Fondos en banco',esf:'Fondos en banco (rodillas flexionadas)',en:'Bench Dip Knees Bent',mu:'triceps',eq:'piso',impl:'piso',role:'comp',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/bench-dip-knees-bent.gif',desc:'Manos en el banco atrás, rodillas flexionadas. Bajá flexionando los codos hacia atrás y empujá.'},
+ {id:'v158',es:'Tríceps a la nuca en polea',esf:'Extensión de tríceps sobre la cabeza en polea alta',en:'Cable High Pulley Overhead Tricep Extension',mu:'triceps',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/cable-high-pulley-overhead-tricep-extension.gif',desc:'De espaldas a la polea alta, soga arriba. Estirá los codos hacia adelante-arriba; volvé lento.'},
+ {id:'v159',es:'Tríceps a la nuca sentado',esf:'Extensión de tríceps sentado con mancuerna',en:'Dumbbell Seated Triceps Extension',mu:'triceps',eq:'lib',impl:'mancuerna',role:'acc',lvl:'intermedio',unil:false,region:'upper',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/dumbbell-seated-triceps-extension.gif',desc:'Sentado, una mancuerna con ambas manos arriba. Bajá detrás de la nuca flexionando los codos y estirá arriba.'},
+ {id:'v160',es:'Gemelos de pie con barra',esf:'Elevación de gemelos de pie con barra',en:'Barbell Standing Calf Raise',mu:'pantorrillas',eq:'lib',impl:'barra',role:'acc',lvl:'principiante',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/calves/barbell-standing-calf-raise.gif',desc:'Barra en la espalda, puntas en el piso o step. Elevá los talones al máximo; bajá estirando.'},
+ {id:'v161',es:'Gemelos con mancuerna',esf:'Elevación de gemelos de pie con mancuerna',en:'Dumbbell Standing Calf Raise',mu:'pantorrillas',eq:'lib',impl:'mancuerna',role:'acc',lvl:'principiante',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/calves/dumbbell-standing-calf-raise.gif',desc:'De pie con una mancuerna, puntas en un step. Elevá los talones apretando arriba; bajá estirando.'},
+ {id:'v162',es:'Gemelos de pie en máquina',esf:'Elevación de gemelos de pie en máquina',en:'Lever Standing Calf Raise',mu:'pantorrillas',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/calves/lever-standing-calf-raise.gif',desc:'Hombros bajo las almohadillas, puntas en la plataforma. Elevá los talones al máximo; bajá estirando.'},
+ {id:'v163',es:'Gemelos a peso corporal',esf:'Elevación de gemelos de pie a peso corporal',en:'Bodyweight Standing Calf Raise',mu:'pantorrillas',eq:'piso',impl:'piso',role:'acc',lvl:'principiante',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/calves/bodyweight-standing-calf-raise.gif',desc:'De pie, puntas en un step. Elevá los talones apretando el gemelo; bajá con control.'},
+ {id:'v164',es:'Gemelos de pie en Smith',esf:'Elevación de gemelos de pie en Smith',en:'Smith Standing Leg Calf Raise',mu:'pantorrillas',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/calves/smith-standing-leg-calf-raise.gif',desc:'Barra del Smith en la espalda, puntas en un step. Elevá los talones al máximo; bajá estirando.'},
+ {id:'v165',es:'Gemelos a una pierna con banda',esf:'Elevación de gemelos a una pierna con banda',en:'Band Single Leg Calf Raise',mu:'pantorrillas',eq:'piso',impl:'banda',role:'acc',lvl:'principiante',unil:true,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/calves/band-single-leg-calf-raise.gif',desc:'Banda en la punta del pie. Elevá el talón de una pierna contra la resistencia; bajá lento y alterná.'},
+ {id:'v166',es:'Gemelos sentado con barra',esf:'Elevación de gemelos sentado con barra',en:'Barbell Seated Calf Raise',mu:'pantorrillas',eq:'lib',impl:'barra',role:'acc',lvl:'principiante',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/calves/barbell-seated-calf-raise.gif',desc:'Sentado, barra sobre las rodillas, puntas en un step. Elevá los talones apretando el sóleo; bajá estirando.'},
+ {id:'v167',es:'Gemelos sentado con mancuerna',esf:'Elevación de gemelos sentado con mancuerna',en:'Dumbbell Seated Calf Raise',mu:'pantorrillas',eq:'lib',impl:'mancuerna',role:'acc',lvl:'principiante',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/calves/dumbbell-seated-calf-raise.gif',desc:'Sentado, mancuerna sobre las rodillas. Elevá los talones apretando; bajá estirando (sóleo).'},
+ {id:'v168',es:'Gemelos sentado en máquina',esf:'Elevación de gemelos sentado en máquina',en:'Lever Seated Calf Raise',mu:'pantorrillas',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/calves/lever-seated-calf-raise.gif',desc:'Sentado, rodillas bajo la almohadilla. Elevá los talones al máximo; bajá estirando (sóleo).'},
+ {id:'v169',es:'Gemelos en hack',esf:'Elevación de gemelos en máquina hack',en:'Hack Calf Raise',mu:'pantorrillas',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'lower',gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/calves/hack-calf-raise.gif',desc:'En la máquina hack, puntas en la plataforma. Elevá los talones al máximo; bajá estirando.'},
 ];
 const LIB_BY_EN={}; LIB.forEach(x=>LIB_BY_EN[x.en]=x);
 function eqMat(eq,en){ if(eq==='maq')return 'Máquina'; if(eq==='piso')return /band/i.test(en)?'Banda':'Peso corporal';
   return /barbell/i.test(en)?'Barra':(/kettlebell/i.test(en)?'Pesa rusa':'Mancuerna'); }
-// Resolución de nombre ES/EN + material para cualquier movimiento (LIB o warmup)
+const IMPL_ES={maquina:'Máquina',mancuerna:'Mancuerna',barra:'Barra',banda:'Banda',pesarusa:'Pesa rusa',piso:'Peso corporal'};
+// Resolución de nombre (jerga principal) + material + gif + descripción (Biblioteca VigoGym)
 function movInfo(enKey){ const x=LIB_BY_EN[enKey];
-  if(x) return {es:x.es,en:x.en,mat:eqMat(x.eq,x.en)};
-  const t=traducir(enKey); return {es:t.es,en:t.en,mat:(MAT_ES[inferMat(enKey)]||'Peso corporal')}; }
+  if(x) return {es:x.es,esf:x.esf,en:x.en,mat:IMPL_ES[x.impl]||eqMat(x.eq,x.en),gif:x.gif,desc:x.desc};
+  const t=traducir(enKey); return {es:t.es,en:t.en,mat:(MAT_ES[inferMat(enKey)]||'Peso corporal'),gif:null,desc:''}; }
 
 // ---- Selección ponderada (prefiere nivel <= usuario, compound primero) ----
 function shuffle(arr,rng){const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+let PREF_IMPL=new Set();   // preferencia de implemento elegida por el usuario para el día
+function implFilter(cand){ if(!PREF_IMPL.size)return cand; const f=cand.filter(x=>PREF_IMPL.has(x.impl)); return f.length?f:cand; }
 function weightedPick(arr,userNivel,rng){ if(!arr||!arr.length)return null;
   const ur=NIVEL_RANK[userNivel];
   const sc=arr.map(x=>{const over=NIVEL_RANK[x.lvl]>ur?0.3:1; const roleW=x.role==='comp'?1.25:1;
-    return {x,s:Math.pow(over*roleW,1.4)*(0.8+rng()*0.4)};});
+    const implW=(PREF_IMPL.size&&PREF_IMPL.has(x.impl))?2.4:1;
+    return {x,s:Math.pow(over*roleW,1.4)*implW*(0.8+rng()*0.4)};});
   const tot=sc.reduce((a,b)=>a+b.s,0); let rv=rng()*tot;
   for(const o of sc){rv-=o.s;if(rv<=0)return o.x;} return sc[sc.length-1].x; }
 // DEPTH: un músculo, varios ángulos + mezcla de equipamiento (maq+lib+piso)
 function pickDepth(M,nMov,userNivel,used,rng){
   const pool=LIB.filter(x=>x.mu===M && !used.has(x.id)); const chosen=[];
   const comps=pool.filter(x=>x.role==='comp'&&(x.eq==='maq'||x.eq==='lib'));
-  const first=weightedPick(comps,userNivel,rng)||weightedPick(pool,userNivel,rng);
+  const first=weightedPick(implFilter(comps),userNivel,rng)||weightedPick(implFilter(pool),userNivel,rng);
   if(first)chosen.push(first);
   while(chosen.length<nMov){
-    const usedEq=new Set(chosen.map(c=>c.eq)); const missing=['maq','lib','piso'].filter(e=>!usedEq.has(e));
-    let cand=pool.filter(x=>!chosen.includes(x)&&(missing.length?missing.includes(x.eq):true));
-    if(!cand.length)cand=pool.filter(x=>!chosen.includes(x));
+    const base=pool.filter(x=>!chosen.includes(x)); let cand;
+    if(PREF_IMPL.size){ cand=base.filter(x=>PREF_IMPL.has(x.impl)); if(!cand.length)cand=base; }
+    else { const usedEq=new Set(chosen.map(c=>c.eq)); const missing=['maq','lib','piso'].filter(e=>!usedEq.has(e));
+           cand=base.filter(x=>missing.length?missing.includes(x.eq):true); if(!cand.length)cand=base; }
     const p=weightedPick(cand,userNivel,rng); if(!p)break; chosen.push(p);
   }
   return chosen;
@@ -387,14 +480,16 @@ function pickDepth(M,nMov,userNivel,used,rng){
 function pickComplement(muscles,nMov,userNivel,used,rng){
   const chosen=[]; const order=shuffle(muscles,rng);
   for(const M of order){ if(chosen.length>=nMov)break;
-    const usedEq=new Set(chosen.map(c=>c.eq)); const missing=['maq','lib','piso'].filter(e=>!usedEq.has(e));
-    let pool=LIB.filter(x=>x.mu===M&&!used.has(x.id)&&!chosen.includes(x));
-    let cand=pool.filter(x=>missing.length?missing.includes(x.eq):true); if(!cand.length)cand=pool;
+    const pool=LIB.filter(x=>x.mu===M&&!used.has(x.id)&&!chosen.includes(x)); let cand;
+    if(PREF_IMPL.size){ cand=pool.filter(x=>PREF_IMPL.has(x.impl)); if(!cand.length)cand=pool; }
+    else { const usedEq=new Set(chosen.map(c=>c.eq)); const missing=['maq','lib','piso'].filter(e=>!usedEq.has(e));
+           cand=pool.filter(x=>missing.length?missing.includes(x.eq):true); if(!cand.length)cand=pool; }
     const p=weightedPick(cand,userNivel,rng); if(p)chosen.push(p); }
   while(chosen.length<nMov){   // completar SOLO con músculos del mismo grupo
-    const usedEq=new Set(chosen.map(c=>c.eq)); const missing=['maq','lib','piso'].filter(e=>!usedEq.has(e));
-    let pool=LIB.filter(x=>muscles.includes(x.mu)&&!chosen.includes(x)&&!used.has(x.id));
-    let cand=pool.filter(x=>missing.length?missing.includes(x.eq):true); if(!cand.length)cand=pool;
+    const pool=LIB.filter(x=>muscles.includes(x.mu)&&!chosen.includes(x)&&!used.has(x.id)); let cand;
+    if(PREF_IMPL.size){ cand=pool.filter(x=>PREF_IMPL.has(x.impl)); if(!cand.length)cand=pool; }
+    else { const usedEq=new Set(chosen.map(c=>c.eq)); const missing=['maq','lib','piso'].filter(e=>!usedEq.has(e));
+           cand=pool.filter(x=>missing.length?missing.includes(x.eq):true); if(!cand.length)cand=pool; }
     if(!cand.length)break;
     const p=weightedPick(cand,userNivel,rng); if(!p)break; chosen.push(p); }
   return chosen;
@@ -839,44 +934,103 @@ function inferMat(n){
 /* ---------- GALERÍA DE TÉCNICA ---------- */
 function openTech(encN){
   const n=decodeURIComponent(encN), t=movInfo(n), mat=t.mat;
-  const bn=baseName(n);
-  const g = resolveGifRich(bn);
-  // Solo mostramos GIF animado (demo real del movimiento). Las fotos fijas se reemplazan por técnica escrita.
-  const isGif = g && /\.gif(\?|$)/i.test(g.url);
-  const desc = DESC[bn] || '';
-  let mediaHTML='';
-  if(isGif){
-    mediaHTML=`<div class="mediaB"><img src="${g.url}" alt="" onerror="techFallback(this)"></div>`;
-  }
+  const gif=t.gif, desc=t.desc||'';
+  const mediaHTML = gif
+    ? `<div class="mediaB"><img src="${gif}" alt="" loading="lazy" onerror="this.closest('.mediaB').innerHTML='<div style=\\'font-size:13px;color:#888;padding:24px\\'>El GIF requiere conexión la primera vez</div>'"></div>`
+    : '';
   const descHTML = desc
-    ? `<div class="cue" style="margin-top:${isGif?12:4}px;font-size:15px;line-height:1.5"><b>Cómo se hace:</b> ${esc(desc)}</div>`
+    ? `<div class="cue" style="margin-top:${gif?12:4}px;font-size:15px;line-height:1.5"><b>Cómo se hace:</b> ${esc(desc)}</div>`
     : `<div class="cue" style="margin-top:8px">Controlá el rango de movimiento y la respiración; ajustá el peso a tu nivel.</div>`;
-  const noAnim = isGif ? '' : `<div class="mven" style="margin:2px 0 0">Seguí la técnica escrita (sin demo animada para este ejercicio).</div>`;
+  const secES = t.esf ? `<div class="mven" style="margin:2px 0 0">${esc(t.esf)} · <span style="opacity:.8">${esc(t.en)}</span></div>` : `<div class="mven" style="margin:2px 0 12px">${esc(t.en)}</div>`;
   document.getElementById('modal').innerHTML=`<div class="overlay" id="ov"><div class="sheet">
     <div class="row between"><div style="font-weight:900;font-size:19px;line-height:1.15">${esc(t.es)}</div>
       <button class="btn ghost sm" id="cl">✕</button></div>
-    <div class="mven" style="margin:2px 0 12px">${esc(t.en)}</div>
+    ${secES}
+    <div style="margin:10px 0"></div>
     ${mediaHTML}
     <div style="margin:12px 0 4px"><span class="matchip">${esc(mat)}</span></div>
     ${descHTML}
-    ${noAnim}
   </div></div>`;
   document.getElementById('cl').onclick=()=>document.getElementById('modal').innerHTML='';
   document.getElementById('ov').onclick=e=>{if(e.target.id==='ov')document.getElementById('modal').innerHTML='';};
 }
 window.openTech=openTech;
 
+/* ---------- SUSTITUIR EJERCICIO (implemento / ejercicio / músculo) ---------- */
+function routineUsedIds(){const s=new Set();(S.routine.bloques||[]).forEach(b=>b.movs.forEach(m=>s.add(m.id)));return s;}
+function pickReplacement(cur,kind,param,rng){
+  const used=routineUsedIds();
+  let pool;
+  if(kind==='impl') pool=LIB.filter(x=>x.mu===cur.mu&&x.impl===param&&x.id!==cur.id);
+  else if(kind==='ejercicio') pool=LIB.filter(x=>x.mu===cur.mu&&x.id!==cur.id);
+  else pool=LIB.filter(x=>x.mu===param&&x.id!==cur.id); // musculo
+  let cand=pool.filter(x=>!used.has(x.id)); if(!cand.length)cand=pool;
+  if(!cand.length)return null;
+  return cand[Math.floor(rng()*cand.length)];
+}
+function doSub(bi,mi,kind,param){
+  const r=S.routine, blk=r.bloques[bi], mov=blk.movs[mi], cur=LIB_BY_EN[mov.n];
+  if(!cur){modalEl.innerHTML='';return;}
+  const rng=mulberry32(hashStr(mov.n+'|'+kind+'|'+(param||'')+'|'+Date.now()));
+  const rep=pickReplacement(cur,kind,param,rng);
+  if(!rep){toast('No hay alternativa disponible');return;}
+  blk.movs[mi]={r:repScheme(r.objetivo,rep.role)+(rep.unil?' /lado':''),n:rep.en,id:rep.id};
+  blk.equipMix=[...new Set(blk.movs.map(m=>{const x=LIB_BY_EN[m.n];return x?x.eq:'lib';}))];
+  save();modalEl.innerHTML='';screenRoutine();toast('Ejercicio sustituido');
+}
+window.doSub=doSub;
+function openSub(bi,mi){
+  const mov=S.routine.bloques[bi].movs[mi], cur=LIB_BY_EN[mov.n];
+  if(!cur){toast('Este movimiento no se puede sustituir');return;}
+  const impls=[...new Set(LIB.filter(x=>x.mu===cur.mu).map(x=>x.impl))].filter(i=>i!==cur.impl);
+  const otherMus=Object.keys(MREGION).filter(m=>MREGION[m]===cur.region&&m!==cur.mu);
+  const implBtns=impls.map(i=>`<button class="subbtn" onclick="doSub(${bi},${mi},'impl','${i}')">${IMPL_ES[i]}</button>`).join('')||'<span class="mven">Sin otros implementos para este músculo</span>';
+  const musBtns=otherMus.map(m=>`<button class="subbtn" onclick="doSub(${bi},${mi},'musculo','${m}')">${MU_ES[m]}</button>`).join('')||'<span class="mven">Sin otros músculos en esta región</span>';
+  modalEl.innerHTML=`<div class="overlay" id="ov"><div class="sheet">
+    <div class="row between"><div style="font-weight:900;font-size:18px;line-height:1.15">Sustituir: ${esc(cur.es)}</div>
+      <button class="btn ghost sm" id="cl">✕</button></div>
+    <div class="mven" style="margin:2px 0 14px">${esc(MU_ES[cur.mu])} · ${esc(IMPL_ES[cur.impl])}</div>
+    <div class="sublabel">🔧 Cambiar implemento <span class="mven">(mismo músculo)</span></div>
+    <div class="subrow">${implBtns}</div>
+    <div class="sublabel">🔄 Cambiar ejercicio <span class="mven">(mantiene músculo)</span></div>
+    <div class="subrow"><button class="subbtn alt" onclick="doSub(${bi},${mi},'ejercicio')">🎲 Otro de ${esc(MU_ES[cur.mu])}</button></div>
+    <div class="sublabel">💪 Cambiar músculo <span class="mven">(mantiene región: ${esc(regLabel(cur.region))})</span></div>
+    <div class="subrow">${musBtns}</div>
+  </div></div>`;
+  document.getElementById('cl').onclick=()=>modalEl.innerHTML='';
+  document.getElementById('ov').onclick=e=>{if(e.target.id==='ov')modalEl.innerHTML='';};
+}
+window.openSub=openSub;
+
 /* ---------- SEEDED RNG (determinismo) ---------- */
 function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 
+/* ---------- Filtros de generación del día (región + implemento) ---------- */
+const GENF={regions:new Set(),impls:new Set()};
+// Plan del día restringido a las regiones elegidas por el usuario
+function dayPlanFiltered(obj,idx,rng,regions){
+  const UP=['pecho','espalda','hombros','biceps','triceps'], LOW=['cuadriceps','isquios','gluteos','pantorrillas'];
+  let pool=[]; if(regions.has('upper'))pool=pool.concat(UP); if(regions.has('lower'))pool=pool.concat(LOW);
+  const wantCore=regions.has('core'); const esL=[true,false,true,false]; const specs=[];
+  if(!pool.length){ for(let i=0;i<4;i++) specs.push({logic:'complement',target:['core'],esLargo:esL[i],core:true}); return specs; }
+  const sp=shuffle(pool,rng); const nStrength=wantCore?3:4;
+  for(let i=0;i<nStrength;i++){ const m=sp[i%sp.length];
+    if(i%2===0) specs.push({logic:'depth',target:m,esLargo:esL[i]});
+    else specs.push({logic:'complement',target:(pool.length>1?pool:[m]),esLargo:esL[i]}); }
+  if(wantCore) specs.push({logic:'complement',target:['core'],esLargo:false,core:true});
+  return specs;
+}
 /* ---------- MOTOR: genera la rutina componiendo bloques ---------- */
 function generarRutina(obj,nivel,hist,seedExtra){
-  const seed=hashStr(obj+'|'+nivel+'|'+(hist.length)+'|'+(seedExtra||''));
+  const fkey=[...GENF.regions].sort().join(',')+'|'+[...GENF.impls].sort().join(',');
+  const seed=hashStr(obj+'|'+nivel+'|'+(hist.length)+'|'+(seedExtra||'')+'|'+fkey);
   const rng=mulberry32(seed);
   const used=new Set();                 // evita repetir el mismo ejercicio dentro del día
-  const specs=dayPlan(obj,hist.length,rng);
+  PREF_IMPL=GENF.impls;                 // sesga la selección hacia los implementos elegidos
+  const specs=GENF.regions.size?dayPlanFiltered(obj,hist.length,rng,GENF.regions):dayPlan(obj,hist.length,rng);
   const bloques=specs.map(sp=>composeBlock(obj,nivel,sp,used,rng));
+  PREF_IMPL=new Set();
   const domReg=(bloques.find(b=>b.esLargo)||{}).region||'full';
   const warm=WARMS.find(w=>w.region===domReg)||WARMS.find(w=>w.region==='full');
   const durTot=warm.dur+bloques.reduce((a,b)=>a+b.dur,0)+bloques.length*(REST_S/60);
@@ -898,8 +1052,9 @@ function fmtFormato(b){return (FMT[b.formato]||'{d}\'').replace('{d}',b.dur).rep
 function roundsGuess(b){return b.formato==='ROUNDS'?(b.esLargo?4:3):'';}
 function icolor(i){return ['','var(--i1)','var(--i2)','var(--i3)','var(--i4)'][i];}
 function dots(i){let h='';for(let k=1;k<=4;k++)h+=`<div class="dot" style="background:${k<=i?icolor(i):'#e0e0e0'}"></div>`;return `<div class="dots">${h}<span class="region" style="margin-left:8px">Intensidad ${i}/4</span></div>`;}
-function movsHTML(b){return b.movs.map(mm=>{const i=movInfo(mm.n);
-  return `<div class="mv" onclick="openTech('${encodeURIComponent(mm.n)}')"><b>${esc(mm.r)}</b> ${esc(i.es)} <span class="mvi">ⓘ</span><div class="mven">${esc(i.en)}</div></div>`;}).join('');}
+function movsHTML(b,idx){return b.movs.map((mm,mi)=>{const i=movInfo(mm.n);
+  const sub=(idx>=0&&LIB_BY_EN[mm.n])?`<button class="subx" title="Sustituir ejercicio" onclick="event.stopPropagation();openSub(${idx},${mi})">⇄</button>`:'';
+  return `<div class="mv" onclick="openTech('${encodeURIComponent(mm.n)}')"><div class="mvmain"><b>${esc(mm.r)}</b> ${esc(i.es)} <span class="mvi">ⓘ</span><div class="mven">${esc(i.en)}</div></div>${sub}</div>`;}).join('');}
 function toast(msg){const t=$('#toast');t.innerHTML=`<div class="toast">${esc(msg)}</div>`;setTimeout(()=>t.innerHTML='',2200);}
 function mmss(s){s=Math.max(0,Math.round(s));const m=Math.floor(s/60),ss=s%60;return m+':'+String(ss).padStart(2,'0');}
 
@@ -953,19 +1108,32 @@ function screenHome(){
         <div><div style="font-weight:800">Entrenamientos</div><div class="muted" style="font-size:13px">registrados en total</div></div></div>
     </div>
     ${nudgeHTML()}
-    <div class="card" style="text-align:center;">
-      <div style="font-weight:900;font-size:20px;margin-bottom:4px">Rutina de hoy</div>
-      <div class="muted" style="font-size:13px;margin-bottom:14px">4 bloques + entrada en calor · 50-60 min, alineada a <b>${objName(p.objetivo)}</b></div>
-      <button id="gen" class="btn">Generar rutina de hoy</button>
+    <div class="card">
+      <div style="font-weight:900;font-size:20px;margin-bottom:4px;text-align:center">Rutina de hoy</div>
+      <div class="muted" style="font-size:13px;margin-bottom:8px;text-align:center">4 bloques + entrada en calor · 50-60 min, alineada a <b>${objName(p.objetivo)}</b></div>
+      ${genFiltersHTML()}
+      <button id="gen" class="btn" style="margin-top:14px">Generar rutina de hoy</button>
     </div>
     <button id="histBtn" class="btn ghost">Ver historial (${p.historial.length})</button>
     <div class="footnote">${Store.ok?'Tus datos se guardan en este dispositivo.':'⚠ Persistencia no disponible en este contexto: los datos se pierden al recargar. Abrí la app servida (ver notas).'}<br>
-      Técnica escrita 85/85 + GIF animados · offline<br>
+      Biblioteca VigoGym · 170 ejercicios con GIF<br>
       <span style="opacity:.7">${APP_VERSION}</span></div>
   `;
+  document.querySelectorAll('.genf .gbtn').forEach(b=>b.onclick=()=>{
+    const set=b.dataset.t==='reg'?GENF.regions:GENF.impls, k=b.dataset.k;
+    if(set.has(k))set.delete(k);else set.add(k); screenHome();
+  });
   $('#gen').onclick=()=>{S.routine=generarRutina(p.objetivo,p.nivel,p.historial,'');save();screenRoutine();};
   $('#histBtn').onclick=screenHistory;
   $('#perfilBtn').onclick=screenPerfil;
+}
+function genFiltersHTML(){
+  const R=[['upper','Tren superior'],['core','Core'],['lower','Tren inferior']];
+  const I=[['maquina','Máquina'],['mancuerna','Mancuerna'],['banda','Banda'],['barra','Barra'],['pesarusa','Pesa rusa'],['piso','Peso corporal']];
+  const rb=R.map(([k,l])=>`<button class="gbtn ${GENF.regions.has(k)?'on':''}" data-t="reg" data-k="${k}">${l}</button>`).join('');
+  const ib=I.map(([k,l])=>`<button class="gbtn ${GENF.impls.has(k)?'on':''}" data-t="impl" data-k="${k}">${l}</button>`).join('');
+  return `<div class="genlabel">Región del cuerpo (opcional)</div><div class="genf">${rb}</div>
+          <div class="genlabel">Implemento (opcional)</div><div class="genf">${ib}</div>`;
 }
 function nudgeHTML(){
   // §11.1: categorías relevantes removidas en >=3 de últimas 5 sesiones
@@ -985,7 +1153,7 @@ function blockCardHTML(b,idx,isWarm){
     <div class="time"><b>${b.dur}'</b></div>
     <h3>${esc(b.cat)}</h3>
     <div class="sub">${esc(fmtFormato(b))} · ${esc(b.variante)}</div>
-    <div class="movs">${movsHTML(b)}</div>
+    <div class="movs">${movsHTML(b,idx)}</div>
     ${isWarm?'':dots(b.inten)}
     ${isWarm||!b.equipMix?'':`<div style="margin-top:8px">${b.equipMix.map(e=>`<span class="matchip" style="background:#eee;color:#444;margin-right:6px">${EQ_ES[e]}</span>`).join('')}</div>`}
     ${isWarm?'':`<div class="blkfoot"><span class="region">${regLabel(b.region)}</span>
@@ -1318,22 +1486,12 @@ window.render=render;
 })();
 
 /* ---------- INIT ---------- */
-window._onGif=function(){ if(document.getElementById('gen')) screenHome(); }; // refresca el inicio al terminar de cargar demos
 render();
-buildGifIndex();  // índice online (best-effort) solo para calentamientos sin asset local
 
-/* ---------- Service worker: cachea la app + /assets para modo offline total ---------- */
+/* ---------- Service worker: cachea la app y cachea los GIF de VigoGym al verlos (offline tras primer uso) ---------- */
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
 }
-/* Detecta si los assets locales ya están subidos (para el cartel del inicio) */
-(function(){
-  try{
-    const probe=new Image();
-    probe.onload=function(){ window.__ASSETS_LOCAL__=true; if(document.getElementById('gen'))screenHome(); };
-    probe.src='assets/barbell-bench-press.gif?v='+Date.now();
-  }catch(e){}
-})();
 </script>
 </body>
 </html>
