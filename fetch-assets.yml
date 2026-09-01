@@ -1,0 +1,54 @@
+name: Bajar demos (GIF/fotos) a /assets
+
+# Corré este workflow una vez desde la pestaña "Actions" -> "Bajar demos..." -> "Run workflow".
+# Baja las ~77 imágenes listadas en assets_manifest.json y las guarda en la carpeta assets/ del repo.
+# Es idempotente: si un archivo ya existe, no lo vuelve a bajar.
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "assets_manifest.json"
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Descargar assets
+        run: |
+          set -e
+          mkdir -p assets
+          count=0; ok=0; skip=0; fail=0
+          # Recorre el manifest (file,url) con jq
+          jq -c '.[]' assets_manifest.json | while read -r row; do
+            file=$(echo "$row" | jq -r '.file')
+            url=$(echo "$row" | jq -r '.url')
+            count=$((count+1))
+            if [ -s "assets/$file" ]; then
+              echo "skip  $file (ya existe)"; skip=$((skip+1)); continue
+            fi
+            if curl -fsSL --retry 3 --retry-delay 2 "$url" -o "assets/$file"; then
+              echo "ok    $file"; ok=$((ok+1))
+            else
+              echo "FALLO $file  <-  $url"; fail=$((fail+1)); rm -f "assets/$file"
+            fi
+          done
+          echo "Listo. Archivos en assets/:"; ls -1 assets | wc -l
+
+      - name: Commit y push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets
+          if git diff --staged --quiet; then
+            echo "No hay cambios nuevos que commitear."
+          else
+            git commit -m "Assets: bajar demos GIF/fotos a /assets (automatico)"
+            git push
+          fi
