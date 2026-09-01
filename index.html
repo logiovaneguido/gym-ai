@@ -138,7 +138,7 @@ const Store = (()=>{
 })();
 
 /* ---------- CONFIG ---------- */
-const APP_VERSION='v5 · QA 2026-09-01 (demos self-hosted 85/85 · offline · fotos free-exercise-db)';
+const APP_VERSION='v6 · QA 2026-09-01 (técnica escrita 85/85 · GIF animados · offline)';
 const OBJETIVOS = [
   {id:'hipertrofia', t:'Hipertrofia', d:'Ganar masa muscular'},
   {id:'fuerza',      t:'Fuerza',      d:'Fuerza máxima'},
@@ -612,6 +612,107 @@ const NOTE_MEDIA = {
  'Nordic Hamstring Curl':'Sin demo propia. Alternativa para femorales: curl femoral (mismo músculo).',
  'Hollow Hold':'Sin demo propia. Alternativa para core: dead bug (mismo músculo).',
 };
+
+/* Técnica escrita verificada (ES-AR) para los 85 ejercicios + calentamiento. Fuente principal de la demo. */
+const DESC = {
+ // PECHO
+ 'Machine Chest Press':'Sentate con la espalda apoyada y los agarres a la altura del pecho. Empujá las manijas al frente hasta casi estirar los codos (sin trabarlos) y volvé lento controlando.',
+ 'Machine Fly':'Sentado, codos a la altura de los hombros sobre las almohadillas. Juntá los brazos al frente apretando el pecho; abrí lento sin pasar la línea de los hombros.',
+ 'Incline Machine Chest Press':'Como el press en máquina pero con el respaldo inclinado (~30-45°). Empujá hacia arriba y adelante; trabaja más la parte alta del pecho.',
+ 'Cable Crossover':'De pie, un pie adelante y poleas altas. Con los codos levemente flexionados, llevá las manos al centro y abajo cruzando al frente; apretá el pecho y volvé lento.',
+ 'Barbell Bench Press':'Acostado, escápulas retraídas y pies firmes. Bajá la barra al esternón con los codos a ~45°, tocá el pecho y empujá hasta estirar los brazos.',
+ 'Dumbbell Bench Press':'Acostado con una mancuerna en cada mano. Bajá hasta la línea del pecho sintiendo el estiramiento y empujá arriba juntando sin chocar.',
+ 'Incline Dumbbell Press':'Banco a ~30°. Bajá las mancuernas a la parte alta del pecho y empujá hacia arriba; enfatiza el pecho superior.',
+ 'Dumbbell Fly':'Acostado, brazos casi estirados con leve flexión de codo. Abrí en arco hasta la línea del pecho y volvé juntando arriba, como abrazando.',
+ 'Push-Up':'Cuerpo recto de cabeza a talones, manos bajo los hombros. Bajá el pecho al piso con los codos a ~45° y empujá hasta estirar.',
+ 'Incline Push-Up':'Manos elevadas en un banco o barra, cuerpo recto. Bajá el pecho y empujá; versión más accesible de la flexión.',
+ 'Diamond Push-Up':'Manos juntas formando un rombo bajo el pecho. Bajá con los codos pegados al cuerpo y empujá; carga más el tríceps.',
+ // ESPALDA
+ 'Lat Pulldown':'Sentado, agarre ancho. Traé la barra al pecho llevando los codos hacia abajo y atrás, apretando la espalda; subí controlando.',
+ 'Cable Seated Row':'Sentado, espalda recta. Tirá del maneral al abdomen llevando los codos atrás y juntando las escápulas; volvé sin encorvarte.',
+ 'Machine Row':'Pecho apoyado en la almohadilla. Tirá de las manijas hacia atrás juntando los omóplatos; controlá la vuelta sin soltar de golpe.',
+ 'Cable Pullover':'De pie frente a una polea alta, brazos casi estirados. Bajá la barra o soga hasta los muslos en arco, sintiendo el dorsal; volvé lento.',
+ 'Barbell Bent Over Row':'Bisagra de cadera con el torso a ~45° y espalda neutra. Remá la barra al abdomen bajo llevando los codos atrás; bajá controlando.',
+ 'One-Arm Dumbbell Row':'Apoyá una rodilla y una mano en el banco, espalda plana. Tirá la mancuerna hacia la cadera llevando el codo atrás; bajá lento.',
+ 'Barbell Deadlift':'Barra pegada a la canilla, bisagra de cadera y espalda neutra. Empujá el piso y estirá cadera y rodillas a la vez, manteniendo la barra pegada al cuerpo.',
+ 'Dumbbell Shrug':'De pie con una mancuerna en cada mano al costado. Elevá los hombros hacia las orejas, apretá arriba y bajá lento (sin rotar).',
+ 'Pull-Up':'Colgado con agarre prono. Traccioná llevando el pecho hacia la barra con los codos hacia abajo; bajá con control hasta estirar.',
+ 'Inverted Row':'Bajo una barra fija, cuerpo recto y talones apoyados. Tirá el pecho a la barra juntando las escápulas; bajá lento.',
+ 'Superman':'Boca abajo con brazos y piernas estirados. Elevá al mismo tiempo brazos, pecho y piernas apretando glúteos y lumbares; sostené un instante y bajá.',
+ // HOMBROS
+ 'Machine Shoulder Press':'Sentado, manijas a la altura de los hombros. Empujá hacia arriba hasta casi estirar y bajá controlando hasta la altura de las orejas.',
+ 'Cable Lateral Raise':'Polea baja al costado del cuerpo. Elevá el brazo hacia el lateral hasta la altura del hombro con leve flexión de codo; bajá lento.',
+ 'Reverse Machine Fly':'Pecho apoyado, brazos al frente. Abrí hacia atrás llevando los codos afuera, apretando el deltoides posterior; volvé lento.',
+ 'Barbell Overhead Press':'De pie, barra a la altura de los hombros. Empujá arriba hasta estirar (la cabeza pasa apenas adelante al final); bajá al mentón.',
+ 'Arnold Press':'Sentado, mancuernas al frente con las palmas hacia vos. Al subir rotá las palmas hacia afuera y estirá arriba; invertí el giro al bajar.',
+ 'Dumbbell Lateral Raise':'De pie, mancuernas al costado. Elevá los brazos al lateral hasta la línea del hombro con el codo levemente flexionado; bajá lento.',
+ 'Pike Push-Up':'En posición de "V invertida" con la cadera arriba. Bajá la coronilla hacia el piso flexionando los codos y empujá; trabaja los hombros.',
+ 'Plank Shoulder Taps':'En plancha alta (brazos estirados), cuerpo firme. Tocá con una mano el hombro opuesto y alterná, sin dejar que la cadera rote.',
+ // BICEPS
+ 'Cable Biceps Curl':'De pie, codos pegados al cuerpo. Flexioná llevando el maneral hacia los hombros apretando el bíceps; bajá lento y controlado.',
+ 'Machine Biceps Curl':'Brazos apoyados sobre la almohadilla. Flexioná los codos hasta arriba apretando el bíceps; bajá controlando sin soltar.',
+ 'Barbell Curl':'De pie, codos fijos al costado. Subí la barra flexionando los codos sin balancear el cuerpo; bajá lento.',
+ 'Dumbbell Biceps Curl':'De pie con mancuernas (podés alternar). Flexioná sin mover los codos del costado; bajá controlando.',
+ 'Hammer Curl':'Agarre neutro (palmas enfrentadas). Flexioná manteniendo el pulgar arriba; trabaja braquial y antebrazo.',
+ 'Chin-Up':'Agarre supino al ancho de hombros. Traccioná llevando el mentón por encima de la barra; bajá con control. Mucho bíceps.',
+ 'Band Biceps Curl':'Pisá la banda y mantené los codos al costado. Flexioná contra la resistencia hasta arriba; bajá lento.',
+ // TRICEPS
+ 'Triceps Pushdown':'Codos pegados al cuerpo. Estirá los codos empujando hacia abajo y apretando el tríceps; volvé sin abrir los codos.',
+ 'Cable Overhead Triceps Extension':'De espaldas a la polea con la soga por encima de la cabeza. Estirá los codos hacia adelante-arriba; volvé lento sin bajar los codos.',
+ 'Machine Triceps Dip':'Empujá las manijas hacia abajo estirando los codos, torso firme; controlá la subida.',
+ 'Close-Grip Bench Press':'Agarre al ancho de hombros. Bajá la barra al pecho con los codos pegados al cuerpo y empujá; enfatiza el tríceps.',
+ 'Lying Dumbbell Triceps Extension':'Acostado con las mancuernas arriba. Flexioná los codos bajando hacia la frente y estirá sin mover los codos (press francés).',
+ 'Overhead Dumbbell Triceps Extension':'Sentado o de pie, una mancuerna con ambas manos por encima de la cabeza. Bajá detrás de la nuca flexionando los codos y estirá arriba.',
+ 'Bench Dips':'Manos en el borde del banco atrás, pies adelante. Bajá flexionando los codos hacia atrás y empujá hasta estirar.',
+ // CUADRICEPS
+ 'Leg Press':'Pies al ancho de cadera en la plataforma. Bajá flexionando las rodillas hacia el pecho (~90°) y empujá sin trabar las rodillas.',
+ 'Leg Extension':'Sentado, tobillos bajo el rodillo. Estirá las rodillas hasta arriba apretando el cuádriceps; bajá lento.',
+ 'Hack Squat':'En la máquina hack, espalda apoyada y pies al frente. Bajá flexionando las rodillas hasta ~90° y empujá con los talones.',
+ 'Smith Machine Squat':'Barra en la espalda alta. Llevá la cadera atrás y abajo hasta que los muslos queden paralelos; subí empujando el piso.',
+ 'Barbell Squat':'Barra en la espalda alta, pies al ancho de hombros. Bajá la cadera atrás/abajo con la espalda neutra hasta paralelo; subí empujando el piso.',
+ 'Goblet Squat':'Sostené una mancuerna contra el pecho. Bajá entre las piernas manteniendo el torso erguido y subí.',
+ 'Dumbbell Lunge':'Con mancuernas al costado, dá un paso adelante y bajá la rodilla de atrás hacia el piso; empujá con la pierna delantera y volvé.',
+ 'Bulgarian Split Squat':'Pie de atrás elevado en un banco. Bajá la rodilla trasera hacia el piso manteniendo el torso; subí con la pierna delantera.',
+ 'Bodyweight Squat':'Pies al ancho de hombros. Bajá la cadera atrás/abajo hasta paralelo con los talones firmes; subí controlando.',
+ 'Jump Squat':'Bajá en sentadilla y explotá saltando hacia arriba; caé suave amortiguando con las rodillas.',
+ 'Walking Lunge':'Zancadas alternadas avanzando, bajando la rodilla trasera casi al piso; torso erguido.',
+ 'Wall Sit':'Espalda contra la pared, rodillas a 90° como si estuvieras sentado. Sostené la posición el tiempo indicado.',
+ // ISQUIOS
+ 'Lying Leg Curl':'Boca abajo, rodillo sobre los talones. Flexioná las rodillas llevando los talones hacia los glúteos; bajá lento.',
+ 'Seated Leg Curl':'Sentado, rodillo sobre los talones. Flexioná llevando los talones hacia abajo/atrás; volvé controlando.',
+ 'Smith Romanian Deadlift':'Bisagra de cadera con la barra pegada a las piernas. Bajá con la espalda neutra hasta sentir el isquio; subí estirando la cadera.',
+ 'Dumbbell Romanian Deadlift':'Mancuernas al frente de las piernas, rodillas apenas flexionadas. Bisagra de cadera bajando con espalda neutra; subí apretando glúteos.',
+ 'Good Morning':'Barra en la espalda alta. Bisagra de cadera llevando el torso al frente con la espalda recta; volvé apretando glúteos.',
+ 'Nordic Hamstring Curl':'Arrodillado con los tobillos fijos. Bajá el torso al frente lo más lento posible resistiendo con los isquios; ayudate con las manos al llegar.',
+ 'Single-Leg Glute Bridge':'Boca arriba, un pie apoyado y la otra pierna estirada. Elevá la cadera apretando el glúteo; bajá lento.',
+ // GLUTEOS
+ 'Machine Hip Thrust':'Espalda apoyada y almohadilla sobre la cadera. Empujá la cadera hacia arriba apretando los glúteos; bajá controlando.',
+ 'Cable Glute Kickback':'Tobillera en la polea baja. Llevá la pierna hacia atrás estirando la cadera y apretando el glúteo; volvé lento.',
+ 'Hip Abduction Machine':'Sentado, piernas contra las almohadillas. Abrí las piernas hacia afuera apretando el glúteo medio; volvé lento.',
+ 'Barbell Hip Thrust':'Espalda alta apoyada en el banco y barra sobre la cadera. Empujá la cadera arriba hasta alinear tronco y muslos; bajá.',
+ 'Dumbbell Sumo Deadlift':'Piernas abiertas con las puntas afuera y una mancuerna entre las piernas. Bisagra de cadera y subí estirando la cadera.',
+ 'Glute Bridge':'Boca arriba con los pies apoyados. Elevá la cadera apretando los glúteos; bajá lento.',
+ 'Quadruped Hip Extension':'En cuatro apoyos. Elevá una pierna hacia atrás/arriba con la rodilla flexionada apretando el glúteo, sin arquear la espalda.',
+ // PANTORRILLAS
+ 'Standing Calf Raise':'Puntas en la plataforma, hombros bajo las almohadillas. Elevá los talones al máximo y bajá estirando el gemelo.',
+ 'Calf Press':'En la prensa, empujá con las puntas estirando el tobillo; volvé estirando el gemelo abajo.',
+ 'Dumbbell Calf Raise':'De pie con una mancuerna. Elevá los talones al máximo apretando arriba; bajá lento.',
+ 'Bodyweight Calf Raise':'De pie. Elevá los talones apretando el gemelo arriba; bajá con control (podés apoyar la punta en un escalón).',
+ // CORE
+ 'Cable Crunch':'Arrodillado bajo la polea alta con la soga en la nuca. Flexioná el tronco llevando los codos hacia los muslos, redondeando; volvé lento.',
+ 'Torso Rotation Machine':'Sentado con el torso contra la almohadilla. Rotá el tronco de forma controlada hacia un lado y volvé; trabaja los oblicuos.',
+ 'Captain Chair Leg Raise':'Antebrazos apoyados y espalda contra el respaldo. Elevá las rodillas o piernas hacia el pecho sin balancear; bajá lento.',
+ 'Cable Woodchopper':'Polea alta, agarre con ambas manos. Traé en diagonal de arriba abajo cruzando el cuerpo, rotando el tronco; volvé lento.',
+ 'Weighted Russian Twist':'Sentado con el torso atrás y los pies elevados. Rotá el peso de lado a lado tocando cerca de la cadera.',
+ 'Plank':'Antebrazos y puntas de los pies, cuerpo recto de cabeza a talones. Apretá abdomen y glúteos; sostené sin hundir la cadera.',
+ 'Hollow Hold':'Boca arriba con la zona lumbar pegada al piso. Elevá hombros y piernas estiradas formando una "banana"; sostené.',
+ 'Toe Touches':'Boca arriba con las piernas hacia arriba. Elevá los hombros llevando las manos hacia las puntas de los pies; bajá lento.',
+ 'Bicycle Crunch':'Boca arriba. Llevá el codo hacia la rodilla opuesta alternando en pedaleo, controlado.',
+ 'Dead Bug':'Boca arriba con brazos y rodillas a 90°. Estirá el brazo y la pierna opuestos sin arquear la lumbar; alterná.',
+ 'Hanging Leg Raise':'Colgado de la barra. Elevá las piernas al frente (rodillas o rectas) sin balancear; bajá lento.',
+ // WARMUP con GIF
+ 'Jumping Jacks':'Saltos abriendo y cerrando piernas mientras subís y bajás los brazos, de forma coordinada y continua.',
+};
 const PLACEHOLDER_MEDIA=`<div style="font-size:34px">🎬</div><div>Demo no disponible</div><div style="font-size:12px">Este movimiento (funcional) aún no tiene demo en la base libre</div>`;
 const LOADING_MEDIA=`<div style="font-size:34px">⏳</div><div>Cargando demos animadas…</div><div style="font-size:12px">Reabrí este ejercicio en unos segundos</div>`;
 
@@ -738,33 +839,27 @@ function inferMat(n){
 /* ---------- GALERÍA DE TÉCNICA ---------- */
 function openTech(encN){
   const n=decodeURIComponent(encN), t=movInfo(n), mat=t.mat;
-  const g = resolveGifRich(n);
-  let mediaHTML, note='';
-  if(g){
-    mediaHTML=`<img src="${g.url}" alt="" onerror="techFallback(this)">`;
-    if(g.tier==='local'){
-      note = g.note
-        ? `<div class="banner" style="margin-top:8px">⚠ ${esc(g.note)}</div>`
-        : `<div class="mven" style="margin-top:6px">Demo alojada en la app · funciona offline</div>`;
-    }
-    else if(g.tier==='exact') note=`<div class="mven" style="margin-top:6px">Demo: base libre ExerciseGymGifsDB · GIFs © sus autores (stopgap)</div>`;
-    else if(g.tier==='aprox') note=`<div class="banner" style="margin-top:8px">⚠ No hay GIF exacto de este ejercicio. Se muestra una <b>variante equivalente</b> (mismo músculo). Podés hacer el del GIF, o mantener la misma lógica muscular cambiando el implemento (banda ↔ mancuerna ↔ máquina).</div>`;
-    else note=`<div class="banner" style="margin-top:8px">⚠ Todavía no hay demo propia de este ejercicio. Te mostramos una <b>alternativa equivalente para el mismo músculo</b>: <b>${esc(g.altEs)}</b> <span class="mven">(${esc(g.altEn)})</span>. Trabajá el mismo grupo muscular con este movimiento.</div>`;
-  } else if(GIF_STATUS==='fail'){
-    mediaHTML=`<div style="font-size:34px">📡</div><div>No se pudo cargar la base de demos</div><div style="font-size:12px">Revisá tu conexión y reabrí la app (o abrila desde la URL publicada, no la vista previa)</div>`;
-  } else if(!GIFIDX){
-    mediaHTML=LOADING_MEDIA;
-  } else {
-    mediaHTML=PLACEHOLDER_MEDIA;
+  const bn=baseName(n);
+  const g = resolveGifRich(bn);
+  // Solo mostramos GIF animado (demo real del movimiento). Las fotos fijas se reemplazan por técnica escrita.
+  const isGif = g && /\.gif(\?|$)/i.test(g.url);
+  const desc = DESC[bn] || '';
+  let mediaHTML='';
+  if(isGif){
+    mediaHTML=`<div class="mediaB"><img src="${g.url}" alt="" onerror="techFallback(this)"></div>`;
   }
+  const descHTML = desc
+    ? `<div class="cue" style="margin-top:${isGif?12:4}px;font-size:15px;line-height:1.5"><b>Cómo se hace:</b> ${esc(desc)}</div>`
+    : `<div class="cue" style="margin-top:8px">Controlá el rango de movimiento y la respiración; ajustá el peso a tu nivel.</div>`;
+  const noAnim = isGif ? '' : `<div class="mven" style="margin:2px 0 0">Seguí la técnica escrita (sin demo animada para este ejercicio).</div>`;
   document.getElementById('modal').innerHTML=`<div class="overlay" id="ov"><div class="sheet">
     <div class="row between"><div style="font-weight:900;font-size:19px;line-height:1.15">${esc(t.es)}</div>
       <button class="btn ghost sm" id="cl">✕</button></div>
     <div class="mven" style="margin:2px 0 12px">${esc(t.en)}</div>
-    <div class="mediaB">${mediaHTML}</div>
-    ${note}
+    ${mediaHTML}
     <div style="margin:12px 0 4px"><span class="matchip">${esc(mat)}</span></div>
-    <div class="cue" style="margin-top:8px">Mirá la demo para dominar la técnica antes de ejecutar. Controlá el rango de movimiento y la respiración; ajustá el peso a tu nivel.</div>
+    ${descHTML}
+    ${noAnim}
   </div></div>`;
   document.getElementById('cl').onclick=()=>document.getElementById('modal').innerHTML='';
   document.getElementById('ov').onclick=e=>{if(e.target.id==='ov')document.getElementById('modal').innerHTML='';};
@@ -865,7 +960,7 @@ function screenHome(){
     </div>
     <button id="histBtn" class="btn ghost">Ver historial (${p.historial.length})</button>
     <div class="footnote">${Store.ok?'Tus datos se guardan en este dispositivo.':'⚠ Persistencia no disponible en este contexto: los datos se pierden al recargar. Abrí la app servida (ver notas).'}<br>
-      Demos: ${window.__ASSETS_LOCAL__?'✓ alojadas en la app (offline)':'☁ desde la nube (subí /assets para modo offline)'}<br>
+      Técnica escrita 85/85 + GIF animados · offline<br>
       <span style="opacity:.7">${APP_VERSION}</span></div>
   `;
   $('#gen').onclick=()=>{S.routine=generarRutina(p.objetivo,p.nivel,p.historial,'');save();screenRoutine();};
