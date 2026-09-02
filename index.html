@@ -151,7 +151,7 @@ const Store = (()=>{
 })();
 
 /* ---------- CONFIG ---------- */
-const APP_VERSION='v10 · 2026-09-02 (VigoGym 230 · cronómetro robusto en segundo plano)';
+const APP_VERSION='v11 · 2026-09-02';
 const OBJETIVOS = [
   {id:'hipertrofia', t:'Hipertrofia', d:'Ganar masa muscular'},
   {id:'fuerza',      t:'Fuerza',      d:'Fuerza máxima'},
@@ -1183,7 +1183,6 @@ function screenHome(){
     </div>
     <button id="histBtn" class="btn ghost">Ver historial (${p.historial.length})</button>
     <div class="footnote">${Store.ok?'Tus datos se guardan en este dispositivo.':'⚠ Persistencia no disponible en este contexto: los datos se pierden al recargar. Abrí la app servida (ver notas).'}<br>
-      Biblioteca VigoGym · calentamiento propio (bici/cinta) · GIF self-host<br>
       <span style="opacity:.7">${APP_VERSION}</span></div>
   `;
   document.querySelectorAll('.genf .gbtn').forEach(b=>b.onclick=()=>{
