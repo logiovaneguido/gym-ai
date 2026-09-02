@@ -1,5 +1,5 @@
 /* Gym AI service worker — v10 (network-first para la app; cache-first para GIF/assets) */
-const CACHE='gymai-v13';
+const CACHE='gymai-v15';
 const CORE=['./','./index.html'];
 self.addEventListener('install',e=>{
   self.skipWaiting();
