@@ -151,7 +151,7 @@ const Store = (()=>{
 })();
 
 /* ---------- CONFIG ---------- */
-const APP_VERSION='v9 · 2026-09-02 (VigoGym 230 · todos los grupos musculares · self-host)';
+const APP_VERSION='v10 · 2026-09-02 (VigoGym 230 · cronómetro robusto en segundo plano)';
 const OBJETIVOS = [
   {id:'hipertrofia', t:'Hipertrofia', d:'Ganar masa muscular'},
   {id:'fuerza',      t:'Fuerza',      d:'Fuerza máxima'},
@@ -1377,41 +1377,61 @@ function buildPhases(r){
   });
   return ph;
 }
+/* Cronómetro por TIMESTAMP: no cuenta tick a tick (el navegador congela eso en segundo plano),
+   sino que calcula el tiempo restante contra la hora real (EX.deadline). Así sobrevive al bloqueo
+   del celu / segundo plano / recarga: al volver, recalcula solo. */
+function saveEX(){ try{
+    if(EX && EX.idx<EX.phases.length){ Store.set('gymai_exec',{idx:EX.idx,deadline:EX.deadline,blockStarted:EX.blockStarted,running:EX.running,finalizados:EX.finalizados,phaseRem:EX.phaseRem}); }
+    else Store.set('gymai_exec',null);
+  }catch(e){} }
+function activePhase(){ const ph=EX.phases[EX.idx]; return (ph.type!=='block' || EX.blockStarted); }
+function calcRem(){ return EX.deadline ? Math.ceil((EX.deadline-Date.now())/1000) : EX.phaseRem; }
 function startExec(){
   initAudio();                            // desbloquea el audio con el gesto del usuario
   const r=S.routine;
   const phases=buildPhases(r);
   const total=phases.reduce((a,p)=>a+p.dur,0);
-  EX={r,phases,idx:0,total,totalRem:total,phaseRem:phases[0].dur,running:true,blockStarted:true,
-      finalizados:[],cancelados:[]};
-  drawExec();
-  clearInterval(TICK);TICK=setInterval(tick,1000);
+  EX={r,phases,idx:0,total,phaseRem:phases[0].dur,running:true,blockStarted:true,
+      deadline:Date.now()+phases[0].dur*1000, snd:{}, finalizados:[],cancelados:[]};
+  drawExec(); saveEX();
+  clearInterval(TICK);TICK=setInterval(tick,250);
 }
 function tick(){
   if(!EX||!EX.running)return;
-  const ph=EX.phases[EX.idx];
-  const active = (ph.type!=='block' || EX.blockStarted);
-  EX.totalRem--;
-  if(active) EX.phaseRem--;
-  // avisos sonoros: 10s restantes y cuenta regresiva 3-2-1
-  if(active){ if(EX.phaseRem===10) sWarn10(); else if(EX.phaseRem<=3 && EX.phaseRem>=1) sTick(); }
-  if(EX.phaseRem<=0){ advance('timer'); }
-  else drawExec();
+  let ph=EX.phases[EX.idx];
+  if(ph.type==='block' && !EX.blockStarted){ EX.phaseRem=ph.dur; drawExec(); return; } // bloque espera "Iniciar"
+  let rem=calcRem();
+  // Catch-up: si estuvo en segundo plano y ya vencieron fases (prep/descanso), avanzar sin repetir sonidos
+  let guard=0;
+  while(rem<=0 && EX.idx<EX.phases.length && guard++<30){
+    advance('timer', true);
+    if(!EX || EX.idx>=EX.phases.length) return;
+    ph=EX.phases[EX.idx];
+    if(ph.type==='block' && !EX.blockStarted){ EX.phaseRem=ph.dur; drawExec(); saveEX(); return; }
+    rem=calcRem();
+  }
+  EX.phaseRem=Math.max(0,rem);
+  if(EX.phaseRem===10 && !EX.snd.w10){ EX.snd.w10=1; sWarn10(); }
+  if(EX.phaseRem<=3 && EX.phaseRem>=1 && !EX.snd['t'+EX.phaseRem]){ EX.snd['t'+EX.phaseRem]=1; sTick(); }
+  drawExec();
 }
-function advance(reason){
+function advance(reason, catchup){
   const ph=EX.phases[EX.idx];
-  if(ph.type==='block' && reason!=='cancel'){ EX.finalizados.push(ph.ref.id); sBlockEnd(); }
+  if(ph.type==='block' && reason!=='cancel'){ EX.finalizados.push(ph.ref.id); if(!catchup) sBlockEnd(); }
   EX.idx++;
   if(EX.idx>=EX.phases.length){ return finishRoutine('CompletoTimer'); }
   const np=EX.phases[EX.idx];
+  EX.snd={};
+  EX.blockStarted = np.type!=='block';   // prep/descanso corren solos; bloque espera "Iniciar"
   EX.phaseRem=np.dur;
-  EX.blockStarted = np.type!=='block';   // prep/rest corren solos; bloque espera "Iniciar"
-  if(np.type==='rest') sRestStart();
-  drawExec();
+  EX.deadline = EX.blockStarted ? Date.now()+np.dur*1000 : null;
+  if(np.type==='rest' && !catchup) sRestStart();
+  drawExec(); saveEX();
 }
 function drawExec(){
   const ph=EX.phases[EX.idx];
-  const pct=100*(1-EX.totalRem/EX.total);
+  const totalRem=EX.phaseRem+EX.phases.slice(EX.idx+1).reduce((a,p)=>a+p.dur,0);
+  const pct=100*(1-totalRem/EX.total);
   const stepBlocks=EX.phases.filter(p=>p.type==='block');
   const curBlockNo=stepBlocks.indexOf(ph);
   const doneBlocks=EX.finalizados.length;
@@ -1443,7 +1463,7 @@ function drawExec(){
   app.innerHTML=`
     <div class="totwrap">
       <div class="lab">Tiempo total de la rutina</div>
-      <div class="clock" style="color:${EX.totalRem<=0?'var(--red)':'#fff'}">${mmss(EX.totalRem)}</div>
+      <div class="clock" style="color:${totalRem<=0?'var(--red)':'#fff'}">${mmss(totalRem)}</div>
       <div class="totbar"><i style="width:${Math.min(100,pct)}%"></i></div>
     </div>
     <div class="steps">${stepsHTML}</div>
@@ -1456,12 +1476,16 @@ function drawExec(){
     <div class="navwarn">Finalizar guarda la sesión (aunque hayas acortado). Cancelar la descarta.</div>
   `;
 }
-window.startBlock=()=>{EX.blockStarted=true;initAudio();sBlockStart();drawExec();};
+window.startBlock=()=>{EX.blockStarted=true;EX.snd={};EX.deadline=Date.now()+EX.phases[EX.idx].dur*1000;initAudio();sBlockStart();drawExec();saveEX();};
 window.finBlock=()=>advance('user');
 window.skipPhase=()=>advance('skip');
-window.togglePause=()=>{EX.running=!EX.running;drawExec();};
+window.togglePause=()=>{
+  if(EX.running){ EX.running=false; EX.phaseRem=calcRem(); EX.deadline=null; }
+  else { EX.running=true; if(activePhase()) EX.deadline=Date.now()+Math.max(0,EX.phaseRem)*1000; }
+  drawExec(); saveEX();
+};
 window.cancelRoutine=()=>{ if(!confirm('¿Cancelar la rutina? No se va a guardar.'))return;
-  clearInterval(TICK);EX=null;toast('Rutina cancelada (no guardada)');render();};
+  clearInterval(TICK);EX=null;saveEX();toast('Rutina cancelada (no guardada)');render();};
 window.finishRoutine=(cierre)=>{
   clearInterval(TICK);
   const r=EX.r;
@@ -1476,7 +1500,7 @@ window.finishRoutine=(cierre)=>{
     removed:r.removed||[], cierre, durMin:r.durEstim};
   S.profile.historial.push(sess);
   S.profile.contador[r.objetivo]=(S.profile.contador[r.objetivo]||0)+1;
-  S.routine=null;save();EX=null;
+  S.routine=null;save();EX=null;saveEX();
   screenDone(sess);
 };
 function screenDone(sess){
@@ -1554,6 +1578,28 @@ window.render=render;
 
 /* ---------- INIT ---------- */
 render();
+
+/* Cronómetro robusto: recalcula al volver a primer plano y reanuda una sesión en curso tras recargar */
+function _resync(){ if(EX && EX.running){ tick(); } }
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) _resync(); });
+window.addEventListener('focus',_resync);
+window.addEventListener('pageshow',_resync);
+(function resumeExec(){
+  try{
+    const sv=Store.get('gymai_exec');
+    if(sv && S.routine && sv.idx!=null){
+      const phases=buildPhases(S.routine);
+      if(sv.idx<phases.length){
+        EX={r:S.routine,phases,idx:sv.idx,total:phases.reduce((a,p)=>a+p.dur,0),
+            phaseRem:(sv.phaseRem!=null?sv.phaseRem:phases[sv.idx].dur),
+            blockStarted:sv.blockStarted,running:sv.running,deadline:sv.deadline,snd:{},
+            finalizados:sv.finalizados||[],cancelados:[]};
+        clearInterval(TICK);TICK=setInterval(tick,250);
+        drawExec(); if(EX.running) tick();
+      } else { Store.set('gymai_exec',null); }
+    }
+  }catch(e){}
+})();
 
 /* ---------- Service worker: cachea la app y cachea los GIF de VigoGym al verlos (offline tras primer uso) ---------- */
 if('serviceWorker' in navigator){
