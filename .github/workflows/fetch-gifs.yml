@@ -1,0 +1,37 @@
+name: Self-host GIF (VigoGym) a /gifs
+
+# Baja los GIF de los ejercicios de la app (los listados en vigogym_assets.json) a la carpeta gifs/.
+# Corré una vez: Actions -> "Self-host GIF (VigoGym) a /gifs" -> Run workflow.
+# La app usa gifs/ si están, y si no cae a la CDN automáticamente.
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "vigogym_assets.json"
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Descargar GIF
+        run: |
+          set -e
+          jq -c '.[]' vigogym_assets.json | while read -r row; do
+            file=$(echo "$row" | jq -r '.file')
+            url=$(echo "$row" | jq -r '.url')
+            [ -s "$file" ] && { echo "skip $file"; continue; }
+            mkdir -p "$(dirname "$file")"
+            if curl -fsSL --retry 3 --retry-delay 2 "$url" -o "$file"; then echo "ok   $file"; else echo "FALLO $file"; rm -f "$file"; fi
+          done
+          echo "Total en gifs/:"; find gifs -type f 2>/dev/null | wc -l
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add gifs
+          if git diff --staged --quiet; then echo "sin cambios"; else git commit -m "Self-host GIF VigoGym (automatico)"; git push; fi
