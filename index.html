@@ -58,6 +58,28 @@
   .blk h3{font-size:22px;font-weight:900;margin:20px 0 2px;letter-spacing:-.03em;}
   .blk .sub{font-size:12px;font-weight:700;color:var(--ink2);background:#f0f0f0;display:inline-block;
     padding:4px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.02em;}
+  .restline{font-size:12px;color:var(--ink2);margin:8px 0 2px;}
+  .restline b{color:var(--ink);}
+  .progcard{margin-top:14px;text-align:left;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 13px;}
+  .progcard.done{background:#f3fae9;border-color:#d7ecac;}
+  .pghead{font-size:13px;font-weight:800;color:var(--ink);}
+  .pghead b{color:var(--ink);}
+  .pgsub{font-size:11px;color:var(--ink2);margin:2px 0 8px;}
+  .progrow{padding:7px 0;border-top:1px solid var(--line);}
+  .progrow:first-of-type{border-top:none;}
+  .pgname{font-size:13px;font-weight:700;color:var(--ink);display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .pgreps{font-size:11px;font-weight:800;color:var(--ink2);background:#f0f0f0;border-radius:6px;padding:2px 6px;}
+  .pgbtns{display:flex;gap:8px;margin-top:6px;}
+  .pgbtn{flex:1;border:2px solid var(--line);background:#fafafa;color:var(--ink);font-weight:800;font-size:14px;
+    border-radius:10px;padding:8px 0;cursor:pointer;}
+  .pgbtn.si{background:var(--lime);border-color:var(--lime);color:#1c1c1c;}
+  .pgbtn.no{background:#ececec;border-color:#d8d8d8;color:#555;}
+  .pgprev{font-size:11.5px;margin-top:6px;}
+  .pgok{color:#3f7d12;font-weight:700;} .pgok b{color:#2c5c07;}
+  .pgmut{color:var(--ink2);}
+  .pgres{font-size:12.5px;padding:3px 0;color:var(--ink);}
+  .pgres.up{font-weight:700;}
+  .btn.off{opacity:.5;}
   .blk .time{position:absolute;top:12px;right:12px;text-align:center;background:#fff;border-radius:10px;
     padding:4px 8px;box-shadow:0 2px 8px rgba(0,0,0,.08);}
   .blk .time b{font-size:18px;font-weight:900;display:block;}
@@ -158,7 +180,7 @@ const Store = (()=>{
 })();
 
 /* ---------- CONFIG ---------- */
-const APP_VERSION='v13 · 2026-09-02';
+const APP_VERSION='v15 · 2026-09-02';
 const OBJETIVOS = [
   {id:'hipertrofia', t:'Hipertrofia', d:'Ganar masa muscular'},
   {id:'fuerza',      t:'Fuerza',      d:'Fuerza máxima'},
@@ -570,8 +592,32 @@ function objInten(obj,esLargo,core){ if(core)return 2;
   if(obj==='fuerza')return esLargo?4:3; if(obj==='resistencia')return esLargo?4:3;
   if(obj==='salud')return 2; return 3;}
 function styleFor(obj){return {hipertrofia:'Hypertrophy',fuerza:'Strength',resistencia:'Conditioning',rendimiento:'Power',salud:'Full Body'}[obj]||'Hypertrophy';}
+/* ---- Diseño de bloque basado en evidencia (NSCA CSCS + ACSM 2026 + meta-análisis de descanso) ----
+   El bloque es un circuito cronometrado: el DESCANSO que exige cada objetivo gobierna cuántos ejercicios
+   entran en la ventana. Fuerza/potencia (descanso 2–5') → menos; hipertrofia/salud (60–90s) → medio;
+   resistencia (<30s) → más. Los bloques largos (14') llevan 4–5 ejercicios; los cortos (7') 3–4. */
+function nMovBlock(obj,esLargo){
+  const T={fuerza:[3,4],rendimiento:[3,4],hipertrofia:[3,5],salud:[3,5],resistencia:[4,5]};
+  return (T[obj]||T.hipertrofia)[esLargo?1:0];
+}
+// Segundos por "slot" de ejercicio (trabajo + descanso intra-serie) según objetivo → sirve para estimar rondas.
+function slotSec(obj){ return ({fuerza:60,rendimiento:55,hipertrofia:48,salud:45,resistencia:35})[obj]||48; }
+// Rondas objetivo para llenar la ventana del bloque con el nº de ejercicios dado.
+function targetRounds(obj,durMin,nMov){ const r=Math.round((durMin*60)/((nMov||3)*slotSec(obj))); return Math.max(2,Math.min(6,r||3)); }
+// Descanso ENTRE BLOQUES por objetivo (NSCA: fuerza/potencia 2–5', hipertrofia/salud ~1–2', resistencia <1').
+function blockRest(obj){ return ({fuerza:150,rendimiento:150,hipertrofia:90,salud:90,resistencia:45})[obj]||90; }
+// Descanso sugerido ENTRE SERIES para mostrar (objetivo + si el bloque es de compuestos pesados usa el tope).
+function restHint(obj,heavy){
+  if(obj==='fuerza')return '2–5 min';
+  if(obj==='rendimiento')return '2–3 min';
+  if(obj==='hipertrofia')return heavy?'90 s – 2 min':'60–90 s';
+  if(obj==='salud')return heavy?'90 s':'45–75 s';
+  if(obj==='resistencia')return '≤30 s';
+  return '60–90 s';
+}
 function composeBlock(obj,nivel,spec,used,rng){
-  const nMov=3, esLargo=!!spec.esLargo;
+  const esLargo=!!spec.esLargo;
+  const nMov = spec.core ? (esLargo?4:3) : nMovBlock(obj,esLargo);
   let movs = spec.core ? pickDepth('core',nMov,nivel,used,rng)
            : spec.logic==='depth' ? pickDepth(spec.target,nMov,nivel,used,rng)
            : pickComplement(spec.target,nMov,nivel,used,rng);
@@ -586,8 +632,12 @@ function composeBlock(obj,nivel,spec,used,rng){
        :('Complementariedad · '+regLabel(region)));
   const nivelB=movs.reduce((mx,mm)=>Math.max(mx,NIVEL_RANK[mm.lvl]),1);
   const equipMix=[...new Set(movs.map(mm=>mm.eq))];
+  // ¿bloque dominado por compuestos pesados (máquina/barra)? → descanso al tope del rango
+  const heavy = movs.filter(mm=>mm.role==='comp'&&(mm.eq==='maq'||mm.impl==='barra')).length >= Math.ceil((movs.length||1)/2);
+  const durB = esLargo?14:7;
+  const rounds = targetRounds(obj,durB,movs.length||nMov);
   return {id:'blk'+Math.floor(rng()*1e9)+'_'+_mid, cat:styleFor(obj), variante:foco.toUpperCase(),
-    formato:objFormato(obj,esLargo), dur:esLargo?14:7, esLargo, region,
+    formato:objFormato(obj,esLargo), dur:durB, esLargo, region, rounds, descanso:restHint(obj,heavy),
     inten:objInten(obj,esLargo,spec.core), nivel:['','principiante','intermedio','avanzado'][nivelB],
     peso:obj==='fuerza', movs:bmovs, logic:spec.core?'core':spec.logic, equipMix};
 }
@@ -1099,7 +1149,7 @@ function generarRutina(obj,nivel,hist,seedExtra){
   const bloques=specs.map(sp=>composeBlock(obj,nivel,sp,used,rng));
   PREF_IMPL=new Set();
   const warm=buildWarmup(rng);
-  const durTot=warm.dur+bloques.reduce((a,b)=>a+b.dur,0)+bloques.length*(REST_S/60);
+  const durTot=warm.dur+bloques.reduce((a,b)=>a+b.dur,0)+bloques.length*(blockRest(obj)/60);
   return {fecha:todayKey(), objetivo:obj, nivel, warmup:warm, bloques,
           durEstim:Math.round(durTot), removed:[]};
 }
@@ -1127,7 +1177,7 @@ const $=(s,el=document)=>el.querySelector(s);
 const app=$('#app'), modalEl=$('#modal');
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function fmtFormato(b){return (FMT[b.formato]||'{d}\'').replace('{d}',b.dur).replace('{r}',roundsGuess(b));}
-function roundsGuess(b){return b.formato==='ROUNDS'?(b.esLargo?4:3):'';}
+function roundsGuess(b){return b.formato==='ROUNDS'?(b.rounds||(b.esLargo?4:3)):'';}
 function icolor(i){return ['','var(--i1)','var(--i2)','var(--i3)','var(--i4)'][i];}
 function dots(i){let h='';for(let k=1;k<=4;k++)h+=`<div class="dot" style="background:${k<=i?icolor(i):'#e0e0e0'}"></div>`;return `<div class="dots">${h}<span class="region" style="margin-left:8px">Intensidad ${i}/4</span></div>`;}
 /* ---- Registro de peso por (ejercicio × reps × objetivo) [F14] ---- */
@@ -1135,6 +1185,73 @@ function wKey(en,reps){ return (S.routine?S.routine.objetivo:'')+'|'+en+'|'+reps
 function getWeight(en,reps){ try{ const w=(S.profile&&S.profile.weights)||{}; const v=w[wKey(en,reps)]; return v!=null?v:''; }catch(e){ return ''; } }
 window.setWeight=function(en,reps,val){ if(!S.profile)return; S.profile.weights=S.profile.weights||{}; const k=wKey(en,reps);
   const n=parseFloat(String(val).replace(',','.')); if(isNaN(n)||n<=0) delete S.profile.weights[k]; else S.profile.weights[k]=n; save(); };
+
+/* ---- Progresión de carga: regla 2×2 (NSCA) [F22] ----
+   Si superás la meta por 2+ reps en la última serie en DOS sesiones seguidas, se sube el peso.
+   Incremento relativo (rango 2.5–10%): compuestos 5%, accesorios/aislados 2.5%.
+   El estado se guarda por (objetivo × ejercicio × reps), igual que el peso. */
+function progGet(en,reps){ try{ const p=(S.profile&&S.profile.prog)||{}; return p[wKey(en,reps)]||0; }catch(e){ return 0; } }
+function progPct(en){ const x=LIB_BY_EN[en]; return (x&&x.role==='comp')?0.05:0.025; }
+function roundKg(x){ return Math.round(x*2)/2; }
+function nextWeight(w,en){ let nw=roundKg(w*(1+progPct(en))); if(nw<=w) nw=roundKg(w+0.5); return nw; }
+// Vista previa en vivo de lo que pasará al guardar, según la respuesta actual.
+function progPreview(mm,a){
+  if(!a) return '';
+  if(a==='no') return '<span class="pgmut">reinicia la racha</span>';
+  const hits=progGet(mm.n,mm.r)+1, pct=Math.round(progPct(mm.n)*100);
+  if(hits<2) return '<span class="pgok">vas 1/2 ✓ · una más y subimos</span>';
+  const w=getWeight(mm.n,mm.r);
+  if(w!==''&&(+w)>0){ return `<span class="pgok">↑ ${esc(String(w))} → <b>${nextWeight(+w,mm.n)} kg</b> (+${pct}%) al guardar</span>`; }
+  return `<span class="pgok">subí ~${pct}% · cargá el kg y lo hace solo</span>`;
+}
+// Procesa las respuestas de un bloque: actualiza la racha 2×2 y, al llegar a 2, sube el peso. Devuelve resumen.
+function processProg(b,ans){
+  if(!S.profile) return [];
+  S.profile.prog=S.profile.prog||{}; S.profile.weights=S.profile.weights||{};
+  const out=[];
+  b.movs.forEach(mm=>{
+    if(!LIB_BY_EN[mm.n]) return;
+    const a=ans[mm.n+'|'+mm.r]; if(a==null) return;
+    const k=wKey(mm.n,mm.r), es=movInfo(mm.n).es;
+    let hits=S.profile.prog[k]||0;
+    if(a==='no'){ if(hits) S.profile.prog[k]=0; out.push({es,kind:'reset'}); return; }
+    hits+=1;
+    if(hits>=2){
+      const w=S.profile.weights[k], pct=Math.round(progPct(mm.n)*100);
+      if(w!=null&&w>0){ const nw=nextWeight(w,mm.n); S.profile.weights[k]=nw; S.profile.prog[k]=0; out.push({es,kind:'up',from:w,to:nw,pct}); }
+      else { S.profile.prog[k]=0; out.push({es,kind:'up_nokg',pct}); }
+    } else { S.profile.prog[k]=hits; out.push({es,kind:'one'}); }
+  });
+  save(); return out;
+}
+function progDoneHTML(out){
+  if(!out||!out.length) return '<div class="progcard done">✓ Progresión registrada</div>';
+  const rows=out.map(o=> o.kind==='up' ? `<div class="pgres up">💪 <b>${esc(o.es)}</b>: ${o.from} → <b>${o.to} kg</b> (+${o.pct}%)</div>`
+    : o.kind==='up_nokg' ? `<div class="pgres up">💪 <b>${esc(o.es)}</b>: subí ~${o.pct}% (cargá el kg)</div>`
+    : o.kind==='one' ? `<div class="pgres">✓ <b>${esc(o.es)}</b>: 1/2 · una más y subimos</div>`
+    : `<div class="pgres pgmut">${esc(o.es)}: racha reiniciada</div>`).join('');
+  return `<div class="progcard done"><div class="pghead">Progresión registrada</div>${rows}</div>`;
+}
+// Tarjeta de preguntas SÍ/NO (togFn/applyFn son nombres de handlers para reusar en descanso y en fin de rutina).
+function progCardHTML(b,ans,done,togFn,applyFn){
+  if(done) return progDoneHTML(done);
+  const movs=b.movs.filter(mm=>LIB_BY_EN[mm.n]);
+  if(!movs.length) return '';
+  const rows=movs.map(mm=>{ const key=mm.n+'|'+mm.r, a=ans[key], info=movInfo(mm.n), pv=progPreview(mm,a);
+    return `<div class="progrow">
+      <div class="pgname">${esc(info.es)} <span class="pgreps">${esc(mm.r)}</span></div>
+      <div class="pgbtns">
+        <button class="pgbtn ${a==='si'?'si':''}" onclick="${togFn}('${esc(key).replace(/'/g,"\\'")}','si')">Sí</button>
+        <button class="pgbtn ${a==='no'?'no':''}" onclick="${togFn}('${esc(key).replace(/'/g,"\\'")}','no')">No</button>
+      </div>${pv?`<div class="pgprev">${pv}</div>`:''}</div>`;}).join('');
+  const any=movs.some(mm=>ans[mm.n+'|'+mm.r]);
+  return `<div class="progcard">
+    <div class="pghead">¿Hiciste <b>2 reps más</b> que lo programado en la última serie?</div>
+    <div class="pgsub">Regla 2×2 · dos sesiones seguidas y subimos el peso</div>
+    ${rows}
+    <button class="btn dark sm ${any?'':'off'}" onclick="${applyFn}('${esc(b.id)}')">Guardar y actualizar pesos</button>
+  </div>`;
+}
 function movsHTML(b,idx){return b.movs.map((mm,mi)=>{const i=movInfo(mm.n);const isLib=!!LIB_BY_EN[mm.n];
   const w=isLib?`<input class="wt" type="number" inputmode="decimal" min="0" step="0.5" placeholder="kg" title="Peso usado (kg)" data-en="${esc(mm.n)}" data-r="${esc(mm.r)}" value="${esc(String(getWeight(mm.n,mm.r)))}" onclick="event.stopPropagation()" onchange="setWeight(this.dataset.en,this.dataset.r,this.value)">`:'';
   const sub=(idx>=0&&isLib)?`<button class="subx" title="Sustituir ejercicio" onclick="event.stopPropagation();openSub(${idx},${mi})">⇄</button>`:'';
@@ -1236,6 +1353,7 @@ function blockCardHTML(b,idx,isWarm){
     <div class="time"><b>${b.dur}'</b></div>
     <h3>${esc(b.cat)}</h3>
     <div class="sub">${esc(fmtFormato(b))} · ${esc(b.variante)}</div>
+    ${isWarm||!b.descanso?'':`<div class="restline">🕑 Descanso entre series: <b>${esc(b.descanso)}</b></div>`}
     <div class="movs">${movsHTML(b,idx)}</div>
     ${isWarm?'':dots(b.inten)}
     ${isWarm||!b.equipMix?'':`<div style="margin-top:8px">${b.equipMix.map(e=>`<span class="matchip" style="background:#eee;color:#444;margin-right:6px">${EQ_ES[e]}</span>`).join('')}</div>`}
@@ -1296,7 +1414,7 @@ function makeAlt(idx,spec,salt){
 }
 function applyAlt(idx,b){const r=S.routine, old=r.bloques[idx];
   r.bloques[idx]=b; r.removed=r.removed||[]; if(old.variante!==b.variante) r.removed.push(old.cat);
-  r.durEstim=Math.round(r.warmup.dur+r.bloques.reduce((a,x)=>a+x.dur,0)+r.bloques.length*(REST_S/60));
+  r.durEstim=Math.round(r.warmup.dur+r.bloques.reduce((a,x)=>a+x.dur,0)+r.bloques.length*(blockRest(r.objetivo)/60));
   save();modalEl.innerHTML='';screenRoutine();toast('Bloque cambiado');
 }
 function openEdit(idx){
@@ -1388,7 +1506,7 @@ function buildPhases(r){
   const ph=[{type:'prep',name:'Preparate',dur:PREP_S}];
   ph.push({type:'block',name:r.warmup.cat+' · Warm-up',dur:r.warmup.dur*60,ref:r.warmup,warm:true});
   r.bloques.forEach((b,i)=>{
-    ph.push({type:'rest',name:'Descanso',dur:REST_S});
+    ph.push({type:'rest',name:'Descanso',dur:blockRest(r.objetivo)});
     ph.push({type:'block',name:'Bloque '+(i+1)+' · '+b.cat,dur:b.dur*60,ref:b,idx:i});
   });
   return ph;
@@ -1441,9 +1559,14 @@ function advance(reason, catchup){
   EX.blockStarted = np.type!=='block';   // prep/descanso corren solos; bloque espera "Iniciar"
   EX.phaseRem=np.dur;
   EX.deadline = EX.blockStarted ? Date.now()+np.dur*1000 : null;
+  if(np.type==='rest'){ const prev=EX.phases[EX.idx-1]; EX.progBlock=(prev&&prev.type==='block'&&!prev.warm)?prev.ref:null; EX.progAns={}; }
   if(np.type==='rest' && !catchup) sRestStart();
   drawExec(); saveEX();
 }
+window.progTog=function(key,val){ if(!EX)return; EX.progAns=EX.progAns||{}; EX.progAns[key]=(EX.progAns[key]===val?null:val); drawExec(); };
+window.progApplyRest=function(blockId){ if(!EX||!EX.progBlock||EX.progBlock.id!==blockId)return;
+  const out=processProg(EX.progBlock,EX.progAns); EX.progDone=EX.progDone||{}; EX.progDone[blockId]=out;
+  if(out.some(o=>o.kind==='up')) toast('Pesos actualizados 💪'); drawExec(); };
 function drawExec(){
   const ph=EX.phases[EX.idx];
   const totalRem=EX.phaseRem+EX.phases.slice(EX.idx+1).reduce((a,p)=>a+p.dur,0);
@@ -1460,7 +1583,7 @@ function drawExec(){
     inner=`<div class="phase">
       <div class="ptype">${ph.warm?'Entrada en calor':'Bloque '+(ph.idx+1)+' de 4'}</div>
       <div class="pname" style="margin-top:4px">${esc(b.cat)} · ${esc(b.variante)}</div>
-      <div class="muted" style="font-size:12px;margin-bottom:6px">${esc(fmtFormato(b))}</div>
+      <div class="muted" style="font-size:12px;margin-bottom:6px">${esc(fmtFormato(b))}${ph.warm||!b.descanso?'':' · descanso series '+esc(b.descanso)}</div>
       <div class="pclock">${mmss(EX.phaseRem)}</div>
       <div class="movs" style="text-align:left;max-width:340px;margin:6px auto 0">${movsHTML(b)}</div>
       <div style="height:12px"></div>
@@ -1469,11 +1592,13 @@ function drawExec(){
         : `<button class="btn dark" onclick="startBlock()">Iniciar bloque</button>`}
     </div>`;
   } else {
+    const progHTML=(ph.type==='rest'&&EX.progBlock)?progCardHTML(EX.progBlock,EX.progAns||{},(EX.progDone||{})[EX.progBlock.id],'progTog','progApplyRest'):'';
     inner=`<div class="phase ${ph.type}">
       <div class="ptype">${ph.type==='prep'?'Preparate — agarrá el material':'Descanso'}</div>
       <div class="pclock">${mmss(EX.phaseRem)}</div>
       <div class="pname">${ph.type==='prep'?'Arranca el warm-up':'Próximo bloque en breve'}</div>
       <button class="btn ghost sm" style="margin-top:12px" onclick="skipPhase()">Saltar</button>
+      ${progHTML}
     </div>`;
   }
   app.innerHTML=`
@@ -1516,16 +1641,31 @@ window.finishRoutine=(cierre)=>{
     removed:r.removed||[], cierre, durMin:r.durEstim};
   S.profile.historial.push(sess);
   S.profile.contador[r.objetivo]=(S.profile.contador[r.objetivo]||0)+1;
+  // Progresión pendiente del último bloque (no tiene descanso después): se ofrece en la pantalla de fin.
+  let pend=null; try{ const done=(EX&&EX.progDone)||{}; const fin=[...new Set(EX?EX.finalizados:[])];
+    for(let i=r.bloques.length-1;i>=0;i--){ const b=r.bloques[i];
+      if(fin.includes(b.id)&&!done[b.id]&&b.movs.some(mm=>LIB_BY_EN[mm.n])){ pend=b; break; } } }catch(e){}
   S.routine=null;save();EX=null;saveEX();
+  DPROG={block:pend,ans:{},done:null};
   screenDone(sess);
 };
+let DPROG={block:null,ans:{},done:null};
+window.progTogD=function(key,val){ DPROG.ans=DPROG.ans||{}; DPROG.ans[key]=(DPROG.ans[key]===val?null:val); screenDone(LAST_SESS); };
+window.progApplyD=function(blockId){ if(!DPROG.block||DPROG.block.id!==blockId)return;
+  DPROG.done=processProg(DPROG.block,DPROG.ans); if(DPROG.done.some(o=>o.kind==='up')) toast('Pesos actualizados 💪'); screenDone(LAST_SESS); };
+let LAST_SESS=null;
 function screenDone(sess){
+  LAST_SESS=sess;
+  const progHTML=DPROG.block?`<div class="card" style="padding:14px 16px;text-align:left">
+      <div style="font-weight:900;font-size:15px;margin-bottom:6px">📈 Progresión — último bloque</div>
+      ${progCardHTML(DPROG.block,DPROG.ans||{},DPROG.done,'progTogD','progApplyD')}</div>`:'';
   app.innerHTML=`
     <div style="text-align:center;padding:28px 10px 6px">
       <div style="font-size:56px">✅</div>
       <h2 style="font-size:26px;font-weight:900;margin:10px 0 4px">¡Rutina completada!</h2>
       <p class="muted">Objetivo: <b>${objName(sess.objetivo)}</b> · ${sess.durMin} min<br>Se guardó en tu historial.</p>
     </div>
+    ${progHTML}
     <div class="card" style="padding:14px 16px;text-align:left">
       <div style="font-weight:900;font-size:15px">🧘 No te saltees la vuelta a la calma</div>
       <div class="cue" style="margin-top:8px"><b>Elongá 5–10 min</b> los músculos que trabajaste (20–30&quot; por estiramiento, sin rebotes).<br>
