@@ -106,6 +106,13 @@
   .movs .mv{cursor:pointer;padding:3px 0;border-radius:6px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
   .movs .mv:active{background:#f4f4f4;}
   .movs .mvmain{flex:1;min-width:0;}
+  .mvright{flex:none;display:flex;align-items:center;gap:6px;margin-top:1px;}
+  .wt{width:52px;padding:5px 6px;border:1px solid #dcdcdc;border-radius:8px;font-size:13px;text-align:center;background:#fff;color:#222;}
+  .wt:focus{outline:none;border-color:var(--lime);}
+  .seg{display:flex;border:1px solid #dcdcdc;border-radius:20px;overflow:hidden;}
+  .segbtn{background:transparent;border:none;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;color:var(--muted);}
+  .segbtn.on{background:var(--lime);color:#1c1c1c;}
+  @media(prefers-color-scheme:dark){.wt{background:#2a2a2a;color:#eee;border-color:#444;}.seg{border-color:#444;}}
   .subx{flex:none;background:var(--lime);color:#1c1c1c;border:none;border-radius:8px;font-size:15px;font-weight:900;
     width:30px;height:30px;line-height:1;cursor:pointer;margin-top:2px;}
   .subx:active{transform:scale(.92);}
@@ -151,7 +158,7 @@ const Store = (()=>{
 })();
 
 /* ---------- CONFIG ---------- */
-const APP_VERSION='v11 · 2026-09-02';
+const APP_VERSION='v13 · 2026-09-02';
 const OBJETIVOS = [
   {id:'hipertrofia', t:'Hipertrofia', d:'Ganar masa muscular'},
   {id:'fuerza',      t:'Fuerza',      d:'Fuerza máxima'},
@@ -447,8 +454,8 @@ const LIB=[
  {id:'v176',es:'Trote suave',esf:'Trote',en:'Run',mu:'cardio',musculo:'Cardio',eq:'piso',impl:'piso',role:'acc',lvl:'intermedio',unil:false,region:'cardio',warm:true,gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/run.gif',gl:'gifs/cardio/run.gif',desc:'Trotá suave (en el lugar o desplazándote) para elevar pulsaciones.'},
  {id:'v177',es:'Saltos de patinador',esf:'Skater hops',en:'Skater Hops',mu:'cardio',musculo:'Cardio',eq:'piso',impl:'piso',role:'acc',lvl:'intermedio',unil:false,region:'cardio',warm:true,gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/skater-hops.gif',gl:'gifs/cardio/skater-hops.gif',desc:'Saltos laterales de una pierna a la otra amortiguando; activa glúteo y equilibrio.'},
  {id:'v178',es:'Saltos de tijera',esf:'Jumping jacks',en:'Star Jump',mu:'cardio',musculo:'Cardio',eq:'piso',impl:'piso',role:'acc',lvl:'intermedio',unil:false,region:'cardio',warm:true,gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/star-jump-male.gif',gl:'gifs/cardio/star-jump-male.gif',desc:'Abrí y cerrá piernas y brazos de forma coordinada y continua.'},
- {id:'v179',es:'Bici fija',esf:'Bicicleta fija',en:'Stationary Bike Run',mu:'cardio',musculo:'Cardio',eq:'piso',impl:'piso',role:'acc',lvl:'intermedio',unil:false,region:'cardio',warm:true,gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/stationary-bike-run-v-3.gif',gl:'gifs/cardio/stationary-bike-run-v-3.gif',desc:'Pedaleá a ritmo moderado manteniendo la cadencia; ideal para elevar pulsaciones antes de entrenar.'},
- {id:'v180',es:'Bici fija (suave)',esf:'Bicicleta fija ritmo suave',en:'Stationary Bike Walk',mu:'cardio',musculo:'Cardio',eq:'piso',impl:'piso',role:'acc',lvl:'intermedio',unil:false,region:'cardio',warm:true,gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/stationary-bike-walk.gif',gl:'gifs/cardio/stationary-bike-walk.gif',desc:'Pedaleá a ritmo suave y constante 3-5 min para entrar en calor; subí la resistencia de a poco.'},
+ {id:'v179',es:'Bici fija',esf:'Bicicleta fija',en:'Stationary Bike Run',mu:'cardio',musculo:'Cardio',eq:'maq',impl:'maquina',role:'acc',lvl:'intermedio',unil:false,region:'cardio',warm:true,gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/stationary-bike-run-v-3.gif',gl:'gifs/cardio/stationary-bike-run-v-3.gif',desc:'Pedaleá a ritmo moderado manteniendo la cadencia; ideal para elevar pulsaciones antes de entrenar.'},
+ {id:'v180',es:'Bici fija (suave)',esf:'Bicicleta fija ritmo suave',en:'Stationary Bike Walk',mu:'cardio',musculo:'Cardio',eq:'maq',impl:'maquina',role:'acc',lvl:'intermedio',unil:false,region:'cardio',warm:true,gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/stationary-bike-walk.gif',gl:'gifs/cardio/stationary-bike-walk.gif',desc:'Pedaleá a ritmo suave y constante 3-5 min para entrar en calor; subí la resistencia de a poco.'},
  {id:'v181',es:'Elíptica (caminata)',esf:'Elíptica ritmo suave',en:'Walk Elliptical Cross Trainer',mu:'cardio',musculo:'Cardio',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'cardio',warm:true,gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/walk-elliptical-cross-trainer.gif',gl:'gifs/cardio/walk-elliptical-cross-trainer.gif',desc:'Movimiento suave y continuo en elíptica para activar todo el cuerpo.'},
  {id:'v182',es:'Cinta (inclinada)',esf:'Caminata en cinta inclinada',en:'Walking On Incline Treadmill',mu:'cardio',musculo:'Cardio',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'cardio',warm:true,gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/walking-on-incline-treadmill.gif',gl:'gifs/cardio/walking-on-incline-treadmill.gif',desc:'Caminá en cinta con leve inclinación a ritmo sostenido 3-5 min para entrar en calor.'},
  {id:'v183',es:'Escaladora',esf:'Escaladora / stepmill',en:'Walking On Stepmill',mu:'cardio',musculo:'Cardio',eq:'maq',impl:'maquina',role:'acc',lvl:'principiante',unil:false,region:'cardio',warm:true,gif:'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/walking-on-stepmill.gif',gl:'gifs/cardio/walking-on-stepmill.gif',desc:'Subí escalones a ritmo sostenido; entrada en calor de piernas y cardio.'},
@@ -1098,7 +1105,11 @@ function generarRutina(obj,nivel,hist,seedExtra){
 }
 // Entrada en calor armada con la Biblioteca VigoGym (cardio/movilidad: bici, cinta, jumping jacks, etc.)
 function buildWarmup(rng){
-  const pool=LIB.filter(x=>x.warm);
+  let pool=LIB.filter(x=>x.warm);
+  // Respeta el filtro de IMPLEMENTO: si el usuario eligió implementos, el calentamiento usa
+  // solo esos + peso corporal (piso), que no requiere ningún equipo. Así, al sacar "Máquina"
+  // no aparecen bici fija / cinta / elíptica / escaladora en la entrada en calor.
+  if(GENF.impls.size){ const f=pool.filter(x=>x.impl==='piso'||GENF.impls.has(x.impl)); if(f.length)pool=f; }
   const pick=(pool.length?shuffle(pool,rng):[]).slice(0,4);
   const movs=pick.map(x=>({r:'40-60"',n:x.en,id:x.id}));
   return {id:'warm'+Math.floor(rng()*1e9), cat:'Entrada en calor', formato:'WARMUP', dur:4, region:'full',
@@ -1119,9 +1130,15 @@ function fmtFormato(b){return (FMT[b.formato]||'{d}\'').replace('{d}',b.dur).rep
 function roundsGuess(b){return b.formato==='ROUNDS'?(b.esLargo?4:3):'';}
 function icolor(i){return ['','var(--i1)','var(--i2)','var(--i3)','var(--i4)'][i];}
 function dots(i){let h='';for(let k=1;k<=4;k++)h+=`<div class="dot" style="background:${k<=i?icolor(i):'#e0e0e0'}"></div>`;return `<div class="dots">${h}<span class="region" style="margin-left:8px">Intensidad ${i}/4</span></div>`;}
-function movsHTML(b,idx){return b.movs.map((mm,mi)=>{const i=movInfo(mm.n);
-  const sub=(idx>=0&&LIB_BY_EN[mm.n])?`<button class="subx" title="Sustituir ejercicio" onclick="event.stopPropagation();openSub(${idx},${mi})">⇄</button>`:'';
-  return `<div class="mv" onclick="openTech('${encodeURIComponent(mm.n)}')"><div class="mvmain"><b>${esc(mm.r)}</b> ${esc(i.es)} <span class="mvi">ⓘ</span><div class="mven">${esc(i.en)}</div></div>${sub}</div>`;}).join('');}
+/* ---- Registro de peso por (ejercicio × reps × objetivo) [F14] ---- */
+function wKey(en,reps){ return (S.routine?S.routine.objetivo:'')+'|'+en+'|'+reps; }
+function getWeight(en,reps){ try{ const w=(S.profile&&S.profile.weights)||{}; const v=w[wKey(en,reps)]; return v!=null?v:''; }catch(e){ return ''; } }
+window.setWeight=function(en,reps,val){ if(!S.profile)return; S.profile.weights=S.profile.weights||{}; const k=wKey(en,reps);
+  const n=parseFloat(String(val).replace(',','.')); if(isNaN(n)||n<=0) delete S.profile.weights[k]; else S.profile.weights[k]=n; save(); };
+function movsHTML(b,idx){return b.movs.map((mm,mi)=>{const i=movInfo(mm.n);const isLib=!!LIB_BY_EN[mm.n];
+  const w=isLib?`<input class="wt" type="number" inputmode="decimal" min="0" step="0.5" placeholder="kg" title="Peso usado (kg)" data-en="${esc(mm.n)}" data-r="${esc(mm.r)}" value="${esc(String(getWeight(mm.n,mm.r)))}" onclick="event.stopPropagation()" onchange="setWeight(this.dataset.en,this.dataset.r,this.value)">`:'';
+  const sub=(idx>=0&&isLib)?`<button class="subx" title="Sustituir ejercicio" onclick="event.stopPropagation();openSub(${idx},${mi})">⇄</button>`:'';
+  return `<div class="mv" onclick="openTech('${encodeURIComponent(mm.n)}')"><div class="mvmain"><b>${esc(mm.r)}</b> ${esc(i.es)} <span class="mvi">ⓘ</span><div class="mven">${esc(i.en)}</div></div><div class="mvright">${w}${sub}</div></div>`;}).join('');}
 function toast(msg){const t=$('#toast');t.innerHTML=`<div class="toast">${esc(msg)}</div>`;setTimeout(()=>t.innerHTML='',2200);}
 function mmss(s){s=Math.max(0,Math.round(s));const m=Math.floor(s/60),ss=s%60;return m+':'+String(ss).padStart(2,'0');}
 
@@ -1520,18 +1537,57 @@ function screenDone(sess){
 }
 
 /* ---------- HISTORIAL ---------- */
+/* ---- Gráfico de actividad histórica (entrenamientos por semana / mes) ---- */
+let HIST_MODE='week';
+window.setHistMode=function(m){ HIST_MODE=m; screenHistory(); };
+function _sesDate(s){ return s.ts?new Date(s.ts):new Date(String(s.fecha).replace(/-/g,'/')); }
+function _monday(d){ const x=new Date(d); const day=(x.getDay()+6)%7; x.setDate(x.getDate()-day); x.setHours(0,0,0,0); return x; }
+function activityBuckets(mode){
+  const now=new Date(); const h=S.profile.historial||[]; const bk=[];
+  if(mode==='month'){
+    const ML=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    for(let i=5;i>=0;i--){ const d=new Date(now.getFullYear(),now.getMonth()-i,1);
+      bk.push({key:d.getFullYear()+'-'+(d.getMonth()+1),label:ML[d.getMonth()],count:0}); }
+    h.forEach(s=>{const d=_sesDate(s);const k=d.getFullYear()+'-'+(d.getMonth()+1);const b=bk.find(x=>x.key===k);if(b)b.count++;});
+  } else {
+    const m0=_monday(now);
+    for(let i=11;i>=0;i--){ const d=new Date(m0); d.setDate(d.getDate()-i*7);
+      bk.push({key:d.toISOString().slice(0,10),label:d.getDate()+'/'+(d.getMonth()+1),count:0}); }
+    h.forEach(s=>{const k=_monday(_sesDate(s)).toISOString().slice(0,10);const b=bk.find(x=>x.key===k);if(b)b.count++;});
+  }
+  return bk;
+}
+function activityChartHTML(mode){
+  const bk=activityBuckets(mode); const max=Math.max(1,...bk.map(b=>b.count));
+  const W=320,H=112,n=bk.length,gap=6,bw=(W-(n+1)*gap)/n; let g='';
+  bk.forEach((b,i)=>{ const x=gap+i*(bw+gap); const bh=b.count?Math.max(3,(b.count/max)*(H-30)):2; const y=H-20-bh;
+    g+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${bh.toFixed(1)}" rx="3" fill="${b.count?'var(--lime)':'currentColor'}" ${b.count?'':'opacity=".12"'}></rect>`;
+    if(b.count) g+=`<text x="${(x+bw/2).toFixed(1)}" y="${(y-3).toFixed(1)}" text-anchor="middle" font-size="9" fill="currentColor" opacity=".65">${b.count}</text>`;
+    if(mode==='month'||i%2===1||i===n-1) g+=`<text x="${(x+bw/2).toFixed(1)}" y="${H-5}" text-anchor="middle" font-size="8" fill="currentColor" opacity=".5">${esc(b.label)}</text>`;
+  });
+  const total=bk.reduce((a,b)=>a+b.count,0); const prom=(total/bk.length).toFixed(1);
+  const last=bk[bk.length-1].count;
+  return `<div class="card">
+    <div class="row between" style="align-items:center;margin-bottom:8px">
+      <div style="font-weight:900;font-size:15px">Tu actividad</div>
+      <div class="seg"><button class="segbtn ${mode==='week'?'on':''}" onclick="setHistMode('week')">Semana</button><button class="segbtn ${mode==='month'?'on':''}" onclick="setHistMode('month')">Mes</button></div>
+    </div>
+    <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">${g}</svg>
+    <div class="muted" style="font-size:12px;text-align:center;margin-top:4px">Promedio <b>${prom}</b> ${mode==='week'?'por semana':'por mes'} · ${mode==='week'?'esta semana':'este mes'}: <b>${last}</b></div>
+  </div>`;
+}
 function screenHistory(){
   const h=[...S.profile.historial].reverse();
   app.innerHTML=`
     <div class="topbar"><div class="row" style="gap:8px"><button class="btn ghost sm" onclick="render()">‹</button>
     <div style="font-weight:900;font-size:20px">Historial</div></div></div>
-    ${h.length?'':'<div class="card muted" style="text-align:center">Todavía no registraste entrenamientos.</div>'}
-    <div class="card">${h.map(s=>`
+    ${h.length?activityChartHTML(HIST_MODE):'<div class="card muted" style="text-align:center">Todavía no registraste entrenamientos.</div>'}
+    ${h.length?`<div class="card">${h.map(s=>`
       <div class="hist"><div><div style="font-weight:800">${objName(s.objetivo)}</div>
       <div class="muted" style="font-size:12px">${s.fecha} · ${s.cats.slice(0,3).join(', ')}</div></div>
       <div style="text-align:right"><div style="font-weight:800">${s.durMin}'</div>
       <div class="muted" style="font-size:11px">${s.cierre==='FinalizadoPorUsuario'?'finalizada':'completa'}</div></div></div>
-    `).join('')}</div>
+    `).join('')}</div>`:''}
   `;
 }
 window.screenHistory=screenHistory;
