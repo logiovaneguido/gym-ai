@@ -1,0 +1,922 @@
+[
+ {
+  "file": "gifs/abs/3-4-sit-up.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/3-4-sit-up.gif"
+ },
+ {
+  "file": "gifs/abs/air-bike.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/air-bike.gif"
+ },
+ {
+  "file": "gifs/abs/cable-kneeling-crunch.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/cable-kneeling-crunch.gif"
+ },
+ {
+  "file": "gifs/abs/band-bicycle-crunch.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/band-bicycle-crunch.gif"
+ },
+ {
+  "file": "gifs/abs/dumbbell-side-bend.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/dumbbell-side-bend.gif"
+ },
+ {
+  "file": "gifs/abs/kettlebell-windmill.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/kettlebell-windmill.gif"
+ },
+ {
+  "file": "gifs/abs/barbell-press-sit-up.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/barbell-press-sit-up.gif"
+ },
+ {
+  "file": "gifs/abs/alternate-heel-touchers.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/alternate-heel-touchers.gif"
+ },
+ {
+  "file": "gifs/abs/cable-seated-twist.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/cable-seated-twist.gif"
+ },
+ {
+  "file": "gifs/abs/band-standing-crunch.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/band-standing-crunch.gif"
+ },
+ {
+  "file": "gifs/abs/hanging-leg-raise.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/hanging-leg-raise.gif"
+ },
+ {
+  "file": "gifs/abs/cable-side-bend.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/cable-side-bend.gif"
+ },
+ {
+  "file": "gifs/abs/band-v-up.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/band-v-up.gif"
+ },
+ {
+  "file": "gifs/abs/kettlebell-figure-8.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/kettlebell-figure-8.gif"
+ },
+ {
+  "file": "gifs/abs/barbell-seated-twist.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/barbell-seated-twist.gif"
+ },
+ {
+  "file": "gifs/abs/crunch-floor.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/crunch-floor.gif"
+ },
+ {
+  "file": "gifs/abs/cable-standing-crunch.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/cable-standing-crunch.gif"
+ },
+ {
+  "file": "gifs/abs/band-horizontal-pallof-press.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/band-horizontal-pallof-press.gif"
+ },
+ {
+  "file": "gifs/abs/dead-bug.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/dead-bug.gif"
+ },
+ {
+  "file": "gifs/abs/decline-sit-up.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/decline-sit-up.gif"
+ },
+ {
+  "file": "gifs/abs/kettlebell-bent-press.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/kettlebell-bent-press.gif"
+ },
+ {
+  "file": "gifs/abs/barbell-rollerout.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abs/barbell-rollerout.gif"
+ },
+ {
+  "file": "gifs/delts/dumbbell-arnold-press.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/dumbbell-arnold-press.gif"
+ },
+ {
+  "file": "gifs/delts/barbell-front-raise.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/barbell-front-raise.gif"
+ },
+ {
+  "file": "gifs/delts/cable-shoulder-press.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/cable-shoulder-press.gif"
+ },
+ {
+  "file": "gifs/delts/band-shoulder-press.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/band-shoulder-press.gif"
+ },
+ {
+  "file": "gifs/delts/dumbbell-lateral-raise.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/dumbbell-lateral-raise.gif"
+ },
+ {
+  "file": "gifs/delts/barbell-upright-row.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/barbell-upright-row.gif"
+ },
+ {
+  "file": "gifs/delts/cable-rear-delt-row-with-rope.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/cable-rear-delt-row-with-rope.gif"
+ },
+ {
+  "file": "gifs/delts/band-reverse-fly.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/band-reverse-fly.gif"
+ },
+ {
+  "file": "gifs/delts/dumbbell-seated-shoulder-press.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/dumbbell-seated-shoulder-press.gif"
+ },
+ {
+  "file": "gifs/delts/barbell-thruster.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/barbell-thruster.gif"
+ },
+ {
+  "file": "gifs/delts/cable-lateral-raise.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/cable-lateral-raise.gif"
+ },
+ {
+  "file": "gifs/delts/band-y-raise.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/band-y-raise.gif"
+ },
+ {
+  "file": "gifs/delts/dumbbell-rear-lateral-raise.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/dumbbell-rear-lateral-raise.gif"
+ },
+ {
+  "file": "gifs/delts/barbell-rear-delt-raise.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/barbell-rear-delt-raise.gif"
+ },
+ {
+  "file": "gifs/delts/cable-forward-raise.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/cable-forward-raise.gif"
+ },
+ {
+  "file": "gifs/delts/kettlebell-arnold-press.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/kettlebell-arnold-press.gif"
+ },
+ {
+  "file": "gifs/delts/dumbbell-front-raise.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/dumbbell-front-raise.gif"
+ },
+ {
+  "file": "gifs/delts/barbell-seated-overhead-press.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/barbell-seated-overhead-press.gif"
+ },
+ {
+  "file": "gifs/delts/cable-alternate-shoulder-press.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/cable-alternate-shoulder-press.gif"
+ },
+ {
+  "file": "gifs/delts/band-front-raise.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/band-front-raise.gif"
+ },
+ {
+  "file": "gifs/delts/dumbbell-push-press.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/dumbbell-push-press.gif"
+ },
+ {
+  "file": "gifs/delts/kettlebell-alternating-press.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/delts/kettlebell-alternating-press.gif"
+ },
+ {
+  "file": "gifs/pectorals/archer-push-up.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/archer-push-up.gif"
+ },
+ {
+  "file": "gifs/pectorals/band-bench-press.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/band-bench-press.gif"
+ },
+ {
+  "file": "gifs/pectorals/barbell-bench-press.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/barbell-bench-press.gif"
+ },
+ {
+  "file": "gifs/pectorals/cable-bench-press.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/cable-bench-press.gif"
+ },
+ {
+  "file": "gifs/pectorals/chest-dip.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/chest-dip.gif"
+ },
+ {
+  "file": "gifs/pectorals/dumbbell-bench-press.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/dumbbell-bench-press.gif"
+ },
+ {
+  "file": "gifs/pectorals/dumbbell-fly.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/dumbbell-fly.gif"
+ },
+ {
+  "file": "gifs/pectorals/barbell-incline-bench-press.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/barbell-incline-bench-press.gif"
+ },
+ {
+  "file": "gifs/pectorals/cable-incline-fly.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/cable-incline-fly.gif"
+ },
+ {
+  "file": "gifs/pectorals/dumbbell-decline-bench-press.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/dumbbell-decline-bench-press.gif"
+ },
+ {
+  "file": "gifs/pectorals/clap-push-up.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/clap-push-up.gif"
+ },
+ {
+  "file": "gifs/pectorals/band-one-arm-twisting-chest-press.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/band-one-arm-twisting-chest-press.gif"
+ },
+ {
+  "file": "gifs/pectorals/barbell-decline-bench-press.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/barbell-decline-bench-press.gif"
+ },
+ {
+  "file": "gifs/pectorals/cable-decline-fly.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/cable-decline-fly.gif"
+ },
+ {
+  "file": "gifs/pectorals/dumbbell-pullover.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/dumbbell-pullover.gif"
+ },
+ {
+  "file": "gifs/pectorals/incline-push-up.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/incline-push-up.gif"
+ },
+ {
+  "file": "gifs/pectorals/dumbbell-incline-fly.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/dumbbell-incline-fly.gif"
+ },
+ {
+  "file": "gifs/pectorals/cable-standing-fly.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/cable-standing-fly.gif"
+ },
+ {
+  "file": "gifs/pectorals/barbell-guillotine-bench-press.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/barbell-guillotine-bench-press.gif"
+ },
+ {
+  "file": "gifs/pectorals/chest-dip-on-straight-bar.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/pectorals/chest-dip-on-straight-bar.gif"
+ },
+ {
+  "file": "gifs/quads/backward-jump.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/backward-jump.gif"
+ },
+ {
+  "file": "gifs/quads/band-one-arm-single-leg-split-squat.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/band-one-arm-single-leg-split-squat.gif"
+ },
+ {
+  "file": "gifs/quads/barbell-bench-front-squat.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/barbell-bench-front-squat.gif"
+ },
+ {
+  "file": "gifs/quads/barbell-clean-and-press.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/barbell-clean-and-press.gif"
+ },
+ {
+  "file": "gifs/quads/barbell-overhead-squat.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/barbell-overhead-squat.gif"
+ },
+ {
+  "file": "gifs/quads/barbell-side-split-squat.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/barbell-side-split-squat.gif"
+ },
+ {
+  "file": "gifs/quads/barbell-squat-on-knees.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/barbell-squat-on-knees.gif"
+ },
+ {
+  "file": "gifs/quads/dumbbell-goblet-squat.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/dumbbell-goblet-squat.gif"
+ },
+ {
+  "file": "gifs/quads/dumbbell-single-leg-split-squat.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/dumbbell-single-leg-split-squat.gif"
+ },
+ {
+  "file": "gifs/quads/dumbbell-step-up-lunge.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/dumbbell-step-up-lunge.gif"
+ },
+ {
+  "file": "gifs/quads/dumbbell-supported-squat.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/dumbbell-supported-squat.gif"
+ },
+ {
+  "file": "gifs/quads/farmers-walk.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/farmers-walk.gif"
+ },
+ {
+  "file": "gifs/quads/forward-jump.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/forward-jump.gif"
+ },
+ {
+  "file": "gifs/quads/lever-alternate-leg-press.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/lever-alternate-leg-press.gif"
+ },
+ {
+  "file": "gifs/quads/lever-leg-extension.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/lever-leg-extension.gif"
+ },
+ {
+  "file": "gifs/quads/resistance-band-leg-extension.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/resistance-band-leg-extension.gif"
+ },
+ {
+  "file": "gifs/quads/sissy-squat.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/sissy-squat.gif"
+ },
+ {
+  "file": "gifs/quads/smith-chair-squat.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/smith-chair-squat.gif"
+ },
+ {
+  "file": "gifs/quads/smith-single-leg-split-squat.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/smith-single-leg-split-squat.gif"
+ },
+ {
+  "file": "gifs/quads/split-squats.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/quads/split-squats.gif"
+ },
+ {
+  "file": "gifs/lats/band-assisted-pull-up.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/band-assisted-pull-up.gif"
+ },
+ {
+  "file": "gifs/lats/barbell-bent-arm-pullover.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/barbell-bent-arm-pullover.gif"
+ },
+ {
+  "file": "gifs/lats/barbell-pullover.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/barbell-pullover.gif"
+ },
+ {
+  "file": "gifs/lats/cable-bar-lateral-pulldown.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/cable-bar-lateral-pulldown.gif"
+ },
+ {
+  "file": "gifs/lats/cable-one-arm-pulldown.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/cable-one-arm-pulldown.gif"
+ },
+ {
+  "file": "gifs/lats/cable-straight-arm-pulldown.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/cable-straight-arm-pulldown.gif"
+ },
+ {
+  "file": "gifs/lats/chin-up.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/chin-up.gif"
+ },
+ {
+  "file": "gifs/lats/close-grip-chin-up.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/close-grip-chin-up.gif"
+ },
+ {
+  "file": "gifs/lats/ez-bar-lying-bent-arms-pullover.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/ez-bar-lying-bent-arms-pullover.gif"
+ },
+ {
+  "file": "gifs/lats/lever-front-pulldown.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/lever-front-pulldown.gif"
+ },
+ {
+  "file": "gifs/lats/lever-pullover.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/lever-pullover.gif"
+ },
+ {
+  "file": "gifs/lats/pull-up.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/pull-up.gif"
+ },
+ {
+  "file": "gifs/lats/pull-up-neutral-grip.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/pull-up-neutral-grip.gif"
+ },
+ {
+  "file": "gifs/lats/reverse-grip-pull-up.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/reverse-grip-pull-up.gif"
+ },
+ {
+  "file": "gifs/lats/weighted-pull-up.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/weighted-pull-up.gif"
+ },
+ {
+  "file": "gifs/lats/wide-grip-pull-up.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/wide-grip-pull-up.gif"
+ },
+ {
+  "file": "gifs/lats/cable-lat-pulldown-full-range-of-motion.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/cable-lat-pulldown-full-range-of-motion.gif"
+ },
+ {
+  "file": "gifs/lats/archer-pull-up.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/lats/archer-pull-up.gif"
+ },
+ {
+  "file": "gifs/glutes/barbell-deadlift.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/barbell-deadlift.gif"
+ },
+ {
+  "file": "gifs/glutes/barbell-glute-bridge.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/barbell-glute-bridge.gif"
+ },
+ {
+  "file": "gifs/glutes/barbell-full-squat.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/barbell-full-squat.gif"
+ },
+ {
+  "file": "gifs/glutes/dumbbell-deadlift.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/dumbbell-deadlift.gif"
+ },
+ {
+  "file": "gifs/glutes/dumbbell-romanian-deadlift.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/dumbbell-romanian-deadlift.gif"
+ },
+ {
+  "file": "gifs/glutes/dumbbell-lunge.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/dumbbell-lunge.gif"
+ },
+ {
+  "file": "gifs/glutes/dumbbell-step-up.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/dumbbell-step-up.gif"
+ },
+ {
+  "file": "gifs/glutes/cable-pull-through-with-rope.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/cable-pull-through-with-rope.gif"
+ },
+ {
+  "file": "gifs/glutes/cable-standing-hip-extension.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/cable-standing-hip-extension.gif"
+ },
+ {
+  "file": "gifs/glutes/cable-deadlift.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/cable-deadlift.gif"
+ },
+ {
+  "file": "gifs/glutes/band-pull-through.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/band-pull-through.gif"
+ },
+ {
+  "file": "gifs/glutes/band-hip-lift.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/band-hip-lift.gif"
+ },
+ {
+  "file": "gifs/glutes/band-squat.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/band-squat.gif"
+ },
+ {
+  "file": "gifs/glutes/forward-lunge-male.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/forward-lunge-male.gif"
+ },
+ {
+  "file": "gifs/glutes/glute-bridge-march.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/glute-bridge-march.gif"
+ },
+ {
+  "file": "gifs/glutes/jump-squat.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/jump-squat.gif"
+ },
+ {
+  "file": "gifs/glutes/lever-deadlift.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/lever-deadlift.gif"
+ },
+ {
+  "file": "gifs/glutes/lever-reverse-hyperextension.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/glutes/lever-reverse-hyperextension.gif"
+ },
+ {
+  "file": "gifs/hamstrings/barbell-good-morning.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/barbell-good-morning.gif"
+ },
+ {
+  "file": "gifs/hamstrings/barbell-straight-leg-deadlift.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/barbell-straight-leg-deadlift.gif"
+ },
+ {
+  "file": "gifs/hamstrings/dumbbell-lying-femoral.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/dumbbell-lying-femoral.gif"
+ },
+ {
+  "file": "gifs/hamstrings/cable-assisted-inverse-leg-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/cable-assisted-inverse-leg-curl.gif"
+ },
+ {
+  "file": "gifs/hamstrings/assisted-prone-hamstring.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/assisted-prone-hamstring.gif"
+ },
+ {
+  "file": "gifs/hamstrings/glute-ham-raise.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/glute-ham-raise.gif"
+ },
+ {
+  "file": "gifs/hamstrings/inverse-leg-curl-bench-support.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/inverse-leg-curl-bench-support.gif"
+ },
+ {
+  "file": "gifs/hamstrings/self-assisted-inverse-leg-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/self-assisted-inverse-leg-curl.gif"
+ },
+ {
+  "file": "gifs/hamstrings/lever-kneeling-leg-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/lever-kneeling-leg-curl.gif"
+ },
+ {
+  "file": "gifs/hamstrings/lever-lying-leg-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/lever-lying-leg-curl.gif"
+ },
+ {
+  "file": "gifs/hamstrings/lever-seated-leg-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/hamstrings/lever-seated-leg-curl.gif"
+ },
+ {
+  "file": "gifs/biceps/barbell-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/barbell-curl.gif"
+ },
+ {
+  "file": "gifs/biceps/dumbbell-biceps-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/dumbbell-biceps-curl.gif"
+ },
+ {
+  "file": "gifs/biceps/cable-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/cable-curl.gif"
+ },
+ {
+  "file": "gifs/biceps/band-alternating-biceps-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/band-alternating-biceps-curl.gif"
+ },
+ {
+  "file": "gifs/biceps/biceps-pull-up.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/biceps-pull-up.gif"
+ },
+ {
+  "file": "gifs/biceps/barbell-preacher-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/barbell-preacher-curl.gif"
+ },
+ {
+  "file": "gifs/biceps/dumbbell-hammer-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/dumbbell-hammer-curl.gif"
+ },
+ {
+  "file": "gifs/biceps/cable-preacher-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/cable-preacher-curl.gif"
+ },
+ {
+  "file": "gifs/biceps/dumbbell-concentration-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/dumbbell-concentration-curl.gif"
+ },
+ {
+  "file": "gifs/biceps/barbell-reverse-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/barbell-reverse-curl.gif"
+ },
+ {
+  "file": "gifs/biceps/cable-hammer-curl-with-rope.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/cable-hammer-curl-with-rope.gif"
+ },
+ {
+  "file": "gifs/biceps/dumbbell-incline-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/dumbbell-incline-curl.gif"
+ },
+ {
+  "file": "gifs/biceps/dumbbell-preacher-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/dumbbell-preacher-curl.gif"
+ },
+ {
+  "file": "gifs/biceps/dumbbell-cross-body-hammer-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/dumbbell-cross-body-hammer-curl.gif"
+ },
+ {
+  "file": "gifs/biceps/barbell-drag-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/biceps/barbell-drag-curl.gif"
+ },
+ {
+  "file": "gifs/triceps/cable-pushdown.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/cable-pushdown.gif"
+ },
+ {
+  "file": "gifs/triceps/barbell-lying-triceps-extension.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/barbell-lying-triceps-extension.gif"
+ },
+ {
+  "file": "gifs/triceps/dumbbell-kickback.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/dumbbell-kickback.gif"
+ },
+ {
+  "file": "gifs/triceps/close-grip-push-up.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/close-grip-push-up.gif"
+ },
+ {
+  "file": "gifs/triceps/band-side-triceps-extension.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/band-side-triceps-extension.gif"
+ },
+ {
+  "file": "gifs/triceps/cable-reverse-grip-pushdown.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/cable-reverse-grip-pushdown.gif"
+ },
+ {
+  "file": "gifs/triceps/barbell-close-grip-bench-press.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/barbell-close-grip-bench-press.gif"
+ },
+ {
+  "file": "gifs/triceps/dumbbell-lying-triceps-extension.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/dumbbell-lying-triceps-extension.gif"
+ },
+ {
+  "file": "gifs/triceps/band-close-grip-push-up.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/band-close-grip-push-up.gif"
+ },
+ {
+  "file": "gifs/triceps/cable-kickback.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/cable-kickback.gif"
+ },
+ {
+  "file": "gifs/triceps/dumbbell-one-arm-kickback.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/dumbbell-one-arm-kickback.gif"
+ },
+ {
+  "file": "gifs/triceps/bench-dip-knees-bent.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/bench-dip-knees-bent.gif"
+ },
+ {
+  "file": "gifs/triceps/cable-high-pulley-overhead-tricep-extension.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/cable-high-pulley-overhead-tricep-extension.gif"
+ },
+ {
+  "file": "gifs/triceps/dumbbell-seated-triceps-extension.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/triceps/dumbbell-seated-triceps-extension.gif"
+ },
+ {
+  "file": "gifs/calves/barbell-standing-calf-raise.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/calves/barbell-standing-calf-raise.gif"
+ },
+ {
+  "file": "gifs/calves/dumbbell-standing-calf-raise.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/calves/dumbbell-standing-calf-raise.gif"
+ },
+ {
+  "file": "gifs/calves/lever-standing-calf-raise.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/calves/lever-standing-calf-raise.gif"
+ },
+ {
+  "file": "gifs/calves/bodyweight-standing-calf-raise.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/calves/bodyweight-standing-calf-raise.gif"
+ },
+ {
+  "file": "gifs/calves/smith-standing-leg-calf-raise.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/calves/smith-standing-leg-calf-raise.gif"
+ },
+ {
+  "file": "gifs/calves/band-single-leg-calf-raise.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/calves/band-single-leg-calf-raise.gif"
+ },
+ {
+  "file": "gifs/calves/barbell-seated-calf-raise.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/calves/barbell-seated-calf-raise.gif"
+ },
+ {
+  "file": "gifs/calves/dumbbell-seated-calf-raise.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/calves/dumbbell-seated-calf-raise.gif"
+ },
+ {
+  "file": "gifs/calves/lever-seated-calf-raise.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/calves/lever-seated-calf-raise.gif"
+ },
+ {
+  "file": "gifs/calves/hack-calf-raise.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/calves/hack-calf-raise.gif"
+ },
+ {
+  "file": "gifs/cardio/bear-crawl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/bear-crawl.gif"
+ },
+ {
+  "file": "gifs/cardio/burpee.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/burpee.gif"
+ },
+ {
+  "file": "gifs/cardio/cycle-cross-trainer.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/cycle-cross-trainer.gif"
+ },
+ {
+  "file": "gifs/cardio/high-knee-against-wall.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/high-knee-against-wall.gif"
+ },
+ {
+  "file": "gifs/cardio/jump-rope.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/jump-rope.gif"
+ },
+ {
+  "file": "gifs/cardio/mountain-climber.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/mountain-climber.gif"
+ },
+ {
+  "file": "gifs/cardio/run.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/run.gif"
+ },
+ {
+  "file": "gifs/cardio/skater-hops.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/skater-hops.gif"
+ },
+ {
+  "file": "gifs/cardio/star-jump-male.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/star-jump-male.gif"
+ },
+ {
+  "file": "gifs/cardio/stationary-bike-run-v-3.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/stationary-bike-run-v-3.gif"
+ },
+ {
+  "file": "gifs/cardio/stationary-bike-walk.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/stationary-bike-walk.gif"
+ },
+ {
+  "file": "gifs/cardio/walk-elliptical-cross-trainer.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/walk-elliptical-cross-trainer.gif"
+ },
+ {
+  "file": "gifs/cardio/walking-on-incline-treadmill.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/walking-on-incline-treadmill.gif"
+ },
+ {
+  "file": "gifs/cardio/walking-on-stepmill.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/cardio/walking-on-stepmill.gif"
+ },
+ {
+  "file": "gifs/forearms/barbell-wrist-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/forearms/barbell-wrist-curl.gif"
+ },
+ {
+  "file": "gifs/forearms/dumbbell-reverse-wrist-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/forearms/dumbbell-reverse-wrist-curl.gif"
+ },
+ {
+  "file": "gifs/forearms/cable-wrist-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/forearms/cable-wrist-curl.gif"
+ },
+ {
+  "file": "gifs/forearms/band-wrist-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/forearms/band-wrist-curl.gif"
+ },
+ {
+  "file": "gifs/forearms/finger-curls.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/forearms/finger-curls.gif"
+ },
+ {
+  "file": "gifs/forearms/barbell-reverse-wrist-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/forearms/barbell-reverse-wrist-curl.gif"
+ },
+ {
+  "file": "gifs/forearms/dumbbell-one-arm-wrist-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/forearms/dumbbell-one-arm-wrist-curl.gif"
+ },
+ {
+  "file": "gifs/forearms/cable-reverse-wrist-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/forearms/cable-reverse-wrist-curl.gif"
+ },
+ {
+  "file": "gifs/forearms/band-reverse-wrist-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/forearms/band-reverse-wrist-curl.gif"
+ },
+ {
+  "file": "gifs/forearms/wrist-circles.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/forearms/wrist-circles.gif"
+ },
+ {
+  "file": "gifs/forearms/barbell-standing-back-wrist-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/forearms/barbell-standing-back-wrist-curl.gif"
+ },
+ {
+  "file": "gifs/forearms/dumbbell-seated-palms-up-wrist-curl.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/forearms/dumbbell-seated-palms-up-wrist-curl.gif"
+ },
+ {
+  "file": "gifs/traps/barbell-shrug.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/traps/barbell-shrug.gif"
+ },
+ {
+  "file": "gifs/traps/cable-shrug.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/traps/cable-shrug.gif"
+ },
+ {
+  "file": "gifs/traps/smith-shrug.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/traps/smith-shrug.gif"
+ },
+ {
+  "file": "gifs/traps/band-shrug.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/traps/band-shrug.gif"
+ },
+ {
+  "file": "gifs/traps/dumbbell-decline-shrug.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/traps/dumbbell-decline-shrug.gif"
+ },
+ {
+  "file": "gifs/traps/dumbbell-incline-shrug.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/traps/dumbbell-incline-shrug.gif"
+ },
+ {
+  "file": "gifs/traps/lever-shrug.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/traps/lever-shrug.gif"
+ },
+ {
+  "file": "gifs/traps/kettlebell-sumo-high-pull.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/traps/kettlebell-sumo-high-pull.gif"
+ },
+ {
+  "file": "gifs/traps/scapular-pull-up.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/traps/scapular-pull-up.gif"
+ },
+ {
+  "file": "gifs/upper-back/barbell-bent-over-row.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/upper-back/barbell-bent-over-row.gif"
+ },
+ {
+  "file": "gifs/upper-back/dumbbell-bent-over-row.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/upper-back/dumbbell-bent-over-row.gif"
+ },
+ {
+  "file": "gifs/upper-back/cable-seated-row.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/upper-back/cable-seated-row.gif"
+ },
+ {
+  "file": "gifs/upper-back/band-one-arm-standing-low-row.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/upper-back/band-one-arm-standing-low-row.gif"
+ },
+ {
+  "file": "gifs/upper-back/lever-bent-over-row.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/upper-back/lever-bent-over-row.gif"
+ },
+ {
+  "file": "gifs/upper-back/bodyweight-standing-row.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/upper-back/bodyweight-standing-row.gif"
+ },
+ {
+  "file": "gifs/upper-back/barbell-pendlay-row.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/upper-back/barbell-pendlay-row.gif"
+ },
+ {
+  "file": "gifs/upper-back/dumbbell-one-arm-bent-over-row.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/upper-back/dumbbell-one-arm-bent-over-row.gif"
+ },
+ {
+  "file": "gifs/upper-back/cable-incline-bench-row.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/upper-back/cable-incline-bench-row.gif"
+ },
+ {
+  "file": "gifs/upper-back/band-one-arm-twisting-seated-row.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/upper-back/band-one-arm-twisting-seated-row.gif"
+ },
+ {
+  "file": "gifs/upper-back/lever-high-row.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/upper-back/lever-high-row.gif"
+ },
+ {
+  "file": "gifs/upper-back/inverted-row.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/upper-back/inverted-row.gif"
+ },
+ {
+  "file": "gifs/upper-back/dumbbell-lying-rear-delt-row.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/upper-back/dumbbell-lying-rear-delt-row.gif"
+ },
+ {
+  "file": "gifs/upper-back/cable-rope-seated-row.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/upper-back/cable-rope-seated-row.gif"
+ },
+ {
+  "file": "gifs/adductors/lever-seated-hip-adduction.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/adductors/lever-seated-hip-adduction.gif"
+ },
+ {
+  "file": "gifs/adductors/cable-hip-adduction.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/adductors/cable-hip-adduction.gif"
+ },
+ {
+  "file": "gifs/adductors/side-lying-hip-adduction-male.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/adductors/side-lying-hip-adduction-male.gif"
+ },
+ {
+  "file": "gifs/adductors/side-plank-hip-adduction.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/adductors/side-plank-hip-adduction.gif"
+ },
+ {
+  "file": "gifs/adductors/butterfly-yoga-pose.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/adductors/butterfly-yoga-pose.gif"
+ },
+ {
+  "file": "gifs/adductors/assisted-side-lying-adductor-stretch.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/adductors/assisted-side-lying-adductor-stretch.gif"
+ },
+ {
+  "file": "gifs/abductors/lever-seated-hip-abduction.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abductors/lever-seated-hip-abduction.gif"
+ },
+ {
+  "file": "gifs/abductors/resistance-band-seated-hip-abduction.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abductors/resistance-band-seated-hip-abduction.gif"
+ },
+ {
+  "file": "gifs/abductors/side-bridge-hip-abduction.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abductors/side-bridge-hip-abduction.gif"
+ },
+ {
+  "file": "gifs/abductors/side-hip-abduction.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abductors/side-hip-abduction.gif"
+ },
+ {
+  "file": "gifs/abductors/straight-leg-outer-hip-abductor.gif",
+  "url": "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/abductors/straight-leg-outer-hip-abductor.gif"
+ }
+]
