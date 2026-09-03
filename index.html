@@ -181,7 +181,7 @@ const Store = (()=>{
 })();
 
 /* ---------- CONFIG ---------- */
-const APP_VERSION='v17 · 2026-09-03 · marca Vigo V0.2';
+const APP_VERSION='v18 · 2026-09-03 · marca Vigo V0.2';
 const OBJETIVOS = [
   {id:'hipertrofia', t:'Hipertrofia', d:'Ganar masa muscular'},
   {id:'fuerza',      t:'Fuerza',      d:'Fuerza máxima'},
@@ -1276,8 +1276,7 @@ function mmss(s){s=Math.max(0,Math.round(s));const m=Math.floor(s/60),ss=s%60;re
 /* ---------- ROUTER ---------- */
 function render(){
   modalEl.innerHTML='';
-  if(!S.profile){ return screenOnboarding(); }
-  screenHome();
+  screenHome();   // el Home maneja el estado vacío (sin objetivo) con su propio banner + CTA
 }
 
 /* ---------- ONBOARDING ---------- */
@@ -1313,34 +1312,81 @@ function screenOnboarding(){
 function objName(id){return (OBJETIVOS.find(o=>o.id===id)||{}).t||id;}
 function nivName(id){return (NIVELES.find(o=>o.id===id)||{}).t||id;}
 function streakThisWeek(){const h=S.profile.historial;return h.length;}
+/* ---- PWA: instalar desde un botón (funnel web, sin pasar por app store) ---- */
+let _deferredPrompt=null;
+function isStandalone(){ try{ return matchMedia('(display-mode: standalone)').matches || navigator.standalone===true; }catch(e){ return false; } }
+function isIOS(){ return /iphone|ipad|ipod/i.test(navigator.userAgent||''); }
+function installBtnHTML(){ return isStandalone()?'':`<button class="install" onclick="doInstall()">⬇ Descargar app</button>`; }
+window.doInstall=async function(){
+  if(_deferredPrompt){ _deferredPrompt.prompt(); try{ await _deferredPrompt.userChoice; }catch(e){} _deferredPrompt=null; if(S.profile!==undefined) screenHome(); }
+  else { openInstallHelp(); }
+};
+window.openInstallHelp=function(){
+  const pasos = isIOS()
+    ? `<li>Tocá el botón <b>Compartir</b> (el cuadrito con la flecha ↑) abajo en Safari.</li><li>Elegí <b>“Agregar a inicio”</b>.</li><li>Confirmá <b>Agregar</b>. Listo: Vigo queda como app.</li>`
+    : `<li>Abrí el menú <b>⋮</b> del navegador (arriba a la derecha).</li><li>Elegí <b>“Instalar app”</b> o <b>“Agregar a pantalla de inicio”</b>.</li><li>Confirmá. Listo: Vigo queda como app.</li>`;
+  modalEl.innerHTML=`<div class="overlay" onclick="if(event.target===this)this.remove()"><div class="sheet" style="padding:18px 18px 26px">
+    <div class="sublabel">Instalar Vigo</div>
+    <div style="font-weight:900;font-size:18px;margin:4px 0 10px">Agregala a tu teléfono</div>
+    <ol style="margin:0 0 4px 18px;padding:0;font-size:14px;line-height:1.7;color:var(--vg-ink-soft)">${pasos}</ol>
+    <button class="btn" style="margin-top:14px" onclick="modalEl.querySelector('.overlay').remove()">Entendido</button>
+  </div></div>`;
+};
+window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); _deferredPrompt=e; if(S.profile!==undefined && !EX){ try{ if(document.querySelector('.botnav')) screenHome(); }catch(_){} } });
+window.addEventListener('appinstalled',()=>{ _deferredPrompt=null; });
+
+/* ---- Header y barra de navegación inferior (patrón recomendado por NN/g para ≤4 destinos) ---- */
+function mainHeader(){ return `<div class="topbar"><div class="logo"><i>VI</i>GO<span class="claim">AI Wellness Coach</span></div>${installBtnHTML()}</div>`; }
+function bottomNav(active){
+  const H='<svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>';
+  const C='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+  const U='<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>';
+  const it=(k,l,svg,fn)=>`<a class="${active===k?'on':''}" onclick="${fn}">${svg}<span>${l}</span></a>`;
+  return `<nav class="botnav">${it('home','Inicio',H,'screenHome()')}${it('hist','Historial',C,'screenHistory()')}${it('perf','Perfil',U,'screenPerfil()')}</nav>`;
+}
+function motivMsg(){
+  const h=(S.profile&&S.profile.historial)||[]; if(!h.length) return '¡Arranquemos! Tu primer entreno te espera.';
+  const now=Date.now(); const wk=h.filter(s=>(s.ts||0)>now-7*864e5).length;
+  if(wk>=4) return '🔥 '+wk+' entrenos esta semana. Estás imparable.';
+  if(wk>=2) return '💪 '+wk+' esta semana. Vas muy bien, seguí así.';
+  if(wk===1) return '👊 1 esta semana. Sumá uno más y agarrás ritmo.';
+  return '🎯 Hace unos días que no entrenás. Hoy es un buen día para volver.';
+}
+function heroHTML(kick,lead){
+  return `<div class="hero">
+    <img src="vigo-hero.jpg" alt="" onerror="this.remove();this.parentNode.classList.add('ph')">
+    <div class="scrim"></div>
+    <div class="heroTxt"><div class="heroKick">${esc(kick)}</div><div class="heroLead">${esc(lead)}</div></div>
+  </div>`;
+}
 function screenHome(){
-  const p=S.profile;
+  const p=S.profile, hasP=!!p, hasR=hasP && !!S.routine;
+  let kick,lead,ctaLabel,ctaFn;
+  if(!hasP){ kick='Empezá acá'; lead='Contame tu objetivo y te preparo la rutina'; ctaLabel='Definir objetivo'; ctaFn='screenPerfil()'; }
+  else if(!hasR){ kick='Hola de nuevo'; lead='¿Te genero la rutina para hoy?'; ctaLabel='Generar rutina de hoy'; ctaFn='genToday()'; }
+  else { kick='Todo listo'; lead='Todo listo para hoy: revisá la rutina y los tips'; ctaLabel='Ver rutina'; ctaFn='screenRoutine()'; }
+  const objChip = hasP?`<div class="objline"><span class="objchip" onclick="screenPerfil()">🎯 <b>${esc(objName(p.objetivo))}</b> · ${esc(nivName(p.nivel))}</span></div>`:'';
+  const filters = (hasP && !hasR)?`<div class="card" style="margin-top:10px">${genFiltersHTML()}</div>`:'';
+  const nudge = hasP?nudgeHTML():'';
+  const chart = (hasP && (p.historial||[]).length)?`<div class="motiv">${motivMsg()}</div>${activityChartHTML(HIST_MODE)}`:'';
   app.innerHTML=`
-    <div class="topbar"><div class="logo"><i>VI</i>GO<span class="claim">AI Wellness Coach</span></div>
-      <div class="pill grey" id="perfilBtn" style="cursor:pointer">${objName(p.objetivo)} · ${nivName(p.nivel)}</div></div>
-    <div class="card">
-      <div class="streak"><div class="num">${streakThisWeek()}</div>
-        <div><div style="font-weight:800">Entrenamientos</div><div class="muted" style="font-size:13px">registrados en total</div></div></div>
-    </div>
-    ${nudgeHTML()}
-    <div class="card">
-      <div style="font-weight:900;font-size:20px;margin-bottom:4px;text-align:center">Rutina de hoy</div>
-      <div class="muted" style="font-size:13px;margin-bottom:8px;text-align:center">4 bloques + entrada en calor · 50-60 min, alineada a <b>${objName(p.objetivo)}</b></div>
-      ${genFiltersHTML()}
-      <button id="gen" class="btn" style="margin-top:14px">Generar rutina de hoy</button>
-    </div>
-    <button id="histBtn" class="btn ghost">Ver historial (${p.historial.length})</button>
-    <div class="footnote">${Store.ok?'Tus datos se guardan en este dispositivo.':'⚠ Persistencia no disponible en este contexto: los datos se pierden al recargar. Abrí la app servida (ver notas).'}<br>
-      <span style="opacity:.7">${APP_VERSION}</span></div>
+    ${mainHeader()}
+    ${heroHTML(kick,lead)}
+    ${objChip}
+    <button class="btn" onclick="${ctaFn}">${ctaLabel}</button>
+    ${filters}
+    ${nudge}
+    ${chart}
+    <div class="footnote"><span style="opacity:.7">${APP_VERSION}</span></div>
+    ${bottomNav('home')}
   `;
   document.querySelectorAll('.genf .gbtn').forEach(b=>b.onclick=()=>{
     const set=b.dataset.t==='reg'?GENF.regions:GENF.impls, k=b.dataset.k;
     if(set.has(k))set.delete(k);else set.add(k); screenHome();
   });
-  $('#gen').onclick=()=>{S.routine=generarRutina(p.objetivo,p.nivel,p.historial,'');save();screenRoutine();};
-  $('#histBtn').onclick=screenHistory;
-  $('#perfilBtn').onclick=screenPerfil;
 }
+window.screenHome=screenHome;
+window.genToday=function(){ const p=S.profile; S.routine=generarRutina(p.objetivo,p.nivel,p.historial,''); save(); screenRoutine(); };
 function genFiltersHTML(){
   const R=[['upper','Tren superior'],['core','Core'],['lower','Tren inferior']];
   const I=[['maquina','Máquina'],['mancuerna','Mancuerna'],['banda','Banda'],['barra','Barra'],['pesarusa','Pesa rusa'],['piso','Peso corporal']];
@@ -1649,11 +1695,16 @@ window.finishRoutine=(cierre)=>{
   const cats=[...new Set([r.warmup.cat,...r.bloques.filter(b=>finIds.includes(b.id)).map(b=>b.cat)])];
   const regiones=[...new Set(r.bloques.filter(b=>finIds.includes(b.id)).map(b=>b.region))];
   if(regiones.length===0){ r.bloques.forEach(b=>regiones.push(b.region)); } // finalizó sin marcar bloques: registrar plan
+  // Detalle compacto (bloques + ejercicios) para poder verlo en el Historial de los últimos entrenos.
+  const det={ warm:{movs:(r.warmup.movs||[]).map(mm=>({es:movInfo(mm.n).es}))},
+    bloques:r.bloques.map(b=>({cat:b.cat,variante:b.variante,movs:(b.movs||[]).map(mm=>({r:mm.r,es:movInfo(mm.n).es}))})) };
   const sess={fecha:todayKey(),ts:Date.now(),objetivo:r.objetivo,nivel:r.nivel,
     blockIds:r.bloques.map(b=>b.id), bloquesFinalizados:finIds,
     cats:[...new Set(r.bloques.map(b=>b.cat))], regiones:[...new Set(r.bloques.map(b=>b.region))],
-    removed:r.removed||[], cierre, durMin:r.durEstim};
+    removed:r.removed||[], cierre, durMin:r.durEstim, det};
   S.profile.historial.push(sess);
+  // Mantener el detalle solo en los últimos 10 (optimizar almacenamiento).
+  try{ const H=S.profile.historial; H.forEach((s,i)=>{ if(i<H.length-10) delete s.det; }); }catch(e){}
   S.profile.contador[r.objetivo]=(S.profile.contador[r.objetivo]||0)+1;
   // Progresión pendiente del último bloque (no tiene descanso después): se ofrece en la pantalla de fin.
   let pend=null; try{ const done=(EX&&EX.progDone)||{}; const fin=[...new Set(EX?EX.finalizados:[])];
@@ -1730,43 +1781,71 @@ function activityChartHTML(mode){
     <div class="muted" style="font-size:12px;text-align:center;margin-top:4px">Promedio <b>${prom}</b> ${mode==='week'?'por semana':'por mes'} · ${mode==='week'?'esta semana':'este mes'}: <b>${last}</b></div>
   </div>`;
 }
+function histRowHTML(s){
+  return `<div class="hist"><div><div style="font-weight:800">${esc(objName(s.objetivo))}</div>
+    <div class="muted" style="font-size:12px">${esc(s.fecha)} · ${esc((s.cats||[]).slice(0,3).join(', '))}</div></div>
+    <div style="text-align:right"><div style="font-weight:800">${s.durMin}'</div>
+    <div class="muted" style="font-size:11px">${s.cierre==='FinalizadoPorUsuario'?'finalizada':'completa'}</div></div></div>`;
+}
+function histDetailHTML(s){
+  if(!s.det||!s.det.bloques) return '';
+  const warm=s.det.warm&&s.det.warm.movs&&s.det.warm.movs.length
+    ? `<div class="muted" style="font-size:12px;margin:6px 0 2px">🔥 Entrada en calor: ${s.det.warm.movs.map(m=>esc(m.es)).join(' · ')}</div>`:'';
+  const blk=b=>`<div class="detblk"><div class="detblkh">${esc(b.cat)}${b.variante?` · <span class="muted" style="font-weight:600">${esc(b.variante)}</span>`:''}</div>
+    ${(b.movs||[]).map(m=>`<div class="detmv"><b>${esc(m.r)}</b> ${esc(m.es)}</div>`).join('')}</div>`;
+  return `<div class="histdet">${warm}${s.det.bloques.map(blk).join('')}</div>`;
+}
 function screenHistory(){
-  const h=[...S.profile.historial].reverse();
+  const hist=(S.profile&&S.profile.historial)||[];
+  const h=[...hist].reverse();
+  const list = h.length? `<div class="card" style="padding:6px 14px">${h.map((s,i)=>
+      (i<3 && s.det)
+        ? `<details class="histrow"><summary>${histRowHTML(s)}<span class="detcue">ver detalle ▾</span></summary>${histDetailHTML(s)}</details>`
+        : `<div class="histplain">${histRowHTML(s)}</div>`
+    ).join('')}</div>` : '';
   app.innerHTML=`
-    <div class="topbar"><div class="row" style="gap:8px"><button class="btn ghost sm" onclick="render()">‹</button>
-    <div style="font-weight:900;font-size:20px">Historial</div></div></div>
-    ${h.length?activityChartHTML(HIST_MODE):'<div class="card muted" style="text-align:center">Todavía no registraste entrenamientos.</div>'}
-    ${h.length?`<div class="card">${h.map(s=>`
-      <div class="hist"><div><div style="font-weight:800">${objName(s.objetivo)}</div>
-      <div class="muted" style="font-size:12px">${s.fecha} · ${s.cats.slice(0,3).join(', ')}</div></div>
-      <div style="text-align:right"><div style="font-weight:800">${s.durMin}'</div>
-      <div class="muted" style="font-size:11px">${s.cierre==='FinalizadoPorUsuario'?'finalizada':'completa'}</div></div></div>
-    `).join('')}</div>`:''}
+    ${mainHeader()}
+    <h2 style="font-size:24px;font-weight:900;letter-spacing:-.02em;margin:2px 2px 10px">Historial</h2>
+    ${h.length?`<div class="motiv">${motivMsg()}</div>${activityChartHTML(HIST_MODE)}`:'<div class="card muted" style="text-align:center">Todavía no registraste entrenamientos.</div>'}
+    ${list}
+    <div class="footnote"><span style="opacity:.7">${APP_VERSION}</span></div>
+    ${bottomNav('hist')}
   `;
 }
 window.screenHistory=screenHistory;
 
 /* ---------- PERFIL ---------- */
+let _pObj=null,_pNiv=null;   // borrador para crear perfil desde cero (empty state)
 function screenPerfil(){
-  const p=S.profile;
+  const creating=!S.profile;
+  if(!creating){ _pObj=S.profile.objetivo; _pNiv=S.profile.nivel; }
+  const selO=_pObj, selN=_pNiv;
+  const canSave = !creating || (selO && selN);
   app.innerHTML=`
-    <div class="topbar"><div class="row" style="gap:8px"><button class="btn ghost sm" onclick="render()">‹</button>
-    <div style="font-weight:900;font-size:20px">Perfil</div></div></div>
+    ${mainHeader()}
+    <h2 style="font-size:24px;font-weight:900;letter-spacing:-.02em;margin:2px 2px 2px">Perfil</h2>
+    <p class="muted" style="margin:2px 2px 10px;font-size:13px">${creating?'Elegí tu objetivo y tu nivel. En segundos te armo la rutina.':'Cambiar objetivo o nivel no borra tu historial; la próxima rutina lo tiene en cuenta.'}</p>
     <div class="label">Objetivo</div><div id="objs" class="grid2"></div>
     <div class="label">Nivel</div><div id="nivs" class="grid2" style="grid-template-columns:1fr 1fr 1fr"></div>
     <div style="height:16px"></div>
-    <button class="btn" onclick="render()">Guardar y volver</button>
-    <button class="btn red" style="margin-top:10px" onclick="resetAll()">Borrar todos mis datos</button>
-    <div class="footnote">Cambiar objetivo o nivel no borra tu historial; la próxima rutina lo tiene en cuenta.</div>
+    <button class="btn ${canSave?'':'off'}" id="saveP">${creating?'Guardar y ver mi plan':'Guardar y volver'}</button>
+    ${creating?'':`<button class="btn red" style="margin-top:10px" onclick="resetAll()">Borrar todos mis datos</button>`}
+    <div class="footnote">Tus datos se guardan en este dispositivo.<br><span style="opacity:.7">${APP_VERSION}</span></div>
+    ${bottomNav('perf')}
   `;
   const oc=$('#objs');
-  OBJETIVOS.forEach(o=>{const d=document.createElement('div');d.className='selcard'+(p.objetivo===o.id?' on':'');
+  OBJETIVOS.forEach(o=>{const d=document.createElement('div');d.className='selcard'+(selO===o.id?' on':'');
     d.innerHTML=`<div class="t">${o.t}</div><div class="d">${o.d}</div>`;
-    d.onclick=()=>{p.objetivo=o.id;save();screenPerfil();};oc.appendChild(d);});
+    d.onclick=()=>{ if(creating){_pObj=o.id;} else {S.profile.objetivo=o.id;save();} screenPerfil(); };oc.appendChild(d);});
   const nc=$('#nivs');
-  NIVELES.forEach(n=>{const d=document.createElement('div');d.className='selcard'+(p.nivel===n.id?' on':'');
+  NIVELES.forEach(n=>{const d=document.createElement('div');d.className='selcard'+(selN===n.id?' on':'');
     d.style.textAlign='center';d.innerHTML=`<div class="t" style="font-size:14px">${n.t}</div>`;
-    d.onclick=()=>{p.nivel=n.id;save();screenPerfil();};nc.appendChild(d);});
+    d.onclick=()=>{ if(creating){_pNiv=n.id;} else {S.profile.nivel=n.id;save();} screenPerfil(); };nc.appendChild(d);});
+  $('#saveP').onclick=()=>{
+    if(creating){ if(!(_pObj&&_pNiv)){ toast('Elegí objetivo y nivel'); return; }
+      S.profile={objetivo:_pObj,nivel:_pNiv,historial:[],contador:{},weights:{},prog:{}}; save(); _pObj=_pNiv=null; toast('¡Listo! Tu plan está armado'); }
+    screenHome();
+  };
 }
 window.screenPerfil=screenPerfil;
 window.resetAll=()=>{if(confirm('¿Borrar objetivo, nivel e historial?')){S=defState();save();render();}};

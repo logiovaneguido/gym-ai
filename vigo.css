@@ -319,3 +319,66 @@ button:focus-visible,input:focus-visible,a:focus-visible,.mv:focus-visible{
   .wt{background:var(--vg-field-700);color:var(--vg-sand-50);border-color:var(--vg-field-600);}
   .seg{border-color:var(--vg-field-600);}
 }
+
+/* ============================================================ 12 · HOME v18
+   Banner con foto, botón instalar en el header, barra de navegación inferior,
+   chip de objetivo en el cuerpo, y detalle expandible del historial.        */
+
+/* botón "Descargar app" en el header */
+.topbar .install{
+  background:var(--vg-signal);color:var(--vg-field-900);border:none;
+  border-radius:999px;padding:9px 14px;font-size:12.5px;font-weight:800;
+  font-variation-settings:'wdth' 84,'wght' 800;letter-spacing:.01em;cursor:pointer;
+  white-space:nowrap;
+}
+.topbar .install:active{background:var(--vg-moss-200);}
+
+/* banner / hero */
+.hero{
+  position:relative;border-radius:16px;overflow:hidden;margin-bottom:14px;
+  background:var(--vg-field-900);min-height:196px;display:flex;align-items:flex-end;
+}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 20%;}
+.hero .scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,20,16,0) 34%,rgba(13,20,16,.55) 68%,rgba(13,20,16,.88) 100%);}
+.hero .heroTxt{position:relative;padding:16px 16px 15px;color:var(--vg-sand-50);width:100%;}
+.hero .heroKick{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--vg-signal);
+  font-variation-settings:'wdth' 84,'wght' 700;margin-bottom:5px;}
+.hero .heroLead{font-size:20px;line-height:1.18;font-variation-settings:'wdth' 108,'wght' 800;text-shadow:0 1px 12px rgba(0,0,0,.35);}
+.hero.ph{background:linear-gradient(135deg,var(--vg-field-800),var(--vg-olive-700));min-height:150px;}
+
+/* chip de objetivo (bajado del header al cuerpo) */
+.objline{display:flex;align-items:center;margin:0 2px 12px;}
+.objchip{background:var(--vg-sand-100);color:var(--vg-khaki-700);border:1px solid var(--vg-sand-200);
+  border-radius:999px;padding:7px 13px;font-size:12.5px;font-weight:700;
+  font-variation-settings:'wdth' 84,'wght' 700;cursor:pointer;}
+.objchip b{color:var(--vg-field-900);font-weight:800;}
+
+/* mensaje motivacional sobre el gráfico */
+.motiv{font-size:13.5px;color:var(--vg-olive-600);font-weight:800;margin:2px 2px 8px;font-variation-settings:'wght' 800;}
+
+/* barra de navegación inferior */
+.botnav{
+  position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:520px;z-index:45;
+  background:var(--vg-field-800);display:flex;justify-content:space-around;
+  padding:9px 6px calc(9px + env(safe-area-inset-bottom));border-radius:18px 18px 0 0;
+  box-shadow:0 -6px 20px rgba(13,20,16,.14);
+}
+.botnav a{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--vg-moss-300);
+  font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;padding:3px 0;}
+.botnav a.on{color:var(--vg-signal);}
+.botnav svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+/* detalle expandible del historial */
+.histrow{border-bottom:1px solid var(--vg-sand-200);}
+.histrow:last-child,.histplain:last-child{border-bottom:none;}
+.histplain{border-bottom:1px solid var(--vg-sand-200);}
+.histrow summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.histrow summary::-webkit-details-marker{display:none;}
+.histrow summary .hist{flex:1;border-bottom:none;}
+.detcue{font-size:11px;color:var(--vg-olive-600);font-weight:800;white-space:nowrap;}
+.histrow[open] .detcue{color:var(--vg-khaki-700);}
+.histdet{padding:2px 2px 12px;}
+.detblk{margin-top:10px;}
+.detblkh{font-size:13px;font-weight:800;color:var(--vg-field-900);margin-bottom:3px;}
+.detmv{font-size:12.5px;color:var(--vg-ink-soft);padding:1px 0;}
+.detmv b{color:var(--vg-olive-700);}
