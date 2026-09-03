@@ -1,7 +1,7 @@
 /* Vigo service worker — v16
    NETWORK-FIRST para la app (index.html) y para el CSS propio (vigo.css): se actualizan solos.
    CACHE-FIRST para fuentes, íconos y GIF (pesados / inmutables). */
-const CACHE='vigo-v16';
+const CACHE='vigo-v17';
 const CORE=['./','./index.html','./vigo.css',
   './fonts/archivo-latin-standard-normal.woff2',
   './fonts/archivo-latin-ext-standard-normal.woff2',

@@ -121,14 +121,19 @@ h1,h2,h3{font-variation-settings:'wdth' 110,'wght' 800;letter-spacing:-.02em;}
 /* -------------------------------------------------- 4 · HEADER FIELD (banda)
    Sin tocar el HTML: los márgenes negativos igualan el padding de .app
    (18px 16px), así la banda sangra a los bordes de la app.                   */
+/* el contenedor no lleva padding arriba: la banda del header ocupa ese lugar y se fija */
+.app{padding-top:0;}
 .topbar{
   background:var(--vg-field-800);
   color:var(--vg-sand-50);
-  margin:-18px -16px 16px;
+  margin:0 -16px 16px;              /* solo bleed horizontal a los bordes */
   padding:16px;
   padding-top:max(16px, env(safe-area-inset-top));
   border-radius:0 0 18px 18px;
   min-height:76px;
+  position:sticky;   /* el header queda fijo arriba al hacer scroll, en todas las pantallas */
+  top:0;
+  z-index:40;        /* debajo del modal (50) y del toast (99) */
 }
 .topbar .logo{color:var(--vg-sand-50);}
 .topbar .btn.ghost{

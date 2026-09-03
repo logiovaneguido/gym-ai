@@ -181,7 +181,7 @@ const Store = (()=>{
 })();
 
 /* ---------- CONFIG ---------- */
-const APP_VERSION='v16 · 2026-09-02 · marca Vigo V0.2';
+const APP_VERSION='v17 · 2026-09-03 · marca Vigo V0.2';
 const OBJETIVOS = [
   {id:'hipertrofia', t:'Hipertrofia', d:'Ganar masa muscular'},
   {id:'fuerza',      t:'Fuerza',      d:'Fuerza máxima'},
@@ -615,6 +615,19 @@ function restHint(obj,heavy){
   if(obj==='salud')return heavy?'90 s':'45–75 s';
   if(obj==='resistencia')return '≤30 s';
   return '60–90 s';
+}
+// Línea de ritmo/descanso SEGÚN EL FORMATO del bloque. En AMRAP/EMOM el descanso está
+// integrado al formato (son continuos), así que mostrar "2–3 min entre series" es incoherente:
+// ROUNDS → descanso entre vueltas; AMRAP → ritmo continuo; EMOM → al minuto.
+function pacingText(b){
+  if(b.formato==='AMRAP') return {lbl:'Ritmo', val:'continuo · el menor descanso que aguante la técnica'};
+  if(b.formato==='EMOM')  return {lbl:'Cada minuto', val:'arrancás una serie al minuto y descansás lo que sobre'};
+  return {lbl:'Descanso entre vueltas', val:b.descanso};
+}
+function pacingShort(b){
+  if(b.formato==='AMRAP') return 'ritmo continuo';
+  if(b.formato==='EMOM')  return 'al minuto';
+  return 'descanso '+b.descanso;
 }
 function composeBlock(obj,nivel,spec,used,rng){
   const esLargo=!!spec.esLargo;
@@ -1354,7 +1367,7 @@ function blockCardHTML(b,idx,isWarm){
     <div class="time"><b>${b.dur}'</b></div>
     <h3>${esc(b.cat)}</h3>
     <div class="sub">${esc(fmtFormato(b))} · ${esc(b.variante)}</div>
-    ${isWarm||!b.descanso?'':`<div class="restline">🕑 Descanso entre series: <b>${esc(b.descanso)}</b></div>`}
+    ${isWarm?'':(pp=>`<div class="restline">🕑 ${esc(pp.lbl)}: <b>${esc(pp.val)}</b></div>`)(pacingText(b))}
     <div class="movs">${movsHTML(b,idx)}</div>
     ${isWarm?'':dots(b.inten)}
     ${isWarm||!b.equipMix?'':`<div style="margin-top:8px">${b.equipMix.map(e=>`<span class="eqchip">${EQ_ES[e]}</span>`).join('')}</div>`}
@@ -1584,7 +1597,7 @@ function drawExec(){
     inner=`<div class="phase">
       <div class="ptype">${ph.warm?'Entrada en calor':'Bloque '+(ph.idx+1)+' de 4'}</div>
       <div class="pname" style="margin-top:4px">${esc(b.cat)} · ${esc(b.variante)}</div>
-      <div class="muted" style="font-size:12px;margin-bottom:6px">${esc(fmtFormato(b))}${ph.warm||!b.descanso?'':' · descanso series '+esc(b.descanso)}</div>
+      <div class="muted" style="font-size:12px;margin-bottom:6px">${esc(fmtFormato(b))}${ph.warm?'':' · '+esc(pacingShort(b))}</div>
       <div class="pclock">${mmss(EX.phaseRem)}</div>
       <div class="movs" style="text-align:left;max-width:340px;margin:6px auto 0">${movsHTML(b)}</div>
       <div style="height:12px"></div>
@@ -1743,7 +1756,7 @@ function screenPerfil(){
     <div class="label">Nivel</div><div id="nivs" class="grid2" style="grid-template-columns:1fr 1fr 1fr"></div>
     <div style="height:16px"></div>
     <button class="btn" onclick="render()">Guardar y volver</button>
-    <button class="btn ghost red" style="margin-top:10px;color:var(--red)" onclick="resetAll()">Borrar todos mis datos</button>
+    <button class="btn red" style="margin-top:10px" onclick="resetAll()">Borrar todos mis datos</button>
     <div class="footnote">Cambiar objetivo o nivel no borra tu historial; la próxima rutina lo tiene en cuenta.</div>
   `;
   const oc=$('#objs');
@@ -1763,8 +1776,11 @@ window.render=render;
 /* ---------- PWA (instalable / agregar a inicio) ---------- */
 (function(){
   try{
-    const icon='vigo-icon-512.png', icon192='vigo-icon-192.png', iconMask='vigo-icon-maskable.svg';
-    const man={name:'Vigo · AI Wellness Coach',short_name:'Vigo',start_url:'.',scope:'.',display:'standalone',orientation:'portrait',
+    // Rutas ABSOLUTAS: el manifest se sirve como blob:, y ahí las rutas relativas resolverían contra
+    // la raíz del dominio (no contra /gym-ai/) → 404. new URL(p, location.href) las ancla a la carpeta real.
+    const abs=p=>new URL(p, location.href).href;
+    const icon=abs('vigo-icon-512.png'), icon192=abs('vigo-icon-192.png'), iconMask=abs('vigo-icon-maskable.svg');
+    const man={name:'Vigo · AI Wellness Coach',short_name:'Vigo',start_url:abs('.'),scope:abs('.'),display:'standalone',orientation:'portrait',
       background_color:'#F6F4EC',theme_color:'#131E17',icons:[{src:icon192,sizes:'192x192',type:'image/png',purpose:'any'},{src:icon,sizes:'512x512',type:'image/png',purpose:'any'},{src:iconMask,sizes:'512x512',type:'image/svg+xml',purpose:'maskable'}]};
     const url=URL.createObjectURL(new Blob([JSON.stringify(man)],{type:'application/manifest+json'}));
     const l=document.createElement('link');l.rel='manifest';l.href=url;document.head.appendChild(l);
