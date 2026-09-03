@@ -156,7 +156,7 @@
   .matchip{display:inline-block;background:var(--ink);color:#fff;font-size:11px;font-weight:800;
     padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.03em;}
 </style>
-<link rel="stylesheet" href="vigo.css">
+<link rel="stylesheet" href="vigo.css?v=20">
 </head>
 <body>
 <div id="app" class="app"></div>
@@ -181,7 +181,7 @@ const Store = (()=>{
 })();
 
 /* ---------- CONFIG ---------- */
-const APP_VERSION='v18 · 2026-09-03 · marca Vigo V0.2';
+const APP_VERSION='v21 · 2026-09-03 · marca Vigo V0.2';
 const OBJETIVOS = [
   {id:'hipertrofia', t:'Hipertrofia', d:'Ganar masa muscular'},
   {id:'fuerza',      t:'Fuerza',      d:'Fuerza máxima'},
@@ -1448,6 +1448,7 @@ function screenRoutine(){
     <div id="blocks"></div>
     <button id="start" class="btn">Iniciar rutina</button>
     <div class="navwarn">${warnIntensidad(r)}</div>
+    ${bottomNav('home')}
   `;
   $('#sndBtn').onclick=()=>{SOUND=!SOUND;initAudio();if(SOUND)sBlockStart();screenRoutine();};
   const bc=$('#blocks');
@@ -1821,31 +1822,30 @@ function screenPerfil(){
   if(!creating){ _pObj=S.profile.objetivo; _pNiv=S.profile.nivel; }
   const selO=_pObj, selN=_pNiv;
   const canSave = !creating || (selO && selN);
+  // Objetivo: filas compactas (todas visibles, sin scroll horizontal que esconda opciones).
+  const objRows=OBJETIVOS.map(o=>`<div class="optrow ${selO===o.id?'on':''}" data-o="${esc(o.id)}">
+      <div><div class="ot">${esc(o.t)}</div><div class="od">${esc(o.d)}</div></div><span class="ock"></span></div>`).join('');
+  // Nivel: control segmentado (3 opciones en una línea).
+  const levBtns=NIVELES.map(n=>`<button class="${selN===n.id?'on':''}" data-n="${esc(n.id)}">${esc(n.t)}</button>`).join('');
   app.innerHTML=`
     ${mainHeader()}
-    <h2 style="font-size:24px;font-weight:900;letter-spacing:-.02em;margin:2px 2px 2px">Perfil</h2>
-    <p class="muted" style="margin:2px 2px 10px;font-size:13px">${creating?'Elegí tu objetivo y tu nivel. En segundos te armo la rutina.':'Cambiar objetivo o nivel no borra tu historial; la próxima rutina lo tiene en cuenta.'}</p>
-    <div class="label">Objetivo</div><div id="objs" class="grid2"></div>
-    <div class="label">Nivel</div><div id="nivs" class="grid2" style="grid-template-columns:1fr 1fr 1fr"></div>
-    <div style="height:16px"></div>
-    <button class="btn ${canSave?'':'off'}" id="saveP">${creating?'Guardar y ver mi plan':'Guardar y volver'}</button>
-    ${creating?'':`<button class="btn red" style="margin-top:10px" onclick="resetAll()">Borrar todos mis datos</button>`}
+    <h2 style="font-size:24px;font-weight:900;letter-spacing:-.02em;margin:2px 2px 2px">${creating?'Definí tu objetivo':'Perfil'}</h2>
+    <p class="muted" style="margin:2px 2px 12px;font-size:13px">${creating?'Elegí tu objetivo y tu nivel. En segundos te armo la rutina.':'Cambiar objetivo o nivel no borra tu historial; la próxima rutina lo tiene en cuenta.'}</p>
+    <div class="label">Objetivo</div><div id="objs">${objRows}</div>
+    <div class="label" style="margin-top:14px">Nivel</div><div class="levseg" id="nivs">${levBtns}</div>
+    ${creating?'':`<button class="btn red" style="margin-top:18px" onclick="resetAll()">Borrar todos mis datos</button>`}
     <div class="footnote">Tus datos se guardan en este dispositivo.<br><span style="opacity:.7">${APP_VERSION}</span></div>
-    ${bottomNav('perf')}
+    ${creating
+      ? `<div class="setupbar"><span class="backlink" onclick="_pObj=null;_pNiv=null;screenHome()">‹ Volver</span><button class="btn ${canSave?'':'off'}" id="saveP">Guardar y ver mi plan</button></div>`
+      : bottomNav('perf')}
   `;
-  const oc=$('#objs');
-  OBJETIVOS.forEach(o=>{const d=document.createElement('div');d.className='selcard'+(selO===o.id?' on':'');
-    d.innerHTML=`<div class="t">${o.t}</div><div class="d">${o.d}</div>`;
-    d.onclick=()=>{ if(creating){_pObj=o.id;} else {S.profile.objetivo=o.id;save();} screenPerfil(); };oc.appendChild(d);});
-  const nc=$('#nivs');
-  NIVELES.forEach(n=>{const d=document.createElement('div');d.className='selcard'+(selN===n.id?' on':'');
-    d.style.textAlign='center';d.innerHTML=`<div class="t" style="font-size:14px">${n.t}</div>`;
-    d.onclick=()=>{ if(creating){_pNiv=n.id;} else {S.profile.nivel=n.id;save();} screenPerfil(); };nc.appendChild(d);});
-  $('#saveP').onclick=()=>{
-    if(creating){ if(!(_pObj&&_pNiv)){ toast('Elegí objetivo y nivel'); return; }
-      S.profile={objetivo:_pObj,nivel:_pNiv,historial:[],contador:{},weights:{},prog:{}}; save(); _pObj=_pNiv=null; toast('¡Listo! Tu plan está armado'); }
-    screenHome();
-  };
+  document.querySelectorAll('#objs .optrow').forEach(el=>el.onclick=()=>{ const id=el.dataset.o;
+    if(creating){_pObj=id;} else {S.profile.objetivo=id;save();} screenPerfil(); });
+  document.querySelectorAll('#nivs button').forEach(el=>el.onclick=()=>{ const id=el.dataset.n;
+    if(creating){_pNiv=id;} else {S.profile.nivel=id;save();} screenPerfil(); });
+  if(creating){ const sp=$('#saveP'); if(sp) sp.onclick=()=>{
+    if(!(_pObj&&_pNiv)){ toast('Elegí objetivo y nivel'); return; }
+    S.profile={objetivo:_pObj,nivel:_pNiv,historial:[],contador:{},weights:{},prog:{}}; save(); _pObj=_pNiv=null; toast('¡Listo! Tu plan está armado'); screenHome(); }; }
 }
 window.screenPerfil=screenPerfil;
 window.resetAll=()=>{if(confirm('¿Borrar objetivo, nivel e historial?')){S=defState();save();render();}};
