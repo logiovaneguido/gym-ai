@@ -181,13 +181,14 @@ const Store = (()=>{
 })();
 
 /* ---------- CONFIG ---------- */
-const APP_VERSION='v21 · 2026-09-03 · marca Vigo V0.2';
+const APP_VERSION='v22 · 2026-09-03 · marca Vigo V0.2';
 const OBJETIVOS = [
   {id:'hipertrofia', t:'Hipertrofia', d:'Ganar masa muscular'},
   {id:'fuerza',      t:'Fuerza',      d:'Fuerza máxima'},
+  {id:'grasa',       t:'Perder grasa', d:'Bajar grasa cuidando el músculo'},
   {id:'resistencia', t:'Resistencia', d:'Aeróbico y acondicionamiento'},
   {id:'rendimiento', t:'Rendimiento', d:'Potencia y deporte (fútbol)'},
-  {id:'salud',       t:'Salud general', d:'Recomposición y mantenimiento'}
+  {id:'salud',       t:'Salud general', d:'Bienestar y mantenimiento'}
 ];
 const NIVELES = [
   {id:'principiante', t:'Principiante'},
@@ -198,20 +199,20 @@ const NIVEL_RANK = {principiante:1, intermedio:2, avanzado:3};
 
 // Matriz de proporción objetivo -> categoría (1..5, nunca 0). §8.2
 const WEIGHTS = {
-  'Hypertrophy':            {hipertrofia:5,fuerza:2,resistencia:1,rendimiento:1,salud:3},
-  'Traditional Hypertrophy':{hipertrofia:5,fuerza:2,resistencia:1,rendimiento:1,salud:3},
-  'Strength':               {hipertrofia:2,fuerza:5,resistencia:1,rendimiento:2,salud:3},
-  'Combined Strength':      {hipertrofia:2,fuerza:5,resistencia:2,rendimiento:3,salud:3},
-  'HRX Training':           {hipertrofia:2,fuerza:4,resistencia:2,rendimiento:4,salud:2},
-  'FBA':                    {hipertrofia:2,fuerza:2,resistencia:3,rendimiento:3,salud:3},
-  'Full Body':              {hipertrofia:3,fuerza:2,resistencia:3,rendimiento:2,salud:4},
-  'Upper Body':             {hipertrofia:4,fuerza:3,resistencia:2,rendimiento:2,salud:3},
-  'Lower Body':             {hipertrofia:4,fuerza:3,resistencia:2,rendimiento:3,salud:3},
-  'Midline':                {hipertrofia:2,fuerza:2,resistencia:2,rendimiento:2,salud:3},
-  'Cardio':                 {hipertrofia:1,fuerza:1,resistencia:5,rendimiento:2,salud:3},
-  'HIIT':                   {hipertrofia:1,fuerza:1,resistencia:5,rendimiento:3,salud:3},
-  'Sport':                  {hipertrofia:1,fuerza:1,resistencia:2,rendimiento:5,salud:2},
-  'Pilates':                {hipertrofia:2,fuerza:2,resistencia:2,rendimiento:2,salud:3}
+  'Hypertrophy':            {hipertrofia:5,fuerza:2,resistencia:1,rendimiento:1,salud:3,grasa:3},
+  'Traditional Hypertrophy':{hipertrofia:5,fuerza:2,resistencia:1,rendimiento:1,salud:3,grasa:3},
+  'Strength':               {hipertrofia:2,fuerza:5,resistencia:1,rendimiento:2,salud:3,grasa:3},
+  'Combined Strength':      {hipertrofia:2,fuerza:5,resistencia:2,rendimiento:3,salud:3,grasa:3},
+  'HRX Training':           {hipertrofia:2,fuerza:4,resistencia:2,rendimiento:4,salud:2,grasa:4},
+  'FBA':                    {hipertrofia:2,fuerza:2,resistencia:3,rendimiento:3,salud:3,grasa:4},
+  'Full Body':              {hipertrofia:3,fuerza:2,resistencia:3,rendimiento:2,salud:4,grasa:4},
+  'Upper Body':             {hipertrofia:4,fuerza:3,resistencia:2,rendimiento:2,salud:3,grasa:3},
+  'Lower Body':             {hipertrofia:4,fuerza:3,resistencia:2,rendimiento:3,salud:3,grasa:3},
+  'Midline':                {hipertrofia:2,fuerza:2,resistencia:2,rendimiento:2,salud:3,grasa:3},
+  'Cardio':                 {hipertrofia:1,fuerza:1,resistencia:5,rendimiento:2,salud:3,grasa:5},
+  'HIIT':                   {hipertrofia:1,fuerza:1,resistencia:5,rendimiento:3,salud:3,grasa:5},
+  'Sport':                  {hipertrofia:1,fuerza:1,resistencia:2,rendimiento:5,salud:2,grasa:2},
+  'Pilates':                {hipertrofia:2,fuerza:2,resistencia:2,rendimiento:2,salud:3,grasa:3}
 };
 // Banda de intensidad total del día (suma de 4 bloques) por objetivo. §8.1 Paso5
 const BANDA = {hipertrofia:[8,13],fuerza:[10,16],resistencia:[10,16],rendimiento:[10,15],salud:[7,12]};
@@ -585,28 +586,29 @@ function pickComplement(muscles,nMov,userNivel,used,rng){
   return chosen;
 }
 function repScheme(obj,role){const T={fuerza:{comp:'5',acc:'8'},hipertrofia:{comp:'8-10',acc:'12'},
-  salud:{comp:'10',acc:'12-15'},resistencia:{comp:'15',acc:'20'},rendimiento:{comp:'6',acc:'10'}};
+  salud:{comp:'10',acc:'12-15'},resistencia:{comp:'15',acc:'20'},rendimiento:{comp:'6',acc:'10'},
+  grasa:{comp:'12',acc:'15'}};
   return (T[obj]||T.hipertrofia)[role];}
 function objFormato(obj,esLargo){ if(obj==='fuerza')return'ROUNDS'; if(obj==='resistencia')return esLargo?'AMRAP':'EMOM';
   if(obj==='rendimiento')return esLargo?'ROUNDS':'AMRAP'; return'ROUNDS';}
 function objInten(obj,esLargo,core){ if(core)return 2;
   if(obj==='fuerza')return esLargo?4:3; if(obj==='resistencia')return esLargo?4:3;
   if(obj==='salud')return 2; return 3;}
-function styleFor(obj){return {hipertrofia:'Hypertrophy',fuerza:'Strength',resistencia:'Conditioning',rendimiento:'Power',salud:'Full Body'}[obj]||'Hypertrophy';}
+function styleFor(obj){return {hipertrofia:'Hypertrophy',fuerza:'Strength',resistencia:'Conditioning',rendimiento:'Power',salud:'Full Body',grasa:'Fat Loss'}[obj]||'Hypertrophy';}
 /* ---- Diseño de bloque basado en evidencia (NSCA CSCS + ACSM 2026 + meta-análisis de descanso) ----
    El bloque es un circuito cronometrado: el DESCANSO que exige cada objetivo gobierna cuántos ejercicios
    entran en la ventana. Fuerza/potencia (descanso 2–5') → menos; hipertrofia/salud (60–90s) → medio;
    resistencia (<30s) → más. Los bloques largos (14') llevan 4–5 ejercicios; los cortos (7') 3–4. */
 function nMovBlock(obj,esLargo){
-  const T={fuerza:[3,4],rendimiento:[3,4],hipertrofia:[3,5],salud:[3,5],resistencia:[4,5]};
+  const T={fuerza:[3,4],rendimiento:[3,4],hipertrofia:[3,5],salud:[3,5],resistencia:[4,5],grasa:[4,5]};
   return (T[obj]||T.hipertrofia)[esLargo?1:0];
 }
 // Segundos por "slot" de ejercicio (trabajo + descanso intra-serie) según objetivo → sirve para estimar rondas.
-function slotSec(obj){ return ({fuerza:60,rendimiento:55,hipertrofia:48,salud:45,resistencia:35})[obj]||48; }
+function slotSec(obj){ return ({fuerza:60,rendimiento:55,hipertrofia:48,salud:45,resistencia:35,grasa:40})[obj]||48; }
 // Rondas objetivo para llenar la ventana del bloque con el nº de ejercicios dado.
 function targetRounds(obj,durMin,nMov){ const r=Math.round((durMin*60)/((nMov||3)*slotSec(obj))); return Math.max(2,Math.min(6,r||3)); }
 // Descanso ENTRE BLOQUES por objetivo (NSCA: fuerza/potencia 2–5', hipertrofia/salud ~1–2', resistencia <1').
-function blockRest(obj){ return ({fuerza:150,rendimiento:150,hipertrofia:90,salud:90,resistencia:45})[obj]||90; }
+function blockRest(obj){ return ({fuerza:150,rendimiento:150,hipertrofia:90,salud:90,resistencia:45,grasa:60})[obj]||90; }
 // Descanso sugerido ENTRE SERIES para mostrar (objetivo + si el bloque es de compuestos pesados usa el tope).
 function restHint(obj,heavy){
   if(obj==='fuerza')return '2–5 min';
@@ -614,6 +616,7 @@ function restHint(obj,heavy){
   if(obj==='hipertrofia')return heavy?'90 s – 2 min':'60–90 s';
   if(obj==='salud')return heavy?'90 s':'45–75 s';
   if(obj==='resistencia')return '≤30 s';
+  if(obj==='grasa')return '30–60 s';
   return '60–90 s';
 }
 // Línea de ritmo/descanso SEGÚN EL FORMATO del bloque. En AMRAP/EMOM el descanso está
@@ -657,7 +660,7 @@ function composeBlock(obj,nivel,spec,used,rng){
 }
 // Plan del día: qué bloques y con qué lógica (split PPL para hipertrofia/fuerza/salud)
 function dayPlan(obj,idx,rng){
-  if(obj==='resistencia'||obj==='rendimiento'){
+  if(obj==='resistencia'||obj==='rendimiento'||obj==='grasa'){   // grasa = circuito full-body (densidad)
     // full-body A LO LARGO de la rutina, pero cada bloque coherente (circuito de empuje, de piernas, de tracción)
     const PUSH=['pecho','hombros','triceps'], PULL=['espalda','biceps'], LEGS=['cuadriceps','isquios','gluteos','pantorrillas'];
     const rot=[[PUSH,LEGS,PULL],[LEGS,PULL,PUSH],[PULL,PUSH,LEGS]][idx%3];
@@ -1133,6 +1136,30 @@ function openSub(bi,mi){
 }
 window.openSub=openSub;
 
+/* ---- Warm-up editable [F36]: cambiar el bloque entero y sustituir cada ejercicio ---- */
+function warmPool(){ let pool=LIB.filter(x=>x.warm);
+  if(GENF.impls.size){ const f=pool.filter(x=>x.impl==='piso'||GENF.impls.has(x.impl)); if(f.length)pool=f; }
+  return pool; }
+window.regenWarm=function(){ if(!S.routine)return;
+  const rng=mulberry32(hashStr('warm|'+Date.now()));
+  S.routine.warmup=buildWarmup(rng); save(); screenRoutine(); toast('Entrada en calor cambiada'); };
+window.subWarm=function(mi){ const w=S.routine&&S.routine.warmup; if(!w)return;
+  const usados=new Set(w.movs.map(m=>m.id)); const cur=w.movs[mi];
+  let cand=warmPool().filter(x=>!usados.has(x.id)); if(!cand.length){ toast('No hay otra opción de calentamiento'); return; }
+  const rng=mulberry32(hashStr(cur.n+'|'+Date.now())); const rep=cand[Math.floor(rng()*cand.length)];
+  w.movs[mi]={r:cur.r||'40-60"',n:rep.en,id:rep.id}; save(); modalEl.innerHTML=''; screenRoutine(); toast('Ejercicio cambiado'); };
+window.openSubWarm=function(mi){ const w=S.routine&&S.routine.warmup; if(!w)return;
+  const cur=LIB_BY_EN[w.movs[mi].n];
+  modalEl.innerHTML=`<div class="overlay" id="ov"><div class="sheet">
+    <div class="row between"><div style="font-weight:900;font-size:18px;line-height:1.15">Sustituir: ${esc(cur?cur.es:'')}</div>
+      <button class="btn ghost sm" id="cl">✕</button></div>
+    <div class="mven" style="margin:2px 0 14px">Entrada en calor</div>
+    <div class="sublabel">🔄 Cambiar por otro ejercicio de calentamiento</div>
+    <div class="subrow"><button class="subbtn alt" onclick="subWarm(${mi})">🎲 Otro ejercicio</button></div>
+  </div></div>`;
+  document.getElementById('cl').onclick=()=>modalEl.innerHTML='';
+  document.getElementById('ov').onclick=e=>{if(e.target.id==='ov')modalEl.innerHTML='';}; };
+
 /* ---------- SEEDED RNG (determinismo) ---------- */
 function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
@@ -1266,9 +1293,10 @@ function progCardHTML(b,ans,done,togFn,applyFn){
     <button class="btn dark sm ${any?'':'off'}" onclick="${applyFn}('${esc(b.id)}')">Guardar y actualizar pesos</button>
   </div>`;
 }
-function movsHTML(b,idx){return b.movs.map((mm,mi)=>{const i=movInfo(mm.n);const isLib=!!LIB_BY_EN[mm.n];
-  const w=isLib?`<input class="wt" type="number" inputmode="decimal" min="0" step="0.5" placeholder="kg" title="Peso usado (kg)" data-en="${esc(mm.n)}" data-r="${esc(mm.r)}" value="${esc(String(getWeight(mm.n,mm.r)))}" onclick="event.stopPropagation()" onchange="setWeight(this.dataset.en,this.dataset.r,this.value)">`:'';
-  const sub=(idx>=0&&isLib)?`<button class="subx" title="Sustituir ejercicio" onclick="event.stopPropagation();openSub(${idx},${mi})">⇄</button>`:'';
+function movsHTML(b,idx){const warm=(idx==='w');return b.movs.map((mm,mi)=>{const i=movInfo(mm.n);const isLib=!!LIB_BY_EN[mm.n];
+  const w=(isLib&&!warm)?`<input class="wt" type="number" inputmode="decimal" min="0" step="0.5" placeholder="kg" title="Peso usado (kg)" data-en="${esc(mm.n)}" data-r="${esc(mm.r)}" value="${esc(String(getWeight(mm.n,mm.r)))}" onclick="event.stopPropagation()" onchange="setWeight(this.dataset.en,this.dataset.r,this.value)">`:'';
+  const sub = warm ? `<button class="subx" title="Sustituir ejercicio" onclick="event.stopPropagation();openSubWarm(${mi})">⇄</button>`
+    : ((idx>=0&&isLib)?`<button class="subx" title="Sustituir ejercicio" onclick="event.stopPropagation();openSub(${idx},${mi})">⇄</button>`:'');
   return `<div class="mv" onclick="openTech('${encodeURIComponent(mm.n)}')"><div class="mvmain"><b>${esc(mm.r)}</b> ${esc(i.es)} <span class="mvi">ⓘ</span><div class="mven">${esc(i.en)}</div></div><div class="mvright">${w}${sub}</div></div>`;}).join('');}
 function toast(msg){const t=$('#toast');t.innerHTML=`<div class="toast">${esc(msg)}</div>`;setTimeout(()=>t.innerHTML='',2200);}
 function mmss(s){s=Math.max(0,Math.round(s));const m=Math.floor(s/60),ss=s%60;return m+':'+String(ss).padStart(2,'0');}
@@ -1359,22 +1387,30 @@ function heroHTML(kick,lead){
     <div class="heroTxt"><div class="heroKick">${esc(kick)}</div><div class="heroLead">${esc(lead)}</div></div>
   </div>`;
 }
+let _homeFilters=false;   // panel "Cambiar rutina" (I38) abierto/cerrado en estado "rutina lista"
 function screenHome(){
   const p=S.profile, hasP=!!p, hasR=hasP && !!S.routine;
-  let kick,lead,ctaLabel,ctaFn;
-  if(!hasP){ kick='Empezá acá'; lead='Contame tu objetivo y te preparo la rutina'; ctaLabel='Definir objetivo'; ctaFn='screenPerfil()'; }
-  else if(!hasR){ kick='Hola de nuevo'; lead='¿Te genero la rutina para hoy?'; ctaLabel='Generar rutina de hoy'; ctaFn='genToday()'; }
-  else { kick='Todo listo'; lead='Todo listo para hoy: revisá la rutina y los tips'; ctaLabel='Ver rutina'; ctaFn='screenRoutine()'; }
+  let kick,lead,ctaArea;
+  const filtersCard = `<div class="card" style="margin-top:10px">${genFiltersHTML()}</div>`;
+  if(!hasP){ kick='Empezá acá'; lead='Contame tu objetivo y te preparo la rutina';
+    ctaArea=`<button class="btn" onclick="screenPerfil()">Definir objetivo</button>`; }
+  else if(!hasR){ kick='Hola de nuevo'; lead='¿Te genero la rutina para hoy?';
+    ctaArea=`<button class="btn" onclick="genToday()">Generar rutina de hoy</button>${filtersCard}`; }
+  else { kick='Todo listo'; lead='Todo listo para hoy: revisá la rutina y los tips';
+    ctaArea=`<button class="btn" onclick="screenRoutine()">Ver rutina</button>
+      <button class="btn ghost" style="margin-top:10px" onclick="toggleHomeFilters()">${_homeFilters?'Cerrar':'Cambiar rutina'}</button>
+      ${_homeFilters?`<div class="card" style="margin-top:10px">
+        <div class="muted" style="font-size:12.5px;margin:0 2px 10px;line-height:1.4">Cambiá <b>región</b> o <b>implemento</b> y generá otra. Lo que no toques queda igual.</div>
+        ${genFiltersHTML()}
+        <button class="btn" style="margin-top:12px" onclick="genOtra()">Generar otra</button></div>`:''}`; }
   const objChip = hasP?`<div class="objline"><span class="objchip" onclick="screenPerfil()">🎯 <b>${esc(objName(p.objetivo))}</b> · ${esc(nivName(p.nivel))}</span></div>`:'';
-  const filters = (hasP && !hasR)?`<div class="card" style="margin-top:10px">${genFiltersHTML()}</div>`:'';
   const nudge = hasP?nudgeHTML():'';
   const chart = (hasP && (p.historial||[]).length)?`<div class="motiv">${motivMsg()}</div>${activityChartHTML(HIST_MODE)}`:'';
   app.innerHTML=`
     ${mainHeader()}
     ${heroHTML(kick,lead)}
     ${objChip}
-    <button class="btn" onclick="${ctaFn}">${ctaLabel}</button>
-    ${filters}
+    ${ctaArea}
     ${nudge}
     ${chart}
     <div class="footnote"><span style="opacity:.7">${APP_VERSION}</span></div>
@@ -1386,7 +1422,9 @@ function screenHome(){
   });
 }
 window.screenHome=screenHome;
-window.genToday=function(){ const p=S.profile; S.routine=generarRutina(p.objetivo,p.nivel,p.historial,''); save(); screenRoutine(); };
+window.toggleHomeFilters=function(){ _homeFilters=!_homeFilters; screenHome(); };
+window.genOtra=function(){ _homeFilters=false; genToday(); };
+window.genToday=function(){ const p=S.profile; S.routine=generarRutina(p.objetivo,p.nivel,p.historial,''); save(); _homeFilters=false; screenRoutine(); };
 function genFiltersHTML(){
   const R=[['upper','Tren superior'],['core','Core'],['lower','Tren inferior']];
   const I=[['maquina','Máquina'],['mancuerna','Mancuerna'],['banda','Banda'],['barra','Barra'],['pesarusa','Pesa rusa'],['piso','Peso corporal']];
@@ -1412,13 +1450,16 @@ function blockCardHTML(b,idx,isWarm){
     <div class="tag">${isWarm?'Warm-up':'Bloque '+(idx+1)}</div>
     <div class="time"><b>${b.dur}'</b></div>
     <h3>${esc(b.cat)}</h3>
-    <div class="sub">${esc(fmtFormato(b))} · ${esc(b.variante)}</div>
+    <div class="sub">${isWarm?('Movilidad y activación · '+b.dur+"'"):(esc(fmtFormato(b))+' · '+esc(b.variante))}</div>
     ${isWarm?'':(pp=>`<div class="restline">🕑 ${esc(pp.lbl)}: <b>${esc(pp.val)}</b></div>`)(pacingText(b))}
-    <div class="movs">${movsHTML(b,idx)}</div>
+    <div class="movs">${movsHTML(b,isWarm?'w':idx)}</div>
     ${isWarm?'':dots(b.inten)}
     ${isWarm||!b.equipMix?'':`<div style="margin-top:8px">${b.equipMix.map(e=>`<span class="eqchip">${EQ_ES[e]}</span>`).join('')}</div>`}
-    ${isWarm?'':`<div class="blkfoot"><span class="region">${regLabel(b.region)}</span>
-      <button class="btn ghost sm" onclick="openEdit(${idx})">Cambiar bloque</button></div>`}
+    ${isWarm
+      ? `<div class="blkfoot"><span class="region">Entrada en calor</span>
+          <button class="btn ghost sm" onclick="regenWarm()">Cambiar entrada en calor</button></div>`
+      : `<div class="blkfoot"><span class="region">${regLabel(b.region)}</span>
+          <button class="btn ghost sm" onclick="openEdit(${idx})">Cambiar bloque</button></div>`}
   </div>`;
 }
 function regLabel(r){return {upper:'Tren superior',lower:'Tren inferior',full:'Cuerpo completo',core:'Core'}[r]||r;}
@@ -1687,7 +1728,9 @@ window.togglePause=()=>{
   drawExec(); saveEX();
 };
 window.cancelRoutine=()=>{ if(!confirm('¿Cancelar la rutina? No se va a guardar.'))return;
-  clearInterval(TICK);EX=null;saveEX();toast('Rutina cancelada (no guardada)');render();};
+  clearInterval(TICK);EX=null;saveEX();
+  S.routine=null;save();   // al cancelar, la rutina deja de persistir → vuelve a "generar rutina"
+  toast('Rutina cancelada (no guardada)');render();};
 window.finishRoutine=(cierre)=>{
   clearInterval(TICK);
   const r=EX.r;
