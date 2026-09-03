@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Vigo">
+  <title>Vigo</title>
+  <rect width="512" height="512" rx="96" fill="#0D1410"/>
+  <g fill="#DDF64B">
+    <path d="M112 156 H176 L212 262 L248 156 H312 L248 356 H176 Z"/>
+    <path d="M340 156 H400 V356 H340 Z"/>
+  </g>
+</svg>

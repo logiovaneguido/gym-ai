@@ -1,0 +1,316 @@
+/* ============================================================================
+   VIGO · CAPA DE MARCA  ·  vigo.css  ·  v1.0  ·  2026-09-02
+   ----------------------------------------------------------------------------
+   Se carga DESPUÉS del <style> inline de index.html. No reemplaza nada:
+   redefine los tokens legacy y sobrescribe las reglas donde el alias no alcanza.
+   Para revertir toda la migración visual: borrar la línea <link> de index.html.
+
+   Manual de marca V0.2 · claude/Vigo_002_Manual_Marca_V0.md
+   ========================================================================== */
+
+/* ---------------------------------------------------------------- 1 · FUENTE
+   Archivo Variable · ejes wght 100–900 + wdth 62–125.
+   Self-hosted para que funcione offline (el service worker la cachea).
+   La marca usa wght 400–800 y wdth 82–125; el resto del rango no se toca.     */
+
+@font-face{
+  font-family:'Archivo Variable';
+  font-style:normal;
+  font-display:swap;
+  font-weight:100 900;
+  font-stretch:62% 125%;
+  src:url(fonts/archivo-latin-standard-normal.woff2) format('woff2-variations');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:'Archivo Variable';
+  font-style:normal;
+  font-display:swap;
+  font-weight:100 900;
+  font-stretch:62% 125%;
+  src:url(fonts/archivo-latin-ext-standard-normal.woff2) format('woff2-variations');
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+
+/* ---------------------------------------------------------------- 2 · TOKENS */
+:root{
+  /* FIELD · verdes profundos */
+  --vg-field-900:#0D1410;
+  --vg-field-800:#131E17;
+  --vg-field-700:#1B2A1F;
+  --vg-field-600:#26382A;
+
+  /* OLIVE · verdes de marca · 700 es el relleno de toda acción */
+  --vg-olive-700:#34452B;
+  --vg-olive-600:#3F5133;
+  --vg-olive-500:#55693F;
+  --vg-olive-400:#6E8450;
+
+  /* MOSS · secundarios sobre oscuro */
+  --vg-moss-300:#A3B878;
+  --vg-moss-200:#C3D49A;
+
+  /* SAND & KHAKI · superficies claras */
+  --vg-sand-50:#F6F4EC;
+  --vg-sand-100:#EFECDF;
+  --vg-sand-200:#E2DDCB;
+  --vg-sand-300:#CFC8AF;
+  --vg-khaki-700:#6B6248;
+  --vg-khaki-600:#8A7F5F;
+
+  /* SIGNAL · la tinta de acción. NUNCA como relleno ni como texto sobre claro. */
+  --vg-signal:#DDF64B;
+  --vg-signal-lime:#CDE85C;   /* archivado */
+  --vg-signal-bone:#E9E3B4;   /* archivado */
+
+  /* BLAZE · atención y seguridad (naranja de caza) */
+  --vg-blaze:#FF6A1F;
+  --vg-blaze-deep:#AE4816;    /* única versión legible como texto sobre claro */
+  --vg-blaze-tint:#FFF1E6;
+
+  /* FLARE · destructivo e irreversible */
+  --vg-flare-soft:#E8735A;
+
+  /* superficies auxiliares */
+  --vg-rest-tint:#EDF2DE;     /* descanso */
+  --vg-prep-tint:#F7EFE2;     /* preparate */
+  --vg-ink-soft:#33422E;      /* texto de lectura largo (9.73:1 sobre sand-50) */
+  --vg-scrim:rgba(13,20,16,.55);
+
+  /* tipografía */
+  --vg-font:'Archivo Variable','Archivo','Helvetica Neue',Arial,sans-serif;
+
+  /* ------------------------------------------------------------------------
+     ALIAS LEGACY · reasignación de las 12 variables de index.html v15.
+     Ojo: --lime deja de ser un color de neón y pasa a ser el RELLENO oliva.
+     Todo lo que usaba --lime como brillo sobre oscuro está corregido abajo.
+     ---------------------------------------------------------------------- */
+  --lime:var(--vg-olive-700);
+  --lime-d:var(--vg-olive-600);
+  --ink:var(--vg-field-900);
+  --ink2:var(--vg-khaki-700);
+  --bg:var(--vg-sand-50);
+  --card:#ffffff;
+  --line:var(--vg-sand-200);
+  --muted:var(--vg-khaki-700);
+  --i1:#A3B878;
+  --i2:#6E8450;
+  --i3:#55693F;
+  --i4:#34452B;
+  --red:var(--vg-flare-soft);
+  --shadow:none;              /* la jerarquía la dan el borde y el fondo */
+}
+
+/* -------------------------------------------------------------- 3 · BASE */
+html,body{
+  font-family:var(--vg-font);
+  font-variation-settings:'wdth' 100;
+  background:var(--vg-sand-50);
+  color:var(--vg-field-900);
+}
+h1,h2,h3{font-variation-settings:'wdth' 110,'wght' 800;letter-spacing:-.02em;}
+.card,.blk,.phase,.selcard,.progcard,.alt,.sheet,.mediaB{box-shadow:none;}
+.card,.blk{border:1px solid var(--vg-sand-200);}
+
+/* cifras alineadas en todo lo que sea tiempo o cantidad */
+.clock,.pclock,.streak .num,.blk .time b,.pgreps,.wt{font-variant-numeric:tabular-nums;}
+
+/* la marca corta en 800; el 900 del CSS original se normaliza */
+.logo,.btn,.pill,.blk h3,.clock,.pclock,.pname,.streak .num,.matchip,.tag-blk{font-weight:800;}
+
+/* -------------------------------------------------- 4 · HEADER FIELD (banda)
+   Sin tocar el HTML: los márgenes negativos igualan el padding de .app
+   (18px 16px), así la banda sangra a los bordes de la app.                   */
+.topbar{
+  background:var(--vg-field-800);
+  color:var(--vg-sand-50);
+  margin:-18px -16px 16px;
+  padding:16px;
+  padding-top:max(16px, env(safe-area-inset-top));
+  border-radius:0 0 18px 18px;
+  min-height:76px;
+}
+.topbar .logo{color:var(--vg-sand-50);}
+.topbar .btn.ghost{
+  background:rgba(246,244,236,.12);
+  color:var(--vg-sand-50);
+  border-color:transparent;
+}
+.topbar .pill{background:var(--vg-olive-700);color:var(--vg-signal);}
+.topbar .pill.grey{background:var(--vg-field-600);color:var(--vg-moss-200);}
+
+/* wordmark · la tinta toma SOLO las dos primeras letras (VI → girado, IA) */
+.logo{font-variation-settings:'wdth' 118,'wght' 800;letter-spacing:.005em;}
+.logo i{font-style:normal;color:var(--vg-signal);}
+.logo span{background:none;padding:0;border-radius:0;color:var(--vg-signal);}
+.logo .claim{
+  display:block;font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--vg-moss-300);font-variation-settings:'wdth' 82,'wght' 600;
+  margin-top:3px;
+}
+
+/* --------------------------------------------------------- 5 · ACCIÓN
+   Regla de escalas: el relleno oliva existe en 32 px (ícono) y en ancho
+   completo. Nada en el medio.                                              */
+.btn{
+  background:var(--vg-olive-700);
+  color:var(--vg-signal);
+  font-variation-settings:'wdth' 86,'wght' 800;
+  letter-spacing:.12em;
+  border-radius:11px;
+}
+.btn:active{background:var(--vg-olive-600);}
+.btn.dark{background:var(--vg-field-900);color:var(--vg-sand-50);}
+.btn.ghost{
+  background:transparent;color:var(--vg-field-900);
+  border:1.5px solid var(--vg-sand-300);
+  font-variation-settings:'wdth' 86,'wght' 700;
+}
+.btn.red{background:var(--vg-flare-soft);color:var(--vg-field-900);}
+.btn.off{opacity:.45;}
+
+/* sustituir ejercicio · misma familia, escala de ícono */
+.subx{
+  background:var(--vg-olive-700);
+  color:var(--vg-signal);
+  border-radius:9px;
+  width:32px;height:32px;font-size:14px;font-weight:700;
+}
+/* ficha del ejercicio · contorno, nunca relleno. Acid sobre claro = 1.10:1 */
+.mvi{color:var(--vg-olive-600);font-weight:700;}
+
+/* chips seleccionables */
+.pill{background:var(--vg-olive-700);color:var(--vg-signal);font-variation-settings:'wdth' 82,'wght' 800;}
+.pill.grey{background:var(--vg-sand-100);color:var(--vg-khaki-700);}
+.gbtn{background:var(--vg-sand-100);border:1px solid var(--vg-sand-200);color:var(--vg-field-900);}
+.genf .gbtn.on{background:var(--vg-olive-700);border-color:var(--vg-olive-700);color:var(--vg-signal);}
+.selcard{background:#fff;border:2px solid var(--vg-sand-200);}
+.selcard.on{border-color:var(--vg-olive-700);background:var(--vg-olive-700);}
+.selcard.on .t{color:var(--vg-signal);}
+.selcard.on .d{color:var(--vg-moss-200);}
+.subbtn{background:var(--vg-sand-100);border:1px solid var(--vg-sand-200);color:var(--vg-field-900);}
+.subbtn.alt{background:var(--vg-olive-700);color:var(--vg-signal);border-color:var(--vg-olive-700);}
+.segbtn{color:var(--vg-khaki-700);}
+.segbtn.on{background:var(--vg-olive-700);color:var(--vg-signal);}
+.seg{border-color:var(--vg-sand-200);}
+.pgbtn{border:2px solid var(--vg-sand-200);background:var(--vg-sand-50);color:var(--vg-field-900);}
+.pgbtn.si{background:var(--vg-olive-700);border-color:var(--vg-olive-700);color:var(--vg-signal);}
+.pgbtn.no{background:var(--vg-sand-200);border-color:var(--vg-sand-300);color:var(--vg-khaki-700);}
+
+/* ------------------------------------------------------- 6 · BLOQUES Y LISTAS */
+.blk .tag{background:var(--vg-field-900);color:var(--vg-sand-50);font-variation-settings:'wdth' 82,'wght' 800;letter-spacing:.15em;}
+.blk.warm .tag{background:var(--vg-olive-500);}   /* warm-up NO es una alerta */
+.blk h3{font-variation-settings:'wdth' 108,'wght' 800;}
+.blk .sub{background:var(--vg-sand-100);color:var(--vg-khaki-700);font-variation-settings:'wdth' 82,'wght' 700;letter-spacing:.11em;}
+.blk .time{background:var(--vg-sand-100);box-shadow:none;color:var(--vg-field-900);}
+.movs{color:var(--vg-ink-soft);}
+.movs .mv b{color:var(--vg-olive-700);}
+.movs .mv:active{background:var(--vg-sand-100);}
+.mven{color:var(--vg-khaki-600);}
+.label,.genlabel,.region{color:var(--vg-khaki-700);font-variation-settings:'wdth' 84,'wght' 700;letter-spacing:.16em;}
+.restline{color:var(--vg-khaki-700);}
+.restline b{color:var(--vg-olive-700);}
+.dot{background:var(--vg-sand-300);}
+.step{background:var(--vg-sand-200);}
+.step.done{background:var(--vg-olive-400);}
+.step.now{background:var(--vg-olive-700);}   /* sobre fondo claro: oliva, no acid */
+.eqchip{
+  display:inline-block;background:var(--vg-sand-100);color:var(--vg-khaki-700);
+  font-size:11px;padding:4px 10px;border-radius:20px;margin-right:6px;
+  text-transform:uppercase;letter-spacing:.11em;
+  font-variation-settings:'wdth' 82,'wght' 700;
+}
+.matchip{background:var(--vg-field-700);color:var(--vg-sand-50);font-variation-settings:'wdth' 82,'wght' 800;letter-spacing:.11em;}
+.pgreps{background:var(--vg-sand-100);color:var(--vg-khaki-700);}
+.wt{border:1px solid var(--vg-sand-300);background:#fff;color:var(--vg-field-900);}
+.wt:focus{border-color:var(--vg-olive-500);outline:2px solid var(--vg-olive-500);outline-offset:1px;}
+a.link{color:var(--vg-olive-600);}
+.cue{color:var(--vg-ink-soft);}
+.pgname{color:var(--vg-field-900);}
+.pghead{color:var(--vg-field-900);}
+.pgsub{color:var(--vg-khaki-700);}
+.pgok{color:var(--vg-olive-600);} .pgok b{color:var(--vg-olive-700);}
+.pgmut{color:var(--vg-khaki-700);}
+.pgres{color:var(--vg-ink-soft);}
+.progcard{border-color:var(--vg-sand-200);}
+.progcard.done{background:var(--vg-rest-tint);border-color:#DCE6C4;}
+.hist{border-bottom-color:var(--vg-sand-200);}
+.progrow{border-top-color:var(--vg-sand-200);}
+.alt{border-color:var(--vg-sand-200);}
+.alt:active{background:var(--vg-sand-100);}
+.mediaB{background:var(--vg-sand-100);border:1.5px dashed var(--vg-sand-300);color:var(--vg-khaki-700);}
+.footnote,.navwarn{color:var(--vg-khaki-600);}
+
+/* ------------------------------------------------------------- 7 · EJECUCIÓN
+   El panel de tiempo es la SEGUNDA (y última) superficie oscura del cuerpo.  */
+.totwrap{background:var(--vg-field-900);color:var(--vg-sand-50);}
+.totwrap .lab{color:var(--vg-moss-300);opacity:1;letter-spacing:.16em;font-variation-settings:'wdth' 84,'wght' 700;}
+.totwrap .clock{color:var(--vg-sand-50);font-variation-settings:'wdth' 112,'wght' 800;letter-spacing:-.01em;}
+.totbar{background:rgba(246,244,236,.16);}
+.totbar>i{background:var(--vg-signal);}   /* sobre oscuro sí va la tinta */
+.phase{background:#fff;border:1px solid var(--vg-sand-200);}
+.phase .ptype{color:var(--vg-khaki-700);letter-spacing:.16em;font-variation-settings:'wdth' 84,'wght' 700;}
+.phase .pclock{color:var(--vg-field-900);font-variation-settings:'wdth' 112,'wght' 800;}
+.phase .pname{font-variation-settings:'wdth' 108,'wght' 800;}
+.phase.rest{background:var(--vg-rest-tint);border-color:#DCE6C4;}
+.phase.rest .pclock,.phase.rest .ptype{color:var(--vg-olive-700);}
+.phase.prep{background:var(--vg-prep-tint);border-color:#E9DCC4;}
+.phase.prep .ptype{color:var(--vg-khaki-700);}
+.toast{background:var(--vg-field-900);color:var(--vg-sand-50);box-shadow:0 8px 24px rgba(13,20,16,.35);}
+
+/* ------------------------------------------------- 8 · SEÑALES (4 niveles)
+   La intensidad la da el par color + superficie, no el color solo.
+   01 informativo · 02 atención · 03 crítico · 04 destructivo               */
+.banner{                       /* nivel 01 · informativo (nudge del agente) */
+  background:var(--vg-sand-100);
+  border:1px solid var(--vg-sand-200);
+  border-left:3px solid var(--vg-olive-500);
+  color:var(--vg-khaki-700);
+  border-radius:14px;
+}
+.banner b{color:var(--vg-olive-700);}
+.banner.warn{               /* nivel 02 · atención — no bloquea */
+  background:var(--vg-blaze-tint);
+  border-color:#F6D9C4;
+  border-left-color:var(--vg-blaze);
+  color:var(--vg-blaze-deep);
+}
+.banner.warn b{color:var(--vg-blaze-deep);}
+.banner.crit{               /* nivel 03 · crítico — seguridad */
+  background:var(--vg-field-900);
+  border-color:rgba(255,106,31,.28);
+  border-left-color:var(--vg-blaze);
+  color:var(--vg-sand-50);
+}
+.banner.crit b{color:var(--vg-blaze);}
+.banner.dest{               /* nivel 04 · destructivo */
+  background:var(--vg-flare-soft);
+  border-color:var(--vg-flare-soft);
+  border-left-color:var(--vg-field-900);
+  color:var(--vg-field-900);
+}
+.banner.dest b{color:var(--vg-field-900);}
+.btn.blaze{background:var(--vg-blaze);color:var(--vg-field-900);}
+
+/* ------------------------------------------------------------- 9 · OVERLAY */
+.overlay{background:var(--vg-scrim);}
+.sheet{background:#fff;border-radius:22px 22px 0 0;}
+.sublabel{font-variation-settings:'wdth' 84,'wght' 700;letter-spacing:.14em;text-transform:uppercase;font-size:11px;color:var(--vg-khaki-700);}
+
+/* ------------------------------------------------------- 10 · ACCESIBILIDAD */
+button:focus-visible,input:focus-visible,a:focus-visible,.mv:focus-visible{
+  outline:2px solid var(--vg-olive-500);
+  outline-offset:2px;
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;}
+}
+
+/* -------------------------------------------------- 11 · MODO NOCHE (parcial)
+   Se invierte: Field de fondo, tarjetas Field 800, texto Sand.
+   El botón primario invierte a relleno Signal con texto Field.
+   Blaze y Flare Soft no cambian. Pendiente de completar (deuda conocida).   */
+@media (prefers-color-scheme:dark){
+  .wt{background:var(--vg-field-700);color:var(--vg-sand-50);border-color:var(--vg-field-600);}
+  .seg{border-color:var(--vg-field-600);}
+}

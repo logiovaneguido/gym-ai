@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#c6f24e">
+<meta name="theme-color" content="#131E17">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Gym AI">
-<title>Gym AI</title>
+<meta name="apple-mobile-web-app-title" content="Vigo">
+<title>Vigo · AI Wellness Coach</title>
 <style>
   :root{
     --lime:#c6f24e; --lime-d:#b0e02f; --ink:#2e2e2e; --ink2:#555; --bg:#ededed;
@@ -156,6 +156,7 @@
   .matchip{display:inline-block;background:var(--ink);color:#fff;font-size:11px;font-weight:800;
     padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.03em;}
 </style>
+<link rel="stylesheet" href="vigo.css">
 </head>
 <body>
 <div id="app" class="app"></div>
@@ -180,7 +181,7 @@ const Store = (()=>{
 })();
 
 /* ---------- CONFIG ---------- */
-const APP_VERSION='v15 · 2026-09-02';
+const APP_VERSION='v16 · 2026-09-02 · marca Vigo V0.2';
 const OBJETIVOS = [
   {id:'hipertrofia', t:'Hipertrofia', d:'Ganar masa muscular'},
   {id:'fuerza',      t:'Fuerza',      d:'Fuerza máxima'},
@@ -1271,7 +1272,7 @@ let _tmpObj=null,_tmpNivel=null;
 function screenOnboarding(){
   _tmpObj=_tmpObj||null;_tmpNivel=_tmpNivel||null;
   app.innerHTML=`
-    <div class="topbar"><div class="logo"><span>GYM</span> AI</div></div>
+    <div class="topbar"><div class="logo"><i>VI</i>GO<span class="claim">AI Wellness Coach</span></div></div>
     <h2 style="font-size:28px;font-weight:900;letter-spacing:-.03em;">Tu entrenador diario</h2>
     <p class="muted" style="margin:6px 0 4px;font-size:14px;">Elegí tu objetivo y tu nivel. En segundos te armamos la rutina de hoy.</p>
     <div class="label">¿Cuál es tu objetivo?</div>
@@ -1302,7 +1303,7 @@ function streakThisWeek(){const h=S.profile.historial;return h.length;}
 function screenHome(){
   const p=S.profile;
   app.innerHTML=`
-    <div class="topbar"><div class="logo"><span>GYM</span> AI</div>
+    <div class="topbar"><div class="logo"><i>VI</i>GO<span class="claim">AI Wellness Coach</span></div>
       <div class="pill grey" id="perfilBtn" style="cursor:pointer">${objName(p.objetivo)} · ${nivName(p.nivel)}</div></div>
     <div class="card">
       <div class="streak"><div class="num">${streakThisWeek()}</div>
@@ -1356,7 +1357,7 @@ function blockCardHTML(b,idx,isWarm){
     ${isWarm||!b.descanso?'':`<div class="restline">🕑 Descanso entre series: <b>${esc(b.descanso)}</b></div>`}
     <div class="movs">${movsHTML(b,idx)}</div>
     ${isWarm?'':dots(b.inten)}
-    ${isWarm||!b.equipMix?'':`<div style="margin-top:8px">${b.equipMix.map(e=>`<span class="matchip" style="background:#eee;color:#444;margin-right:6px">${EQ_ES[e]}</span>`).join('')}</div>`}
+    ${isWarm||!b.equipMix?'':`<div style="margin-top:8px">${b.equipMix.map(e=>`<span class="eqchip">${EQ_ES[e]}</span>`).join('')}</div>`}
     ${isWarm?'':`<div class="blkfoot"><span class="region">${regLabel(b.region)}</span>
       <button class="btn ghost sm" onclick="openEdit(${idx})">Cambiar bloque</button></div>`}
   </div>`;
@@ -1604,7 +1605,7 @@ function drawExec(){
   app.innerHTML=`
     <div class="totwrap">
       <div class="lab">Tiempo total de la rutina</div>
-      <div class="clock" style="color:${totalRem<=0?'var(--red)':'#fff'}">${mmss(totalRem)}</div>
+      <div class="clock" style="color:${totalRem<=0?'var(--vg-blaze)':'var(--vg-sand-50)'}">${mmss(totalRem)}</div>
       <div class="totbar"><i style="width:${Math.min(100,pct)}%"></i></div>
     </div>
     <div class="steps">${stepsHTML}</div>
@@ -1762,9 +1763,9 @@ window.render=render;
 /* ---------- PWA (instalable / agregar a inicio) ---------- */
 (function(){
   try{
-    const icon='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512"><rect width="512" height="512" rx="96" fill="#2e2e2e"/><rect x="56" y="196" width="400" height="120" rx="24" fill="#c6f24e"/><text x="256" y="286" font-size="96" font-family="Arial" font-weight="900" text-anchor="middle" fill="#2e2e2e">GYM</text><text x="256" y="410" font-size="64" font-family="Arial" font-weight="900" text-anchor="middle" fill="#c6f24e">AI</text></svg>');
-    const man={name:'Gym AI',short_name:'Gym AI',start_url:'.',scope:'.',display:'standalone',orientation:'portrait',
-      background_color:'#ededed',theme_color:'#c6f24e',icons:[{src:icon,sizes:'192x192',type:'image/svg+xml',purpose:'any'},{src:icon,sizes:'512x512',type:'image/svg+xml',purpose:'any'}]};
+    const icon='vigo-icon-512.png', icon192='vigo-icon-192.png', iconMask='vigo-icon-maskable.svg';
+    const man={name:'Vigo · AI Wellness Coach',short_name:'Vigo',start_url:'.',scope:'.',display:'standalone',orientation:'portrait',
+      background_color:'#F6F4EC',theme_color:'#131E17',icons:[{src:icon192,sizes:'192x192',type:'image/png',purpose:'any'},{src:icon,sizes:'512x512',type:'image/png',purpose:'any'},{src:iconMask,sizes:'512x512',type:'image/svg+xml',purpose:'maskable'}]};
     const url=URL.createObjectURL(new Blob([JSON.stringify(man)],{type:'application/manifest+json'}));
     const l=document.createElement('link');l.rel='manifest';l.href=url;document.head.appendChild(l);
     const al=document.createElement('link');al.rel='apple-touch-icon';al.href=icon;document.head.appendChild(al);
