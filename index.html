@@ -156,7 +156,7 @@
   .matchip{display:inline-block;background:var(--ink);color:#fff;font-size:11px;font-weight:800;
     padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.03em;}
 </style>
-<link rel="stylesheet" href="vigo.css?v=23">
+<link rel="stylesheet" href="vigo.css?v=25">
 </head>
 <body>
 <div id="app" class="app"></div>
@@ -181,7 +181,7 @@ const Store = (()=>{
 })();
 
 /* ---------- CONFIG ---------- */
-const APP_VERSION='v24 · 2026-09-03 · marca Vigo V0.2';
+const APP_VERSION='v25 · 2026-09-04 · marca Vigo V0.2';
 const OBJETIVOS = [
   {id:'hipertrofia', t:'Hipertrofia', d:'Ganar masa muscular'},
   {id:'fuerza',      t:'Fuerza',      d:'Fuerza máxima'},
@@ -1130,11 +1130,47 @@ function openSub(bi,mi){
     <div class="subrow"><button class="subbtn alt" onclick="doSub(${bi},${mi},'ejercicio')">🎲 Otro de ${esc(MU_ES[cur.mu])}</button></div>
     <div class="sublabel">💪 Cambiar músculo <span class="mven">(mantiene región: ${esc(regLabel(cur.region))})</span></div>
     <div class="subrow">${musBtns}</div>
+    <div class="sublabel">📚 Elegir de la biblioteca <span class="mven">(cualquier ejercicio)</span></div>
+    <div class="subrow"><button class="subbtn alt" onclick="openLibPicker(${bi},${mi})">Ver todos los ejercicios</button></div>
   </div></div>`;
   document.getElementById('cl').onclick=()=>modalEl.innerHTML='';
   document.getElementById('ov').onclick=e=>{if(e.target.id==='ov')modalEl.innerHTML='';};
 }
 window.openSub=openSub;
+/* F48: elegir cualquier ejercicio de la biblioteca completa, agrupada por región y grupo muscular. */
+const LIBPICK_MUS={upper:['pecho','espalda','hombros','biceps','triceps'],
+  lower:['cuadriceps','isquios','gluteos','pantorrillas'], core:['core']};
+window.openLibPicker=function(bi,mi){
+  const mov=S.routine.bloques[bi].movs[mi], cur=LIB_BY_EN[mov.n];
+  let html='';
+  [['upper','Tren superior'],['lower','Tren inferior'],['core','Core']].forEach(([rk,rlabel])=>{
+    let sec='';
+    LIBPICK_MUS[rk].forEach(mu=>{
+      const items=LIB.filter(x=>x.mu===mu && !x.warm);
+      if(!items.length) return;
+      const rows=items.map(x=>{ const on=x.en===mov.n;
+        return `<button class="libitem${on?' on':''}" onclick="pickLib(${bi},${mi},'${x.id}')">
+            <span class="libname">${esc(x.es)}</span><span class="libimpl">${esc(IMPL_ES[x.impl]||x.impl)}</span></button>`; }).join('');
+      sec+=`<div class="libmus">${esc(MU_ES[mu])}</div><div class="libgrid">${rows}</div>`;
+    });
+    if(sec) html+=`<div class="libreg">${esc(rlabel)}</div>${sec}`;
+  });
+  modalEl.innerHTML=`<div class="overlay" id="ov"><div class="sheet">
+    <div class="row between"><div style="font-weight:900;font-size:18px;line-height:1.15">Elegir ejercicio</div>
+      <button class="btn ghost sm" id="cl">← Volver</button></div>
+    <div class="mven" style="margin:2px 0 12px">Reemplaza <b>${esc(cur?cur.es:'')}</b>. Biblioteca completa por zona y grupo muscular.</div>
+    ${html}
+  </div></div>`;
+  document.getElementById('cl').onclick=()=>openSub(bi,mi);
+  document.getElementById('ov').onclick=e=>{if(e.target.id==='ov')modalEl.innerHTML='';};
+};
+window.pickLib=function(bi,mi,exId){
+  const rep=LIB.find(x=>x.id===exId); if(!rep){toast('Ejercicio no encontrado');return;}
+  const r=S.routine, blk=r.bloques[bi];
+  blk.movs[mi]={r:repScheme(r.objetivo,rep.role)+(rep.unil?' /lado':''), n:rep.en, id:rep.id};
+  blk.equipMix=[...new Set(blk.movs.map(m=>{const x=LIB_BY_EN[m.n];return x?x.eq:'lib';}))];
+  save(); modalEl.innerHTML=''; screenRoutine(); toast('Ejercicio cambiado');
+};
 
 /* ---- Warm-up editable [F36]: cambiar el bloque entero y sustituir cada ejercicio ---- */
 function warmPool(){ let pool=LIB.filter(x=>x.warm);
@@ -1936,8 +1972,8 @@ function histDetailHTML(s){
 }
 function histActions(s){
   return `<div class="histact">
-    <button class="btn ghost sm" onclick="openRepetir(${s.ts})">🔁 Volver a esta zona</button>
-    <button class="btn ghost sm" onclick="openAsignar(${s.ts})">📅 Asignar a un día</button></div>`; }
+    <button class="btn ghost sm" onclick="openRepetir(${s.ts})">Repetir rutina</button>
+    <button class="btn ghost sm" onclick="openAsignar(${s.ts})">Asignar a un día</button></div>`; }
 // Regiones válidas como filtro de generación (excluye 'full' del calentamiento).
 function sessRegs(s){ return [...new Set(s.regiones||[])].filter(r=>['upper','lower','core'].includes(r)); }
 function regLabelES(r){ return ({upper:'Tren superior',lower:'Tren inferior',core:'Core'})[r]||r; }
@@ -1950,9 +1986,9 @@ window.openRepetir=function(ts){ const s=(S.profile.historial||[]).find(x=>x.ts=
     <div class="row between"><div style="font-weight:900;font-size:18px;line-height:1.15">Entrenar de nuevo</div>
       <button class="btn ghost sm" id="cl">✕</button></div>
     <div class="mven" style="margin:2px 0 12px">${esc(objName(s.objetivo))} · <b>${esc(zona)}</b></div>
-    <div class="banner" style="margin-bottom:14px">💡 Para hipertrofia, variar los ejercicios del mismo grupo muscular estimula más fibras y suele rendir más que repetir siempre los mismos. Repetir idéntico es útil para afinar una técnica o ganar fuerza en un movimiento puntual.</div>
-    <button class="btn" style="width:100%" onclick="regenZona(${ts})">🔀 Misma zona · ejercicios nuevos</button>
-    ${hasFull?`<button class="btn ghost sm" style="width:100%;margin-top:10px" onclick="repetirRutina(${ts})">🔁 Repetir idéntica</button>`:''}
+    <div class="banner" style="margin-bottom:14px">Para hipertrofia, variar los ejercicios del mismo grupo muscular estimula más fibras y suele rendir más que repetir siempre los mismos. Repetir idéntico es útil para afinar una técnica o ganar fuerza en un movimiento puntual.</div>
+    <button class="btn" style="width:100%" onclick="regenZona(${ts})">Misma zona · ejercicios nuevos</button>
+    ${hasFull?`<button class="btn ghost sm" style="width:100%;margin-top:10px" onclick="repetirRutina(${ts})">Repetir idéntica</button>`:''}
   </div></div>`;
   document.getElementById('cl').onclick=()=>modalEl.innerHTML='';
   document.getElementById('ov').onclick=e=>{if(e.target.id==='ov')modalEl.innerHTML='';}; };
@@ -1961,7 +1997,7 @@ window.regenZona=function(ts){ const s=(S.profile.historial||[]).find(x=>x.ts===
   GENF.regions=new Set(regs); GENF.impls=new Set(); GENF.time=null;
   S.routine=generarRutina(s.objetivo,nivel,(S.profile.historial||[]),'zona'+Date.now());
   S.routine.fecha=todayKey(); S.routine.removed=S.routine.removed||[];
-  modalEl.innerHTML=''; save(); toast('Nueva rutina · misma zona 🔀'); screenRoutine(); };
+  modalEl.innerHTML=''; save(); toast('Nueva rutina · misma zona'); screenRoutine(); };
 window.repetirRutina=function(ts){ const s=(S.profile.historial||[]).find(x=>x.ts===ts);
   if(!s||!s.full){ toast('Esta rutina ya no está guardada completa'); return; }
   S.routine=JSON.parse(JSON.stringify(s.full)); S.routine.fecha=todayKey(); S.routine.removed=S.routine.removed||[];
@@ -1976,28 +2012,30 @@ const FIX_SOFT_DAYS=42, FIX_HARD_DAYS=56;   // 6 y 8 semanas (~2 meses)
 function asigMode(a){ return a ? (a.mode || (a.full?'fija':'zona')) : null; }
 function fixAgeDays(a){ return (a&&a.assignedAt)?Math.floor((Date.now()-a.assignedAt)/86400000):null; }
 function asigDesc(a){ if(!a) return 'Sin asignar';
+  const obj=esc(objName(a.obj));
   if(asigMode(a)==='fija'){ const dd=fixAgeDays(a); const wk=dd!=null?Math.max(1,Math.round(dd/7)):null;
-    const due=dd!=null&&dd>=FIX_HARD_DAYS, soon=dd!=null&&dd>=FIX_SOFT_DAYS;
-    return `Fija · ${esc(objName(a.obj))}${wk?` · hace ${wk} sem${due?' ⚠️':soon?' ⏳':''}`:''}`; }
-  const regs=(a.regiones||[]).filter(r=>['upper','lower','core'].includes(r));
-  return `Zona variable · ${esc(regs.length?regs.map(regLabelES).join(' · '):objName(a.obj))}`; }
+    return `Fija · ${obj}${wk?` · ${wk} sem`:''}`; }
+  return `Zona · ${obj}`; }
 window.setAsignMode=function(m,ts){ _asignMode=m; openAsignar(ts); };
 window.openAsignar=function(ts){ const s=(S.profile.historial||[]).find(x=>x.ts===ts); if(!s){toast('Rutina no disponible');return;}
   const sch=S.profile.schedule||{}; const regs=sessRegs(s); const zona=regs.length?regs.map(regLabelES).join(' · '):'Cuerpo completo';
   const canFija=!!s.full;
   if(_asignMode==='fija'&&!canFija) _asignMode='zona';
   const rows=DIAS.map(([d,nm])=>{ const a=sch[d]; const fija=asigMode(a)==='fija';
-    return `<div class="dayrow"><div><div class="dn">${nm}</div>
-        <div class="da"${a?(fija&&fixAgeDays(a)>=FIX_SOFT_DAYS?' style="color:#B54A2B;font-weight:800"':''):' style="color:var(--vg-khaki-700);font-weight:600"'}>${asigDesc(a)}</div></div>
-      <div style="display:flex;align-items:center;gap:6px">${a?`<span class="drm" title="Quitar" onclick="quitarDia(${d},${ts})">✕</span>`:''}
-        <button class="assignb" onclick="asignarDia(${ts},${d})">${a?'Cambiar':'Asignar'}</button></div></div>`; }).join('');
+    const due=fija&&fixAgeDays(a)!=null&&fixAgeDays(a)>=FIX_SOFT_DAYS;
+    return `<div class="dayrow">
+        <div class="dn">${nm}</div>
+        <div class="da${a?'':' none'}${due?' due':''}">${asigDesc(a)}</div>
+        <div class="dact">${a?`<span class="drm" title="Quitar" onclick="quitarDia(${d},${ts})">✕</span>`:''}
+          <button class="assignb" onclick="asignarDia(${ts},${d})">${a?'Cambiar':'Asignar'}</button></div>
+      </div>`; }).join('');
   const modeSel=`<div class="genf" style="margin:2px 0 10px">
-      <button class="gbtn ${_asignMode==='zona'?'on':''}" onclick="setAsignMode('zona',${ts})">🔀 Zona variable</button>
-      <button class="gbtn ${_asignMode==='fija'?'on':''} ${canFija?'':'off'}" ${canFija?`onclick="setAsignMode('fija',${ts})"`:'title="Esta rutina ya no está guardada completa"'}>📌 Rutina fija</button>
+      <button class="gbtn ${_asignMode==='zona'?'on':''}" onclick="setAsignMode('zona',${ts})">Zona variable</button>
+      <button class="gbtn ${_asignMode==='fija'?'on':''} ${canFija?'':'off'}" ${canFija?`onclick="setAsignMode('fija',${ts})"`:'title="Esta rutina ya no está guardada completa"'}>Rutina fija</button>
     </div>`;
   const tip=_asignMode==='fija'
-    ? `<div class="banner" style="margin:0 0 12px">📌 Se asigna <b>esta misma rutina</b> (ejercicios fijos) al día elegido. Ideal para afinar técnica o fuerza. Vigo te va a <b>avisar a las ~6–8 semanas</b> para que la cambies (el mismo estímulo se estanca).</div>`
-    : `<div class="banner" style="margin:0 0 12px">🔀 Cada semana Vigo arma <b>ejercicios nuevos</b> para esta zona ese día. Variar el estímulo del mismo grupo muscular rinde más y no se estanca. <b>Recomendado.</b></div>`;
+    ? `<div class="banner" style="margin:0 0 12px">Se asigna <b>esta misma rutina</b> (ejercicios fijos) al día elegido. Ideal para afinar técnica o fuerza. Vigo te va a <b>avisar a las ~6–8 semanas</b> para que la cambies (el mismo estímulo se estanca).</div>`
+    : `<div class="banner" style="margin:0 0 12px">Cada semana Vigo arma <b>ejercicios nuevos</b> para esta zona ese día. Variar el estímulo del mismo grupo muscular rinde más y no se estanca. <b>Recomendado.</b></div>`;
   modalEl.innerHTML=`<div class="overlay" id="ov"><div class="sheet">
     <div class="row between"><div style="font-weight:900;font-size:18px">Asignar a un día</div><button class="btn ghost sm" id="cl">✕</button></div>
     <div class="mven" style="margin:2px 0 8px">Zona <b>${esc(zona)}</b> · ${esc(objName(s.objetivo))}.</div>
@@ -2013,10 +2051,10 @@ window.asignarDia=function(ts,d){ const s=(S.profile.historial||[]).find(x=>x.ts
   if(_asignMode==='fija'&&s.full){
     S.profile.schedule[d]={obj:s.objetivo, nivel, mode:'fija', regiones:sessRegs(s),
       full:JSON.parse(JSON.stringify(s.full)), assignedAt:Date.now()};
-    save(); toast('Rutina fija asignada 📌'); }
+    save(); toast('Rutina fija asignada'); }
   else {
     S.profile.schedule[d]={obj:s.objetivo, nivel, mode:'zona', regiones:sessRegs(s)};
-    save(); toast('Zona variable asignada 🔀'); }
+    save(); toast('Zona variable asignada'); }
   openAsignar(ts); };
 window.quitarDia=function(d,ts){ if(S.profile.schedule){ delete S.profile.schedule[d]; save(); toast('Asignación quitada'); openAsignar(ts); } };
 // F47: aviso de recambio para rutinas FIJAS que llevan demasiado tiempo (accommodation/plateau).

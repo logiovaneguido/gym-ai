@@ -407,3 +407,40 @@ button:focus-visible,input:focus-visible,a:focus-visible,.mv:focus-visible{
   box-shadow:0 -6px 20px rgba(13,20,16,.10);}
 .setupbar .btn{flex:1;margin:0;}
 .setupbar .backlink{color:var(--vg-khaki-700);font-weight:700;font-size:14px;cursor:pointer;padding:8px 4px;white-space:nowrap;}
+
+/* ============================================================ 14 · HISTORIAL v23
+   Acciones por entreno (Repetir / Asignar) y diálogo de asignación por día.   */
+.histitem{border-bottom:1px solid var(--vg-sand-200);}
+.histitem:last-child{border-bottom:none;}
+.histitem .histrow,.histitem .histplain{border-bottom:none;}
+.histact{display:flex;gap:8px;padding:2px 2px 12px;}
+.histact .btn{flex:1;margin:0;}
+/* Fila de día: 3 columnas en una línea — día | estado | acción. Tipografía Archivo Variable (manual §6). */
+.dayrow{display:flex;align-items:center;gap:10px;padding:11px 12px;
+  border:1px solid var(--vg-sand-200);border-radius:11px;margin-bottom:8px;background:#fff;}
+.dayrow .dn{flex:0 0 74px;font-variation-settings:'wdth' 100,'wght' 800;font-size:14px;
+  letter-spacing:-.01em;color:var(--vg-field-900);}
+.dayrow .da{flex:1 1 auto;min-width:0;font-variation-settings:'wdth' 100,'wght' 500;
+  font-size:12.5px;line-height:1.3;color:var(--vg-khaki-700);}
+.dayrow .da.none{font-variation-settings:'wdth' 84,'wght' 700;letter-spacing:.1em;text-transform:uppercase;
+  font-size:10.5px;color:var(--vg-khaki-600);}
+.dayrow .da.due{color:var(--vg-blaze-deep);font-variation-settings:'wdth' 100,'wght' 700;}
+.dayrow .dact{flex:0 0 auto;margin-left:auto;display:flex;align-items:center;gap:6px;}
+.dayrow .drm{color:var(--vg-flare-soft);cursor:pointer;font-weight:900;font-size:18px;padding:0 4px;line-height:1;}
+.dayrow .assignb{background:var(--vg-olive-700);color:var(--vg-signal);border:none;border-radius:9px;
+  padding:8px 14px;font-variation-settings:'wdth' 86,'wght' 800;font-size:12.5px;letter-spacing:.06em;
+  cursor:pointer;font-family:inherit;white-space:nowrap;}
+/* F48 · Selector de ejercicio de la biblioteca completa (agrupado por región y grupo muscular). */
+.libreg{font-variation-settings:'wdth' 84,'wght' 800;letter-spacing:.14em;text-transform:uppercase;font-size:11px;
+  color:var(--vg-olive-600);margin:16px 2px 4px;border-top:1px solid var(--vg-sand-200);padding-top:14px;}
+.libreg:first-of-type{border-top:none;padding-top:2px;margin-top:0;}
+.libmus{font-variation-settings:'wdth' 100,'wght' 700;font-size:12.5px;color:var(--vg-khaki-700);margin:9px 2px 6px;}
+.libgrid{display:flex;flex-direction:column;gap:6px;margin-bottom:4px;}
+.libitem{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;
+  background:var(--vg-sand-100);border:1px solid var(--vg-sand-200);border-radius:10px;padding:10px 12px;
+  cursor:pointer;font-family:inherit;}
+.libitem:active{background:var(--vg-sand-200);}
+.libitem.on{border-color:var(--vg-olive-700);background:#fff;}
+.libname{font-variation-settings:'wdth' 100,'wght' 600;font-size:13.5px;color:var(--vg-field-900);}
+.libimpl{flex:0 0 auto;font-variation-settings:'wdth' 84,'wght' 700;letter-spacing:.06em;font-size:10.5px;
+  text-transform:uppercase;color:var(--vg-khaki-700);white-space:nowrap;}
