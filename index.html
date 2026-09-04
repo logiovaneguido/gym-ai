@@ -156,7 +156,7 @@
   .matchip{display:inline-block;background:var(--ink);color:#fff;font-size:11px;font-weight:800;
     padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.03em;}
 </style>
-<link rel="stylesheet" href="vigo.css?v=20">
+<link rel="stylesheet" href="vigo.css?v=23">
 </head>
 <body>
 <div id="app" class="app"></div>
@@ -181,7 +181,7 @@ const Store = (()=>{
 })();
 
 /* ---------- CONFIG ---------- */
-const APP_VERSION='v22 · 2026-09-03 · marca Vigo V0.2';
+const APP_VERSION='v24 · 2026-09-03 · marca Vigo V0.2';
 const OBJETIVOS = [
   {id:'hipertrofia', t:'Hipertrofia', d:'Ganar masa muscular'},
   {id:'fuerza',      t:'Fuerza',      d:'Fuerza máxima'},
@@ -1165,7 +1165,17 @@ function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 
 /* ---------- Filtros de generación del día (región + implemento) ---------- */
-const GENF={regions:new Set(),impls:new Set()};
+const GENF={regions:new Set(),impls:new Set(),time:null};   // time: minutos disponibles (null = completa)
+// F44: recorta/acorta los bloques para encajar en el tiempo disponible (resta warm-up + descansos entre bloques).
+function fitTimeSpecs(specs,obj,targetMin){
+  if(!targetMin) return specs;
+  const warm=4, restPer=blockRest(obj)/60, tight=targetMin<=35;
+  const budget=targetMin-warm; const out=[]; let acc=0;
+  for(const sp of specs){ const s=Object.assign({},sp); if(tight)s.esLargo=false;
+    const cost=(s.esLargo?14:7)+restPer;
+    if(out.length===0 || acc+cost<=budget){ out.push(s); acc+=cost; } else break; }
+  return out.length?out:[Object.assign({},specs[0],{esLargo:false})];
+}
 // Plan del día restringido a las regiones elegidas por el usuario
 function dayPlanFiltered(obj,idx,rng,regions){
   const UP=['pecho','espalda','hombros','biceps','triceps'], LOW=['cuadriceps','isquios','gluteos','pantorrillas'];
@@ -1181,12 +1191,13 @@ function dayPlanFiltered(obj,idx,rng,regions){
 }
 /* ---------- MOTOR: genera la rutina componiendo bloques ---------- */
 function generarRutina(obj,nivel,hist,seedExtra){
-  const fkey=[...GENF.regions].sort().join(',')+'|'+[...GENF.impls].sort().join(',');
+  const fkey=[...GENF.regions].sort().join(',')+'|'+[...GENF.impls].sort().join(',')+'|'+(GENF.time||'');
   const seed=hashStr(obj+'|'+nivel+'|'+(hist.length)+'|'+(seedExtra||'')+'|'+fkey);
   const rng=mulberry32(seed);
   const used=new Set();                 // evita repetir el mismo ejercicio dentro del día
   PREF_IMPL=GENF.impls;                 // sesga la selección hacia los implementos elegidos
-  const specs=GENF.regions.size?dayPlanFiltered(obj,hist.length,rng,GENF.regions):dayPlan(obj,hist.length,rng);
+  let specs=GENF.regions.size?dayPlanFiltered(obj,hist.length,rng,GENF.regions):dayPlan(obj,hist.length,rng);
+  specs=fitTimeSpecs(specs,obj,GENF.time);   // F44: adapta a los minutos disponibles
   const bloques=specs.map(sp=>composeBlock(obj,nivel,sp,used,rng));
   PREF_IMPL=new Set();
   const warm=buildWarmup(rng);
@@ -1226,6 +1237,44 @@ function wKey(en,reps){ return (S.routine?S.routine.objetivo:'')+'|'+en+'|'+reps
 function getWeight(en,reps){ try{ const w=(S.profile&&S.profile.weights)||{}; const v=w[wKey(en,reps)]; return v!=null?v:''; }catch(e){ return ''; } }
 window.setWeight=function(en,reps,val){ if(!S.profile)return; S.profile.weights=S.profile.weights||{}; const k=wKey(en,reps);
   const n=parseFloat(String(val).replace(',','.')); if(isNaN(n)||n<=0) delete S.profile.weights[k]; else S.profile.weights[k]=n; save(); };
+
+/* ---- Editar peso con cuadro de diálogo [F45] ----
+   Reemplaza el input inline (sin confirmación ni feedback) por un modal con stepper ±2.5,
+   botón Guardar (con toast de confirmación) y Quitar peso. Vive en #modal para sobrevivir
+   los re-render del cronómetro. */
+function redrawWeightCtx(){ if(EX) drawExec(); else if(S.routine) screenRoutine(); }
+window.openWeightDialog=function(enc,repsEnc){
+  const en=decodeURIComponent(enc), reps=decodeURIComponent(repsEnc);
+  const info=movInfo(en), wv=getWeight(en,reps);
+  modalEl.innerHTML=`<div class="overlay" id="ov"><div class="sheet">
+    <div class="row between"><div style="font-weight:900;font-size:18px;line-height:1.15">Cargar peso</div>
+      <button class="btn ghost sm" id="cl">✕</button></div>
+    <div class="mven" style="margin:2px 0 16px">${esc(info.es)} · <b>${esc(reps)}</b></div>
+    <div class="wtctl" style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:14px">
+      <button class="wstep" onclick="wstep(-2.5)" style="width:52px;height:52px;border-radius:14px;border:1.5px solid var(--vg-sand-300,#CFC8AF);background:var(--vg-sand-100,#EFECDF);font-size:24px;font-weight:900;cursor:pointer;font-family:inherit;color:var(--vg-field-900,#0D1410)">−</button>
+      <div style="display:flex;align-items:baseline;gap:6px">
+        <input id="wv" type="number" inputmode="decimal" step="0.5" min="0" value="${wv!==''?esc(String(wv)):''}" placeholder="0"
+          style="width:110px;text-align:center;font-size:34px;font-weight:900;border:none;border-bottom:2px solid var(--vg-olive-700,#34452B);background:transparent;font-family:inherit;color:var(--vg-field-900,#0D1410)">
+        <span style="font-size:18px;font-weight:800;color:var(--vg-khaki-700,#6B6248)">kg</span>
+      </div>
+      <button class="wstep" onclick="wstep(2.5)" style="width:52px;height:52px;border-radius:14px;border:1.5px solid var(--vg-sand-300,#CFC8AF);background:var(--vg-sand-100,#EFECDF);font-size:24px;font-weight:900;cursor:pointer;font-family:inherit;color:var(--vg-field-900,#0D1410)">+</button>
+    </div>
+    <button class="btn" style="width:100%" onclick="saveWeightDialog('${enc}','${repsEnc}')">Guardar</button>
+    ${wv!==''?`<button class="btn ghost sm" style="width:100%;margin-top:10px" onclick="clearWeightDialog('${enc}','${repsEnc}')">Quitar peso</button>`:''}
+  </div></div>`;
+  document.getElementById('cl').onclick=()=>modalEl.innerHTML='';
+  document.getElementById('ov').onclick=e=>{if(e.target.id==='ov')modalEl.innerHTML='';};
+  const inp=document.getElementById('wv'); if(inp){ setTimeout(()=>{ inp.focus(); if(wv!=='')inp.select(); },60); }
+};
+window.wstep=function(d){ const inp=document.getElementById('wv'); if(!inp)return;
+  let v=parseFloat(String(inp.value).replace(',','.')); if(isNaN(v))v=0; v=Math.max(0,Math.round((v+d)*2)/2); inp.value=v?String(v):''; };
+window.saveWeightDialog=function(enc,repsEnc){ const en=decodeURIComponent(enc), reps=decodeURIComponent(repsEnc);
+  const inp=document.getElementById('wv'); const val=inp?inp.value:'';
+  const n=parseFloat(String(val).replace(',','.'));
+  setWeight(en,reps,val); modalEl.innerHTML='';
+  toast((isNaN(n)||n<=0)?'Peso quitado':'Peso actualizado 💪'); redrawWeightCtx(); };
+window.clearWeightDialog=function(enc,repsEnc){ const en=decodeURIComponent(enc), reps=decodeURIComponent(repsEnc);
+  setWeight(en,reps,''); modalEl.innerHTML=''; toast('Peso quitado'); redrawWeightCtx(); };
 
 /* ---- Progresión de carga: regla 2×2 (NSCA) [F22] ----
    Si superás la meta por 2+ reps en la última serie en DOS sesiones seguidas, se sube el peso.
@@ -1294,7 +1343,8 @@ function progCardHTML(b,ans,done,togFn,applyFn){
   </div>`;
 }
 function movsHTML(b,idx){const warm=(idx==='w');return b.movs.map((mm,mi)=>{const i=movInfo(mm.n);const isLib=!!LIB_BY_EN[mm.n];
-  const w=(isLib&&!warm)?`<input class="wt" type="number" inputmode="decimal" min="0" step="0.5" placeholder="kg" title="Peso usado (kg)" data-en="${esc(mm.n)}" data-r="${esc(mm.r)}" value="${esc(String(getWeight(mm.n,mm.r)))}" onclick="event.stopPropagation()" onchange="setWeight(this.dataset.en,this.dataset.r,this.value)">`:'';
+  const wv=getWeight(mm.n,mm.r);
+  const w=(isLib&&!warm)?`<button class="wt" title="Cargar peso" style="cursor:pointer;min-width:60px;text-align:center" onclick="event.stopPropagation();openWeightDialog('${encodeURIComponent(mm.n)}','${encodeURIComponent(mm.r)}')">${wv!==''?esc(String(wv))+' kg':'+ kg'}</button>`:'';
   const sub = warm ? `<button class="subx" title="Sustituir ejercicio" onclick="event.stopPropagation();openSubWarm(${mi})">⇄</button>`
     : ((idx>=0&&isLib)?`<button class="subx" title="Sustituir ejercicio" onclick="event.stopPropagation();openSub(${idx},${mi})">⇄</button>`:'');
   return `<div class="mv" onclick="openTech('${encodeURIComponent(mm.n)}')"><div class="mvmain"><b>${esc(mm.r)}</b> ${esc(i.es)} <span class="mvi">ⓘ</span><div class="mven">${esc(i.en)}</div></div><div class="mvright">${w}${sub}</div></div>`;}).join('');}
@@ -1395,7 +1445,9 @@ function screenHome(){
   if(!hasP){ kick='Empezá acá'; lead='Contame tu objetivo y te preparo la rutina';
     ctaArea=`<button class="btn" onclick="screenPerfil()">Definir objetivo</button>`; }
   else if(!hasR){ kick='Hola de nuevo'; lead='¿Te genero la rutina para hoy?';
-    ctaArea=`<button class="btn" onclick="genToday()">Generar rutina de hoy</button>${filtersCard}`; }
+    const asig = (S.profile.schedule||{})[new Date().getDay()];
+    ctaArea=`${asig?`<button class="btn" onclick="usarAsignada()">📅 Usar tu rutina de hoy · ${esc(objName(asig.obj))}</button><div style="height:8px"></div>`:''}
+      <button class="btn ${asig?'ghost':''}" onclick="genToday()">Generar rutina de hoy</button>${filtersCard}`; }
   else { kick='Todo listo'; lead='Todo listo para hoy: revisá la rutina y los tips';
     ctaArea=`<button class="btn" onclick="screenRoutine()">Ver rutina</button>
       <button class="btn ghost" style="margin-top:10px" onclick="toggleHomeFilters()">${_homeFilters?'Cerrar':'Cambiar rutina'}</button>
@@ -1404,7 +1456,7 @@ function screenHome(){
         ${genFiltersHTML()}
         <button class="btn" style="margin-top:12px" onclick="genOtra()">Generar otra</button></div>`:''}`; }
   const objChip = hasP?`<div class="objline"><span class="objchip" onclick="screenPerfil()">🎯 <b>${esc(objName(p.objetivo))}</b> · ${esc(nivName(p.nivel))}</span></div>`:'';
-  const nudge = hasP?nudgeHTML():'';
+  const nudge = hasP?(fixedNudgeHTML()+nudgeHTML()):'';
   const chart = (hasP && (p.historial||[]).length)?`<div class="motiv">${motivMsg()}</div>${activityChartHTML(HIST_MODE)}`:'';
   app.innerHTML=`
     ${mainHeader()}
@@ -1417,11 +1469,23 @@ function screenHome(){
     ${bottomNav('home')}
   `;
   document.querySelectorAll('.genf .gbtn').forEach(b=>b.onclick=()=>{
+    if(b.dataset.t==='time'){ GENF.time=(b.dataset.k==='0')?null:+b.dataset.k; screenHome(); return; }
     const set=b.dataset.t==='reg'?GENF.regions:GENF.impls, k=b.dataset.k;
     if(set.has(k))set.delete(k);else set.add(k); screenHome();
   });
 }
 window.screenHome=screenHome;
+window.usarAsignada=function(){ const a=(S.profile.schedule||{})[new Date().getDay()];
+  if(!a){ toast('No hay rutina asignada para hoy'); return; }
+  if(a.full){ // compat con asignaciones viejas (rutina fija)
+    S.routine=JSON.parse(JSON.stringify(a.full)); S.routine.fecha=todayKey(); S.routine.removed=S.routine.removed||[];
+    save(); toast('Rutina de hoy lista'); screenRoutine(); return; }
+  // Foco por zona: genera ejercicios frescos para el grupo muscular de hoy.
+  const nivel=a.nivel||(S.profile&&S.profile.nivel)||'intermedio';
+  GENF.regions=new Set(a.regiones||[]); GENF.impls=new Set(); GENF.time=null;
+  S.routine=generarRutina(a.obj,nivel,(S.profile.historial||[]),'dia'+Date.now());
+  S.routine.fecha=todayKey(); S.routine.removed=S.routine.removed||[];
+  save(); toast('Rutina de hoy lista · ejercicios nuevos'); screenRoutine(); };
 window.toggleHomeFilters=function(){ _homeFilters=!_homeFilters; screenHome(); };
 window.genOtra=function(){ _homeFilters=false; genToday(); };
 window.genToday=function(){ const p=S.profile; S.routine=generarRutina(p.objetivo,p.nivel,p.historial,''); save(); _homeFilters=false; screenRoutine(); };
@@ -1430,7 +1494,11 @@ function genFiltersHTML(){
   const I=[['maquina','Máquina'],['mancuerna','Mancuerna'],['banda','Banda'],['barra','Barra'],['pesarusa','Pesa rusa'],['piso','Peso corporal']];
   const rb=R.map(([k,l])=>`<button class="gbtn ${GENF.regions.has(k)?'on':''}" data-t="reg" data-k="${k}">${l}</button>`).join('');
   const ib=I.map(([k,l])=>`<button class="gbtn ${GENF.impls.has(k)?'on':''}" data-t="impl" data-k="${k}">${l}</button>`).join('');
-  return `<div class="genlabel">Región del cuerpo (opcional)</div><div class="genf">${rb}</div>
+  const T=[['30','30 min'],['45','45 min'],['60','1 h']];
+  const tb=T.map(([k,l])=>`<button class="gbtn ${GENF.time===+k?'on':''}" data-t="time" data-k="${k}">${l}</button>`).join('')
+    +`<button class="gbtn ${!GENF.time?'on':''}" data-t="time" data-k="0">Completa</button>`;
+  return `<div class="genlabel">Tiempo disponible</div><div class="genf">${tb}</div>
+          <div class="genlabel">Región del cuerpo (opcional)</div><div class="genf">${rb}</div>
           <div class="genlabel">Implemento (opcional)</div><div class="genf">${ib}</div>`;
 }
 function nudgeHTML(){
@@ -1649,7 +1717,8 @@ function tick(){
   EX.phaseRem=Math.max(0,rem);
   if(EX.phaseRem===10 && !EX.snd.w10){ EX.snd.w10=1; sWarn10(); }
   if(EX.phaseRem<=3 && EX.phaseRem>=1 && !EX.snd['t'+EX.phaseRem]){ EX.snd['t'+EX.phaseRem]=1; sTick(); }
-  drawExec();
+  // F41: si no cambió la fase (mismo bloque corriendo), actualizo solo los relojes → no piso el input de kg.
+  if(_execSig && _execSig===execSig() && document.querySelector('.pclock')) lightExec(); else drawExec();
 }
 function advance(reason, catchup){
   const ph=EX.phases[EX.idx];
@@ -1695,11 +1764,14 @@ function drawExec(){
     </div>`;
   } else {
     const progHTML=(ph.type==='rest'&&EX.progBlock)?progCardHTML(EX.progBlock,EX.progAns||{},(EX.progDone||{})[EX.progBlock.id],'progTog','progApplyRest'):'';
+    const np=EX.phases[EX.idx+1];
+    const nextHTML=(np&&np.type==='block'&&!np.warm)?nextBlockHTML(np):'';   // F40: ejercicios del próximo bloque
     inner=`<div class="phase ${ph.type}">
       <div class="ptype">${ph.type==='prep'?'Preparate — agarrá el material':'Descanso'}</div>
       <div class="pclock">${mmss(EX.phaseRem)}</div>
       <div class="pname">${ph.type==='prep'?'Arranca el warm-up':'Próximo bloque en breve'}</div>
       <button class="btn ghost sm" style="margin-top:12px" onclick="skipPhase()">Saltar</button>
+      ${nextHTML}
       ${progHTML}
     </div>`;
   }
@@ -1718,6 +1790,27 @@ function drawExec(){
     <button class="btn red" style="margin-top:10px" onclick="cancelRoutine()">Cancelar rutina</button>
     <div class="navwarn">Finalizar guarda la sesión (aunque hayas acortado). Cancelar la descarta.</div>
   `;
+  _execSig=execSig();
+}
+/* F41: mientras el bloque corre, el tick actualiza SOLO los relojes (no reconstruye el DOM),
+   así el input de "kg" (u otros) no se borra mientras el usuario lo edita en plena rutina. */
+let _execSig='';
+function execSig(){ return EX ? EX.idx+'|'+(EX.blockStarted?1:0)+'|'+(EX.running?1:0) : ''; }
+function lightExec(){
+  if(!EX) return;
+  const totalRem=EX.phaseRem+EX.phases.slice(EX.idx+1).reduce((a,p)=>a+p.dur,0);
+  const pct=100*(1-totalRem/EX.total);
+  const pc=document.querySelector('.pclock'); if(pc) pc.textContent=mmss(EX.phaseRem);
+  const cl=document.querySelector('.totwrap .clock'); if(cl){ cl.textContent=mmss(totalRem); cl.style.color=totalRem<=0?'var(--vg-blaze)':'var(--vg-sand-50)'; }
+  const bar=document.querySelector('.totbar>i'); if(bar) bar.style.width=Math.min(100,pct)+'%';
+}
+/* F40: tarjeta con los ejercicios del PRÓXIMO bloque, para ir buscando los implementos. */
+function nextBlockHTML(np){ const b=np.ref; const n=(np.idx!=null?np.idx+1:'');
+  const rows=(b.movs||[]).map(mm=>{const i=movInfo(mm.n);
+    return `<div style="font-size:13px;color:var(--vg-ink-soft);padding:2px 0">${esc(i.es)}${i.mat?` <span style="color:var(--vg-khaki-700);font-size:11px">· ${esc(i.mat)}</span>`:''}</div>`;}).join('');
+  return `<div style="margin-top:14px;background:#fff;border:1px solid var(--vg-sand-200);border-radius:12px;padding:12px 14px;text-align:left;max-width:340px;margin-left:auto;margin-right:auto">
+    <div style="font-weight:800;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--vg-olive-600);margin-bottom:6px">👉 Preparate · Bloque ${n}${b.cat?' · '+esc(b.cat):''}</div>
+    ${rows}</div>`;
 }
 window.startBlock=()=>{EX.blockStarted=true;EX.snd={};EX.deadline=Date.now()+EX.phases[EX.idx].dur*1000;initAudio();sBlockStart();drawExec();saveEX();};
 window.finBlock=()=>advance('user');
@@ -1742,13 +1835,15 @@ window.finishRoutine=(cierre)=>{
   // Detalle compacto (bloques + ejercicios) para poder verlo en el Historial de los últimos entrenos.
   const det={ warm:{movs:(r.warmup.movs||[]).map(mm=>({es:movInfo(mm.n).es}))},
     bloques:r.bloques.map(b=>({cat:b.cat,variante:b.variante,movs:(b.movs||[]).map(mm=>({r:mm.r,es:movInfo(mm.n).es}))})) };
+  // Rutina COMPLETA reproducible (F42): permite "Repetir" y "Asignar a un día".
+  const full=JSON.parse(JSON.stringify({objetivo:r.objetivo,nivel:r.nivel,warmup:r.warmup,bloques:r.bloques,durEstim:r.durEstim}));
   const sess={fecha:todayKey(),ts:Date.now(),objetivo:r.objetivo,nivel:r.nivel,
     blockIds:r.bloques.map(b=>b.id), bloquesFinalizados:finIds,
     cats:[...new Set(r.bloques.map(b=>b.cat))], regiones:[...new Set(r.bloques.map(b=>b.region))],
-    removed:r.removed||[], cierre, durMin:r.durEstim, det};
+    removed:r.removed||[], cierre, durMin:r.durEstim, det, full};
   S.profile.historial.push(sess);
-  // Mantener el detalle solo en los últimos 10 (optimizar almacenamiento).
-  try{ const H=S.profile.historial; H.forEach((s,i)=>{ if(i<H.length-10) delete s.det; }); }catch(e){}
+  // Mantener detalle + rutina completa solo en las últimas 10 (optimizar almacenamiento).
+  try{ const H=S.profile.historial; H.forEach((s,i)=>{ if(i<H.length-10){ delete s.det; delete s.full; } }); }catch(e){}
   S.profile.contador[r.objetivo]=(S.profile.contador[r.objetivo]||0)+1;
   // Progresión pendiente del último bloque (no tiene descanso después): se ofrece en la pantalla de fin.
   let pend=null; try{ const done=(EX&&EX.progDone)||{}; const fin=[...new Set(EX?EX.finalizados:[])];
@@ -1839,13 +1934,109 @@ function histDetailHTML(s){
     ${(b.movs||[]).map(m=>`<div class="detmv"><b>${esc(m.r)}</b> ${esc(m.es)}</div>`).join('')}</div>`;
   return `<div class="histdet">${warm}${s.det.bloques.map(blk).join('')}</div>`;
 }
+function histActions(s){
+  return `<div class="histact">
+    <button class="btn ghost sm" onclick="openRepetir(${s.ts})">🔁 Volver a esta zona</button>
+    <button class="btn ghost sm" onclick="openAsignar(${s.ts})">📅 Asignar a un día</button></div>`; }
+// Regiones válidas como filtro de generación (excluye 'full' del calentamiento).
+function sessRegs(s){ return [...new Set(s.regiones||[])].filter(r=>['upper','lower','core'].includes(r)); }
+function regLabelES(r){ return ({upper:'Tren superior',lower:'Tren inferior',core:'Core'})[r]||r; }
+/* F46: al repetir/asignar, ofrecer VARIAR ejercicios del mismo grupo muscular (mejor para
+   hipertrofia según la evidencia) o repetir la rutina idéntica (útil para afinar una técnica/fuerza). */
+window.openRepetir=function(ts){ const s=(S.profile.historial||[]).find(x=>x.ts===ts); if(!s){toast('Rutina no disponible');return;}
+  const regs=sessRegs(s); const zona = regs.length?regs.map(regLabelES).join(' · '):'Cuerpo completo';
+  const hasFull=!!s.full;
+  modalEl.innerHTML=`<div class="overlay" id="ov"><div class="sheet">
+    <div class="row between"><div style="font-weight:900;font-size:18px;line-height:1.15">Entrenar de nuevo</div>
+      <button class="btn ghost sm" id="cl">✕</button></div>
+    <div class="mven" style="margin:2px 0 12px">${esc(objName(s.objetivo))} · <b>${esc(zona)}</b></div>
+    <div class="banner" style="margin-bottom:14px">💡 Para hipertrofia, variar los ejercicios del mismo grupo muscular estimula más fibras y suele rendir más que repetir siempre los mismos. Repetir idéntico es útil para afinar una técnica o ganar fuerza en un movimiento puntual.</div>
+    <button class="btn" style="width:100%" onclick="regenZona(${ts})">🔀 Misma zona · ejercicios nuevos</button>
+    ${hasFull?`<button class="btn ghost sm" style="width:100%;margin-top:10px" onclick="repetirRutina(${ts})">🔁 Repetir idéntica</button>`:''}
+  </div></div>`;
+  document.getElementById('cl').onclick=()=>modalEl.innerHTML='';
+  document.getElementById('ov').onclick=e=>{if(e.target.id==='ov')modalEl.innerHTML='';}; };
+window.regenZona=function(ts){ const s=(S.profile.historial||[]).find(x=>x.ts===ts); if(!s){toast('Rutina no disponible');return;}
+  const regs=sessRegs(s); const nivel=(S.profile&&S.profile.nivel)||s.nivel||'intermedio';
+  GENF.regions=new Set(regs); GENF.impls=new Set(); GENF.time=null;
+  S.routine=generarRutina(s.objetivo,nivel,(S.profile.historial||[]),'zona'+Date.now());
+  S.routine.fecha=todayKey(); S.routine.removed=S.routine.removed||[];
+  modalEl.innerHTML=''; save(); toast('Nueva rutina · misma zona 🔀'); screenRoutine(); };
+window.repetirRutina=function(ts){ const s=(S.profile.historial||[]).find(x=>x.ts===ts);
+  if(!s||!s.full){ toast('Esta rutina ya no está guardada completa'); return; }
+  S.routine=JSON.parse(JSON.stringify(s.full)); S.routine.fecha=todayKey(); S.routine.removed=S.routine.removed||[];
+  modalEl.innerHTML=''; save(); toast('Rutina lista para hoy'); screenRoutine(); };
+/* F43/F47: asignar a un día de la semana (getDay 0=Dom..6=Sáb) con DOS caminos:
+   - Zona variable (recomendado): guarda el foco (objetivo + regiones); cada día se generan ejercicios frescos.
+   - Rutina fija: guarda la rutina completa (full) + fecha de asignación (assignedAt) para avisar el recambio. */
+const DIAS=[[1,'Lunes'],[2,'Martes'],[3,'Miércoles'],[4,'Jueves'],[5,'Viernes'],[6,'Sábado'],[0,'Domingo']];
+let _asignMode='zona';   // 'zona' | 'fija'
+// Ventanas de recambio de una rutina FIJA (evidencia: mesociclo/GAS ~4–8 semanas; ver doc investigación).
+const FIX_SOFT_DAYS=42, FIX_HARD_DAYS=56;   // 6 y 8 semanas (~2 meses)
+function asigMode(a){ return a ? (a.mode || (a.full?'fija':'zona')) : null; }
+function fixAgeDays(a){ return (a&&a.assignedAt)?Math.floor((Date.now()-a.assignedAt)/86400000):null; }
+function asigDesc(a){ if(!a) return 'Sin asignar';
+  if(asigMode(a)==='fija'){ const dd=fixAgeDays(a); const wk=dd!=null?Math.max(1,Math.round(dd/7)):null;
+    const due=dd!=null&&dd>=FIX_HARD_DAYS, soon=dd!=null&&dd>=FIX_SOFT_DAYS;
+    return `Fija · ${esc(objName(a.obj))}${wk?` · hace ${wk} sem${due?' ⚠️':soon?' ⏳':''}`:''}`; }
+  const regs=(a.regiones||[]).filter(r=>['upper','lower','core'].includes(r));
+  return `Zona variable · ${esc(regs.length?regs.map(regLabelES).join(' · '):objName(a.obj))}`; }
+window.setAsignMode=function(m,ts){ _asignMode=m; openAsignar(ts); };
+window.openAsignar=function(ts){ const s=(S.profile.historial||[]).find(x=>x.ts===ts); if(!s){toast('Rutina no disponible');return;}
+  const sch=S.profile.schedule||{}; const regs=sessRegs(s); const zona=regs.length?regs.map(regLabelES).join(' · '):'Cuerpo completo';
+  const canFija=!!s.full;
+  if(_asignMode==='fija'&&!canFija) _asignMode='zona';
+  const rows=DIAS.map(([d,nm])=>{ const a=sch[d]; const fija=asigMode(a)==='fija';
+    return `<div class="dayrow"><div><div class="dn">${nm}</div>
+        <div class="da"${a?(fija&&fixAgeDays(a)>=FIX_SOFT_DAYS?' style="color:#B54A2B;font-weight:800"':''):' style="color:var(--vg-khaki-700);font-weight:600"'}>${asigDesc(a)}</div></div>
+      <div style="display:flex;align-items:center;gap:6px">${a?`<span class="drm" title="Quitar" onclick="quitarDia(${d},${ts})">✕</span>`:''}
+        <button class="assignb" onclick="asignarDia(${ts},${d})">${a?'Cambiar':'Asignar'}</button></div></div>`; }).join('');
+  const modeSel=`<div class="genf" style="margin:2px 0 10px">
+      <button class="gbtn ${_asignMode==='zona'?'on':''}" onclick="setAsignMode('zona',${ts})">🔀 Zona variable</button>
+      <button class="gbtn ${_asignMode==='fija'?'on':''} ${canFija?'':'off'}" ${canFija?`onclick="setAsignMode('fija',${ts})"`:'title="Esta rutina ya no está guardada completa"'}>📌 Rutina fija</button>
+    </div>`;
+  const tip=_asignMode==='fija'
+    ? `<div class="banner" style="margin:0 0 12px">📌 Se asigna <b>esta misma rutina</b> (ejercicios fijos) al día elegido. Ideal para afinar técnica o fuerza. Vigo te va a <b>avisar a las ~6–8 semanas</b> para que la cambies (el mismo estímulo se estanca).</div>`
+    : `<div class="banner" style="margin:0 0 12px">🔀 Cada semana Vigo arma <b>ejercicios nuevos</b> para esta zona ese día. Variar el estímulo del mismo grupo muscular rinde más y no se estanca. <b>Recomendado.</b></div>`;
+  modalEl.innerHTML=`<div class="overlay" id="ov"><div class="sheet">
+    <div class="row between"><div style="font-weight:900;font-size:18px">Asignar a un día</div><button class="btn ghost sm" id="cl">✕</button></div>
+    <div class="mven" style="margin:2px 0 8px">Zona <b>${esc(zona)}</b> · ${esc(objName(s.objetivo))}.</div>
+    <div class="sublabel">¿Cómo querés asignarla?</div>
+    ${modeSel}
+    ${tip}
+    ${rows}
+  </div></div>`;
+  document.getElementById('cl').onclick=()=>modalEl.innerHTML='';
+  document.getElementById('ov').onclick=e=>{if(e.target.id==='ov')modalEl.innerHTML='';}; };
+window.asignarDia=function(ts,d){ const s=(S.profile.historial||[]).find(x=>x.ts===ts); if(!s)return;
+  S.profile.schedule=S.profile.schedule||{}; const nivel=(S.profile.nivel||s.nivel||'intermedio');
+  if(_asignMode==='fija'&&s.full){
+    S.profile.schedule[d]={obj:s.objetivo, nivel, mode:'fija', regiones:sessRegs(s),
+      full:JSON.parse(JSON.stringify(s.full)), assignedAt:Date.now()};
+    save(); toast('Rutina fija asignada 📌'); }
+  else {
+    S.profile.schedule[d]={obj:s.objetivo, nivel, mode:'zona', regiones:sessRegs(s)};
+    save(); toast('Zona variable asignada 🔀'); }
+  openAsignar(ts); };
+window.quitarDia=function(d,ts){ if(S.profile.schedule){ delete S.profile.schedule[d]; save(); toast('Asignación quitada'); openAsignar(ts); } };
+// F47: aviso de recambio para rutinas FIJAS que llevan demasiado tiempo (accommodation/plateau).
+function fixedNudgeHTML(){
+  const sch=(S.profile&&S.profile.schedule)||{}; let worst=null;
+  Object.keys(sch).forEach(k=>{ const a=sch[k]; if(asigMode(a)!=='fija') return; const dd=fixAgeDays(a);
+    if(dd!=null&&dd>=FIX_SOFT_DAYS&&(!worst||dd>worst.dd)) worst={dd,obj:a.obj}; });
+  if(!worst) return '';
+  const wk=Math.max(6,Math.round(worst.dd/7)); const hard=worst.dd>=FIX_HARD_DAYS;
+  return `<div class="banner">${hard?'🔄':'⏳'} Venís con la <b>misma rutina fija</b> de ${esc(objName(worst.obj))} hace <b>~${wk} semanas</b>. ${hard
+    ? 'Ya conviene <b>cambiarla para el mes que viene</b>: a las ~8 semanas el mismo estímulo se estanca. En <b>Historial → Volver a esta zona → Misma zona · ejercicios nuevos</b>, o reasigná el día como <b>Zona variable</b>.'
+    : 'Estás cerca del recambio (a las ~8 semanas rinde menos). Preparate para <b>variar los ejercicios</b> el mes que viene.'}</div>`;
+}
 function screenHistory(){
   const hist=(S.profile&&S.profile.historial)||[];
   const h=[...hist].reverse();
   const list = h.length? `<div class="card" style="padding:6px 14px">${h.map((s,i)=>
-      (i<3 && s.det)
+      `<div class="histitem">${(i<3 && s.det)
         ? `<details class="histrow"><summary>${histRowHTML(s)}<span class="detcue">ver detalle ▾</span></summary>${histDetailHTML(s)}</details>`
-        : `<div class="histplain">${histRowHTML(s)}</div>`
+        : `<div class="histplain">${histRowHTML(s)}</div>`}${histActions(s)}</div>`
     ).join('')}</div>` : '';
   app.innerHTML=`
     ${mainHeader()}
